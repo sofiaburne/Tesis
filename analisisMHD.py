@@ -103,8 +103,12 @@ plt.legend(loc = 0, fontsize = 15)
 #%%
 
 #apoapsides antes y despues del choque marcan la orbita en la que sucede el choque
-R_apo1, iapo1 = orbita(7.24,9.24,t_mag,x,y,z) #*
-R_apo2, iapo2 = orbita(11.7,14.2,t_mag,x,y,z) #*
+t_apo11 = 7.24 #* cambiar a mano
+t_apo12 = 9.24 #*
+t_apo21 = 11.7 #*
+t_apo22 = 14.2 #*
+R_apo1, iapo1 = orbita(t_apo11,t_apo12,t_mag,x,y,z)
+R_apo2, iapo2 = orbita(t_apo21,t_apo22,t_mag,x,y,z)
 
 
 #busco indices correspondientes a iapo1 y iapo2 de SWIA y SWEA
@@ -306,9 +310,12 @@ los determino mirando el perfil de densidad, B y vel.
 '''
 
 #indices regiones up/dowstream para t_mag
-i_d = (np.abs(t_mag-11.5)).argmin() #* cambiar a mano
-f_d = (np.abs(t_mag-11.63)).argmin() #*
-i_u = (np.abs(t_mag-11.7)).argmin() #*
+t_id = 11.5 #*
+t_fd = 11.63 #*
+t_iu = 11.7 #*
+i_d = (np.abs(t_mag-t_id)).argmin()
+f_d = (np.abs(t_mag-t_fd)).argmin()
+i_u = (np.abs(t_mag-t_iu)).argmin()
 f_u = i_u + np.abs(i_d-f_d)
 
 #ancho en minutos de los intervalos up/downstream
@@ -326,13 +333,16 @@ v_nave =  vel_nave(x,y,z,t_mag,i_u,f_d)
 norm_v_nave = np.linalg.norm(v_nave) #tiene que ser menor a 6 km/s (vel escape de Marte)
 
 #ancho temporal del shock en s
-ancho_shock_temp = 3600*abs(11.65 - 11.68) #*
+t_ancho_temp1 =  11.65 #*
+t_ancho_temp2 =  11.68 #*
+ancho_shock_temp = 3600*abs(t_ancho_temp1 - t_ancho_temp2)
 #ancho espacial del shock en km
 ancho_shock = ancho_shock_temp*np.array([abs(v_nave[0]), abs(v_nave[1]), abs(v_nave[2])])
 norm_ancho_shock = np.linalg.norm(ancho_shock)
 
 #indice centro del shock
-C = (np.abs(t_mag-11.659)).argmin() #*
+tc = 11.659 #*
+C = (np.abs(t_mag-tc)).argmin()
 #C = i_u + int((f_d-i_u)/2) #mala forma de determinar el centro
 #posicion de la nave en el centro del shock
 Rc = np.array([x[C], y[C], z[C]])
@@ -1000,26 +1010,26 @@ Ldv = len(Vb[0,0,:])
 #campos upstream para cada sample y sus std
 
 Bu_s = np.empty([Lu,3])
-std_Bu_s = np.empty([Lu,3])
+err_Bu_s = np.empty([Lu,3])
 Bd_s = np.empty([Ld,3])
-std_Bd_s = np.empty([Ld,3])
+err_Bd_s = np.empty([Ld,3])
 Vu_s = np.empty([Luv,3])
-std_Vu_s = np.empty([Luv,3])
+err_Vu_s = np.empty([Luv,3])
 Vd_s = np.empty([Ldv,3])
-std_Vd_s = np.empty([Ldv,3])
+err_Vd_s = np.empty([Ldv,3])
 
 for i in range(Lu):
     Bu_s[i,:] = np.mean(Ba[:,:,i], axis = 0)
-    std_Bu_s[i,:] = np.array([st.stdev(Ba[:,0,i]), st.stdev(Ba[:,1,i]), st.stdev(Ba[:,2,i])])
+    err_Bu_s[i,:] = np.array([st.stdev(Ba[:,0,i]), st.stdev(Ba[:,1,i]), st.stdev(Ba[:,2,i])])
 for i in range(Ld):
     Bd_s[i,:] = np.mean(Bb[:,:,i], axis = 0)
-    std_Bu_s[i,:] = np.array([st.stdev(Bb[:,0,i]), st.stdev(Bb[:,1,i]), st.stdev(Bb[:,2,i])])
+    err_Bu_s[i,:] = np.array([st.stdev(Bb[:,0,i]), st.stdev(Bb[:,1,i]), st.stdev(Bb[:,2,i])])
 for i in range(Luv):
     Vu_s[i,:] = np.mean(Va[:,:,i], axis = 0)
-    #std_Vu_s[i,:] = np.array([st.stdev(Va[:,0,i]), st.stdev(Va[:,1,i]), st.stdev(Va[:,2,i])])
+    #err_Vu_s[i,:] = np.array([st.stdev(Va[:,0,i]), st.stdev(Va[:,1,i]), st.stdev(Va[:,2,i])])
 for i in range(Ldv):
     Vd_s[i,:] = np.mean(Vb[:,:,i], axis = 0)
-    #std_Vd_s[i,:] = np.array([st.stdev(Vb[:,0,i]), st.stdev(Vb[:,1,i]), st.stdev(Vb[:,2,i])])
+    #err_Vd_s[i,:] = np.array([st.stdev(Vb[:,0,i]), st.stdev(Vb[:,1,i]), st.stdev(Vb[:,2,i])])
 
 
 #promedios de Bu, Bd, Vu y Vd entre todos los samples y sus std
@@ -1788,56 +1798,3 @@ ax.legend(loc=0, fontsize=20)
 
 #plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}'.format(shock_date))
 
-#%%#####################################################################################################
-########################################################################################################
-########################################################################################################
-########################################################################################################
-#%% guardo resultados
-
-#R = np.empty([44,3])
-#R[0,:] = Rc # Rc posicion de la nave en el centro del shock (para primera eleccion de limites up y down)
-#R[1,:] = R_apo1 #R1 apoapside comienzo de orbita
-#R[2,:] = R_apo2 #R2 apoapside final de orbita
-#R[3,:] = Bu #Bu campo upstream (para primera eleccion de limites up y down)
-#R[4,:] = std_Bu #error Bu
-#R[5,:] = Bd #Bd campo downstream (para primera eleccion de limites up y down)
-#R[6,:] = std_Bd #error Bd
-#R[7,:] = n #n normal (para primera eleccion de limites up y down)
-#R[8,:] = theta #theta Bu n (para primera eleccion de limites up y down)
-#R[9,:] = theta_nRc #theta Rc n (para primera eleccion de limites up y down)
-#R[10,:] = Bu_av #Bu_av campo Bu medio bootstrap
-#R[11,:] = std_Bu #error Bu_av
-#R[12,:] = Bd_av #Bd_av campo Bd medio bootstrap
-#R[13,:] = std_Bd #error Bd_av
-#R[14,:] = n_av #n_av valor medio n bootstrap
-#R[15,:] = std_n #error n_av bootstrap
-#R[16,:] = theta_av #theta_av valor medio theta Bu n bootstrap
-#R[17,:] = std_theta #error theta_av
-#R[18,:] = theta_nRc_av #theta_nRc_av valor medio theta Rc n bootstrap
-#R[19,:] = std_nRc_theta #error theta_nRc_av
-#R[20,:] = Bu_s_av #Bu_s_av campo Bu medio entre distintos intervalos upstream
-#R[21,:] = Bd_s_av #Bd_s_av campo Bd medio entre distintos intervalos downstream
-#R[22,:] = Bu_s_std #error Bu_s_av
-#R[23,:] = Bd_s_std #error Bd_s_av
-#R[24,:] = n_s2_av #n_s2_av n medio variando itervalos up y down
-#R[25,:] = std_n_s2 #error n_s2_av
-#R[26,:] = theta_s2_av #theta_s2_av valor medio de theta Bu n variando intervalos up y down
-#R[27,:] = std_theta_s2 #error theta_s2_av
-#R[28,:] = n_su_av #n_su_av n medio variando itervalo up
-#R[29,:] = std_n_su #error n_su_av
-#R[30,:] = theta_su_av #theta_su_av valor medio de theta Bu n variando intervalo up
-#R[31,:] = std_theta_su #error theta_su_av
-#R[32,:] = n_sd_av #n_sd_av n medio variando itervalo down
-#R[33,:] = std_n_sd #error n_sd_av
-#R[34,:] = theta_sd_av #theta_sd_av valor medio de theta Bu n variando intervalo down
-#R[35,:] = std_theta_sd #error theta_sd_av'
-#R[36,:] = N #normal del fit del bow shock en el centro del shock
-#R[37,:] = angulo_norms #angulo entre normal fit y coplanar
-#R[38,:] = theta_N #angulo entre campo upstream y normal del fit
-#R[39,:] = dif_thetas #diferencia entre angulos con campo upst para la normal del fit y la coplanar
-#R[40,:] = v_nave #vel de la nave
-#R[41,:] = norm_v_nave
-#R[42,:] = ancho_shock
-#R[42,:] = norm_ancho_shock
-
-#np.savetxt(path_analisis+'resultados_coplanarity_{}'.format(shock_date), R, delimiter = '\t', header = '\n'.join(['{}'.format(date),'Rc posicion de la nave en el centro del shock (para primera eleccion de limites up y down)', 'R1 apoapside comienzo de orbita','R2 apoapside final de orbita', 'Bu campo upstream (para primera eleccion de limites up y down)','error Bu', 'Bd campo downstream (para primera eleccion de limites up y down)','error Bd', 'n normal (para primera eleccion de limites up y down)', 'theta Bu n (para primera eleccion de limites up y down)','theta Rc n (para primera eleccion de limites up y down)', 'Bu_av campo Bu medio bootstrap','error Bu_av','Bd_av campo Bd medio bootstrap','error Bd_av','n_av valor medio n bootstrap','error n_av bootstrap','theta_av valor medio theta Bu n bootstrap','error theta_av','theta_nRc_av valor medio theta Rc n bootstrap','error theta_nRc_av','Bu_s_av campo Bu medio entre distintos intervalos upstream','Bd_s_av campo Bd medio entre distintos intervalos downstream','error Bu_s_av','error Bd_s_av','n_s2_av n medio variando itervalos up y down','error n_s2_av','theta_s2_av valor medio de theta Bu n variando intervalos up y down','error theta_s2_av','n_su_av n medio variando itervalo up','error n_su_av','theta_su_av valor medio de theta Bu n variando intervalo up','error theta_su_av','n_sd_av n medio variando itervalo down','error n_sd_av','theta_sd_av valor medio de theta Bu n variando intervalo down','error theta_sd_av', 'normal fit', 'angulo normal fit y coplanar', 'angulo entre campo upstream y normal del fit', 'diferencia angulos campo ups n fit y coplanar', 'vel nave', 'norm vel nave', 'ancho shock', 'norm ancho shock']))
