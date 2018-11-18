@@ -35,7 +35,8 @@ for i in range(len(t_mag)):
     Dt[i-1] = t_mag[i]-t_mag[i-1]
 Dt = Dt*3600 #expreso los intervalos en segundos
 
-plt.figure(0, figsize = (30,20))
+plt.figure(0, figsize = (30,20), tight_layout = True)
+plt.title('Intervalos temporales entre mediciones MAG', fontsize = 30)
 plt.plot(t_mag[:-1], Dt, 'o-', linewidth = 2)
 plt.ylabel('Intervalo entre mediciones [s]', fontsize = 20)
 plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
@@ -49,14 +50,35 @@ path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis\{}/'.format(s
 if not os.path.exists(path_analisis):
     os.makedirs(path_analisis)
 
-#plt.savefig(path_analisis+'intervalos_mediciones_{}'.format(shock_date))
+#plt.savefig(path_analisis+'intervalos_mediciones_MAG_{}'.format(shock_date))
+    
 
+#lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
 
+plt.figure(1, figsize = (30,20), tight_layout = True)
+plt.title('Intervalos temporales entre mediciones MAG', fontsize = 30)   
+plt.hist(Dt, 30)
+plt.ylabel('Cantidad de eventos', fontsize = 20)
+plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
+plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+plt.show()
 
+#plt.savefig(path_analisis+'hist_intervalos_mediciones_MAG_{}'.format(shock_date))
 
+#zoom del hsitograma
 
+plt.figure(2, figsize = (30,20), tight_layout = True)
+plt.title('Intervalos temporales entre mediciones MAG - ampliación del histograma', fontsize = 30)   
+plt.hist(Dt, 30)
+plt.ylabel('Cantidad de eventos', fontsize = 20)
+plt.ylim(ymin = 0, ymax = 100)
+plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
+plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+plt.show()
 
-
+#plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_MAG_{}'.format(shock_date))
 
 
 
