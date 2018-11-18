@@ -1955,11 +1955,11 @@ datos2[3,3] = norm_ancho_shock
 datos2[4,0] = ancho_updown
 
 np.savetxt(path_analisis+'caracteristicas_generales_shock_{}'.format(shock_date), datos2, delimiter = '\t',
-           header = '\n'.join(['{}'.format(shock_date),'(x,y,z) nave en el centro del shock',
-                                                 'vel nave (x,y,z) y su norma',
-                                                 'ancho temporal shock',
-                                                 'ancho espacial shock (x,y,z) y su norma',
-                                                 'ancho intervalo up/downstream']))
+           header = '\n'.join(['{}'.format(shock_date),'(x,y,z) nave en el centro del shock [RM]',
+                                                 'vel nave (x,y,z) y su norma [km/s]',
+                                                 'ancho temporal shock [s]',
+                                                 'ancho espacial shock (x,y,z) y su norma [km]',
+                                                 'ancho intervalo up/downstream [min]']))
 
 
 # coplanaridad para un sample
@@ -2001,21 +2001,21 @@ datos3[14,3] = thetaBduV_Rc
 datos3[14,4] = thetaV_Rc
 
 np.savetxt(path_analisis+'complanaridad_1sample_shock_{}'.format(shock_date), datos3, delimiter = '\t',
-           header = '\n'.join(['{}'.format(shock_date),'Bu',
-                                                 'desvstd Bu',
-                                                 'Bd',
-                                                 'desvstd Bd',
-                                                 'Vu',
-                                                 'desvstd Vu',
-                                                 'Vd',
-                                                 'desvstd Vd',
+           header = '\n'.join(['{}'.format(shock_date),'Bu [nT]',
+                                                 'desvstd Bu [nT]',
+                                                 'Bd [nT]',
+                                                 'desvstd Bd [nT]',
+                                                 'Vu [km/s]',
+                                                 'desvstd Vu [km/s]',
+                                                 'Vd [km/s]',
+                                                 'desvstd Vd [km/s]',
                                                  'nB',
                                                  'nBuV',
                                                  'nBdV',
                                                  'nBduV',
                                                  'nV',
-                                                 'angulos entre normales y Bu',
-                                                 'angulos entre normales y Rc']))
+                                                 'angulos entre normales y Bu [grados]',
+                                                 'angulos entre normales y Rc [grados]']))
 
 
 # bootstrap coplanaridad para un sample
@@ -2088,14 +2088,14 @@ datos4[28,1] = std_thetaV_Rc_boot
 
 np.savetxt(path_analisis+'complanaridad_boot_shock_{}'.format(shock_date), datos4, delimiter = '\t',
            header = '\n'.join(['{}'.format(shock_date),'cantidad de samples',
-                                                 'Bu medio',
-                                                 'desvstd Bu',
-                                                 'Bd medio',
-                                                 'desvstd Bd',
-                                                 'Vu medio',
-                                                 'desvstd Vu',
-                                                 'Vd medio',
-                                                 'desvstd Vd',
+                                                 'Bu medio [nT]',
+                                                 'desvstd Bu [nT]',
+                                                 'Bd medio [nT]',
+                                                 'desvstd Bd [nT]',
+                                                 'Vu medio [km/s]',
+                                                 'desvstd Vu [km/s]',
+                                                 'Vd medio [km/s]',
+                                                 'desvstd Vd [km/s]',
                                                  'normal media nB',
                                                  'desvstd nB',
                                                  'normal media nBuV',
@@ -2106,16 +2106,16 @@ np.savetxt(path_analisis+'complanaridad_boot_shock_{}'.format(shock_date), datos
                                                  'desvstd nBduV',
                                                  'normal media nV',
                                                  'desvstd nV',
-                                                 'angulo medio entre Bu y nB y su desvstd',
-                                                 'angulo medio entre Bu y nBuV y su desvstd',
-                                                 'angulo medio entre Bu y nBdV y su desvstd',
-                                                 'angulo medio entre Bu y nBduV y su desvstd',
-                                                 'angulo medio entre Bu y nV y su desvstd',
-                                                 'angulo medio entre Rc y nB y su desvstd',
-                                                 'angulo medio entre Rc y nBuV y su desvstd',
-                                                 'angulo medio entre Rc y nBdV y su desvstd',
-                                                 'angulo medio entre Rc y nBduV y su desvstd',
-                                                 'angulo medio entre Rc y nV y su desvstd']))
+                                                 'angulo medio entre Bu y nB y su desvstd [grados]',
+                                                 'angulo medio entre Bu y nBuV y su desvstd [grados]',
+                                                 'angulo medio entre Bu y nBdV y su desvstd [grados]',
+                                                 'angulo medio entre Bu y nBduV y su desvstd [grados]',
+                                                 'angulo medio entre Bu y nV y su desvstd [grados]',
+                                                 'angulo medio entre Rc y nB y su desvstd [grados]',
+                                                 'angulo medio entre Rc y nBuV y su desvstd [grados]',
+                                                 'angulo medio entre Rc y nBdV y su desvstd [grados]',
+                                                 'angulo medio entre Rc y nBduV y su desvstd [grados]',
+                                                 'angulo medio entre Rc y nV y su desvstd [grados]']))
 
 
 # coplanaridad variando intervalos up/downstream
@@ -2250,42 +2250,42 @@ datos5[54,1] = std_thetaV_sd
 
 np.savetxt(path_analisis+'complanaridad_variacion_intervalos_shock_{}'.format(shock_date), datos5, delimiter = '\t',
            header = '\n'.join(['{}'.format(shock_date),'cant samples Bu Bd Vu Vd',
-                                                 'Bu medio', 'std Bu', 'Bd medio', 'std Bd',
-                                                 'Vu medio', 'std Vu', 'Vd medio', 'std Vd',
+                                                 'Bu medio [nT]', 'std Bu [nT]', 'Bd medio [nT]', 'std Bd [nT]',
+                                                 'Vu medio [km/s]', 'std Vu [km/s]', 'Vd medio [km/s]', 'std Vd [km/s]',
                                                  'VARIANDO UP/DOWN',
                                                  'nB medio', 'std nB',
                                                  'nBuV medio', 'std nBuV',
                                                  'nBdV medio', 'std nBdV',
                                                  'nBduV medio', 'std nBduV',
                                                  'nV medio', 'std nV',
-                                                 'angulo Bu y nB medio std',
-                                                 'angulo Bu y nBuV medio std',
-                                                 'angulo Bu y nBdV medio std',
-                                                 'angulo Bu y nduV medio std',
-                                                 'angulo Bu y nV medio std'
-                                                 'cono error nB nBuV nBdV nBduV nV',
+                                                 'angulo Bu y nB medio std [grados]',
+                                                 'angulo Bu y nBuV medio std [grados]',
+                                                 'angulo Bu y nBdV medio std [grados]',
+                                                 'angulo Bu y nduV medio std [grados]',
+                                                 'angulo Bu y nV medio std [grados]'
+                                                 'cono error nB nBuV nBdV nBduV nV [grados]',
                                                  'VARIANDO UP',
                                                  'nB medio', 'std nB',
                                                  'nBuV medio', 'std nBuV',
                                                  'nBdV medio', 'std nBdV',
                                                  'nBduV medio', 'std nBduV',
                                                  'nV medio', 'std nV',
-                                                 'angulo Bu y nB medio std',
-                                                 'angulo Bu y nBuV medio std',
-                                                 'angulo Bu y nBdV medio std',
-                                                 'angulo Bu y nduV medio std',
-                                                 'angulo Bu y nV medio std'
+                                                 'angulo Bu y nB medio std [grados]',
+                                                 'angulo Bu y nBuV medio std [grados]',
+                                                 'angulo Bu y nBdV medio std [grados]',
+                                                 'angulo Bu y nduV medio std [grados]',
+                                                 'angulo Bu y nV medio std [grados]'
                                                  'VARIANDO DOWN',
                                                  'nB medio', 'std nB',
                                                  'nBuV medio', 'std nBuV',
                                                  'nBdV medio', 'std nBdV',
                                                  'nBduV medio', 'std nBduV',
                                                  'nV medio', 'std nV',
-                                                 'angulo Bu y nB medio std',
-                                                 'angulo Bu y nBuV medio std',
-                                                 'angulo Bu y nBdV medio std',
-                                                 'angulo Bu y nduV medio std',
-                                                 'angulo Bu y nV medio std']))
+                                                 'angulo Bu y nB medio std [grados]',
+                                                 'angulo Bu y nBuV medio std [grados]',
+                                                 'angulo Bu y nBdV medio std [grados]',
+                                                 'angulo Bu y nduV medio std [grados]',
+                                                 'angulo Bu y nV medio std [grados]']))
 
 
 #testeo hipotesis MHD
@@ -2320,7 +2320,7 @@ datos6[9,0] = hipt_copl_B
 
 np.savetxt(path_analisis+'hipotesis_MHD_shock_{}'.format(shock_date), datos6, delimiter = '\t',
            header = '\n'.join(['{}'.format(shock_date),'normal de ref usada en calculos',
-                                                 'Tu Td Pu Pd',
+                                                 'Tu Td [K] Pu Pd [Pa]',
                                                  'M_Alfv M_sonico M_rapido M_critico',
                                                  'conservacion masa',
                                                  'conservacion impulso norm',
@@ -2328,7 +2328,7 @@ np.savetxt(path_analisis+'hipotesis_MHD_shock_{}'.format(shock_date), datos6, de
                                                  'conservacion energia',
                                                  'conservacion Bn',
                                                  'conservacion campo electrico tang',
-                                                 'hipotesis teo coplanaridad']))
+                                                 'hipotesis teo coplanaridad [nT]']))
 
 
 #comparacion con fir bowshock macro
@@ -2358,7 +2358,7 @@ datos7[4,4] = dif_thetasV
 
 np.savetxt(path_analisis+'comparacion_fit_shock_{}'.format(shock_date), datos7, delimiter = '\t',
            header = '\n'.join(['{}'.format(shock_date),'normal del fit',
-                                                 'angulo Bu y norm fit',
-                                                 'angulo Rc y norm fit',
-                                                 'angulo entre norm fit y nB, nBuV, nBdV, nBduV, nV',
-                                                 'diferencia entre angulo Bu y norm fit y Bu y nB, nBuV, nBdV, nBduV, nVd']))
+                                                 'angulo Bu y norm fit [grados]',
+                                                 'angulo Rc y norm fit [grados]',
+                                                 'angulo entre norm fit y nB, nBuV, nBdV, nBduV, nV [grados]',
+                                                 'diferencia entre angulo Bu y norm fit y Bu y nB, nBuV, nBdV, nBduV, nVd [grados]']))
