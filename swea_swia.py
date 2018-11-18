@@ -156,7 +156,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'intervalos_mediciones_SWEA_{}'.format(shock_date))
+plt.savefig(path_analisis+'intervalos_mediciones_SWEA_{}'.format(shock_date))
     
 
 #lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
@@ -170,7 +170,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'hist_intervalos_mediciones_SWEA_{}'.format(shock_date))
+plt.savefig(path_analisis+'hist_intervalos_mediciones_SWEA_{}'.format(shock_date))
 
 #zoom del hsitograma
 
@@ -184,7 +184,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWEA_{}'.format(shock_date))
+plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWEA_{}'.format(shock_date))
 
 #%%
 
@@ -258,7 +258,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'intervalos_mediciones_SWIAmom_{}'.format(shock_date))
+plt.savefig(path_analisis+'intervalos_mediciones_SWIAmom_{}'.format(shock_date))
     
 
 #lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
@@ -272,7 +272,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'hist_intervalos_mediciones_SWIAmom_{}'.format(shock_date))
+plt.savefig(path_analisis+'hist_intervalos_mediciones_SWIAmom_{}'.format(shock_date))
 
 #zoom del hsitograma
 
@@ -286,7 +286,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWIAmom_{}'.format(shock_date))
+plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWIAmom_{}'.format(shock_date))
 
 
 #para los espectros
@@ -305,7 +305,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'intervalos_mediciones_SWIAspec_{}'.format(shock_date))
+plt.savefig(path_analisis+'intervalos_mediciones_SWIAspec_{}'.format(shock_date))
     
 
 #lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
@@ -319,7 +319,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'hist_intervalos_mediciones_SWIAspec_{}'.format(shock_date))
+plt.savefig(path_analisis+'hist_intervalos_mediciones_SWIAspec_{}'.format(shock_date))
 
 #zoom del hsitograma
 
@@ -333,4 +333,4 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWIAspec_{}'.format(shock_date))
+plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWIAspec_{}'.format(shock_date))

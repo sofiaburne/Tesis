@@ -50,7 +50,7 @@ path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis\{}/'.format(s
 if not os.path.exists(path_analisis):
     os.makedirs(path_analisis)
 
-#plt.savefig(path_analisis+'intervalos_mediciones_MAG_{}'.format(shock_date))
+plt.savefig(path_analisis+'intervalos_mediciones_MAG_{}'.format(shock_date))
     
 
 #lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
@@ -64,7 +64,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'hist_intervalos_mediciones_MAG_{}'.format(shock_date))
+plt.savefig(path_analisis+'hist_intervalos_mediciones_MAG_{}'.format(shock_date))
 
 #zoom del hsitograma
 
@@ -78,7 +78,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.show()
 
-#plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_MAG_{}'.format(shock_date))
+plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_MAG_{}'.format(shock_date))
 
 
 

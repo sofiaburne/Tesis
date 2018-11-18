@@ -31,13 +31,18 @@ datos1[4,0] = lim_t1u
 datos1[4,1] = lim_t2u
 datos1[4,2] = lim_t1d
 datos1[4,3] = lim_t2d
+#limites t_mag regiones up/down de 5min para variar intervalos
+datos1[5,0] = t_id5
+datos1[5,1] = t_fd5
+datos1[5,2] = t_iu5
 
 np.savetxt(path_analisis+'parametros_shock_amano_{}'.format(shock_date), datos1, delimiter = '\t',
            header = '\n'.join(['{}'.format(date),'limites apoapsides',
                                                  'limites regiones up/dowstream',
                                                  'limites ancho temporal shock',
                                                  'tiempo centro shock',
-                                                 'extremos regiones up/downstream']))
+                                                 'extremos regiones up/downstream',
+                                                 'limites regiones up/downstream de 5min para variar int']))
 
 
 # caracteristicas generales del shock
@@ -58,11 +63,15 @@ datos2[2,0] = ancho_shock_temp
 datos2[3,:] = ancho_shock
 datos2[3,3] = norm_ancho_shock
 
+#ancho intervalos down/upstream
+datos[4,0] = ancho_updown
+
 np.savetxt(path_analisis+'caracteristicas_generales_shock_{}'.format(shock_date), datos2, delimiter = '\t',
            header = '\n'.join(['{}'.format(date),'(x,y,z) nave en el centro del shock',
                                                  'vel nave (x,y,z) y su norma',
                                                  'ancho temporal shock',
-                                                 'ancho espacial shock (x,y,z) y su norma']))
+                                                 'ancho espacial shock (x,y,z) y su norma',
+                                                 'ancho intervalo up/downstream']))
 
 
 # coplanaridad para un sample
