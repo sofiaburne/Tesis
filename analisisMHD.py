@@ -607,9 +607,9 @@ Pd = densnum_d*kB*Td
 
 #numeros de Mach
 
-mu = np.pi*4e-7 #permiabilidad mag del vacio en Wb/Am=mT/A
-v_alfv = np.linalg.norm(B_u/np.sqrt(mu*rho_u))
-v_cs = np.sqrt(Pu/rho_u*5/3)
+mu = np.pi*4e-7 #permeabilidad mag del vacio en Wb/Am=mT/A
+v_alfv = np.linalg.norm(B_u/np.sqrt(mu*rho_u)) # m/s
+v_cs = np.sqrt(Pu/rho_u*5/3) # m/s
 
 M_A = np.linalg.norm(U_u)/v_alfv
 M_cs = np.linalg.norm(U_u)/v_cs
@@ -627,24 +627,67 @@ eq_adiab = Pu*rho_u**G - (Pd*rho_d**G)
 gam = solve(eq_adiab, G)
 
 #conservacion de la masa
-cons_masa = rho_u*U_un - rho_d*U_dn
+cons_masa_u = rho_u*U_un
+cons_masa_d = rho_d*U_dn
+
+if cons_masa_u > cons_masa_d:
+    cons_masa = np.abs(cons_masa_d/cons_masa_u)
+else:
+    cons_masa = np.abs(cons_masa_u/cons_masa_d)    
 
 #consevacion del impulso normal al shock
-cons_impul_n = rho_u*U_un**2 + Pu + B_u**2/(2*mu) - (rho_d*U_dn**2 + Pd + B_d**2/(2*mu))
+cons_impul_n_u = rho_u*U_un**2 + Pu + B_u**2/(2*mu)
+cons_impul_n_d = rho_d*U_dn**2 + Pd + B_d**2/(2*mu)
+
+cons_impul_n = np.empty_like(cons_impul_n_u)
+for i in range(len(cons_impul_n_u)):
+    if cons_impul_n_u[i] > cons_impul_n_d[i]:
+        cons_impul_n[i] = np.abs(cons_impul_n_d[i]/cons_impul_n_u[i])
+    else:
+        cons_impul_n[i] = np.abs(cons_impul_n_u[i]/cons_impul_n_d[i]) 
 
 #conservacion del impulso tangencial al shock
-cons_impul_t = rho_u*U_un*U_ut - B_un/mu*B_ut - (rho_d*U_dn*U_dt - B_dn/mu*B_dt)
+cons_impul_t_u = rho_u*U_un*U_ut - B_un/mu*B_ut
+cons_impul_t_d = rho_d*U_dn*U_dt - B_dn/mu*B_dt
+
+cons_impul_t = np.empty_like(cons_impul_t_u)
+for i in range(len(cons_impul_t_u)):
+    if cons_impul_t_u[i] > cons_impul_t_d[i]:
+        cons_impul_t[i] = np.abs(cons_impul_t_d[i]/cons_impul_t_u[i])
+    else:
+        cons_impul_t[i] = np.abs(cons_impul_t_u[i]/cons_impul_t_d[i])
 
 #consevacion de la energia
 gamma = 5/3
-cons_energ = rho_u*U_un*(1/2*U_u**2 + gamma/(gamma-1)*Pu/rho_u) + U_un*B_u**2/mu - np.dot(U_u,B_u)*B_un/mu - (rho_d*U_dn*(1/2*U_d**2 + gamma/(gamma-1)*Pd/rho_d) + U_dn*B_d**2/mu - np.dot(U_d,B_d)*B_dn/mu)
+cons_energ_u = rho_u*U_un*(1/2*U_u**2 + gamma/(gamma-1)*Pu/rho_u) + U_un*B_u**2/mu - np.dot(U_u,B_u)*B_un/mu
+cons_energ_d = rho_d*U_dn*(1/2*U_d**2 + gamma/(gamma-1)*Pd/rho_d) + U_dn*B_d**2/mu - np.dot(U_d,B_d)*B_dn/mu
+
+cons_energ = np.empty_like(cons_energ_u)
+for i in range(len(cons_energ)):
+    if cons_energ_u[i] > cons_energ_d[i]:
+        cons_energ[i] = np.abs(cons_energ_d[i]/cons_energ_u[i])
+    else:
+        cons_energ[i] = np.abs(cons_energ_u[i]/cons_energ_d[i])
 
 #conservacion de componente normal de B
-cons_Bn = B_un - B_dn
+cons_Bn_u = B_un
+cons_Bn_d = B_dn
+
+if cons_Bn_u > cons_Bn_d:
+    cons_Bn = np.abs(cons_Bn_d/cons_Bn_u0)
+else:
+    cons_Bn = np.abs(cons_Bn_u/cons_Bn_d)
 
 #conservacion de campo electrico tang
-cons_Et = U_un*B_ut - B_un*U_ut - (U_dn*B_dt - B_dn*U_dt)
+cons_Et_u = U_un*B_ut - B_un*U_ut
+cons_Et_d = U_dn*B_dt - B_dn*U_dt
 
+cons_Et = np.empty_like(cons_Et_u)
+for i in range(len(cons_Et)):
+    if cons_Et_u[i] > cons_Et_d[i]:
+        cons_Et[i] = np.abs(cons_Et_d[i]/cons_Et_u[i])
+    else:
+        cons_Et[i] = np.abs(cons_Et_u[i]/cons_Et_d[i])
 
 #hipotesis de coplanaridad
 hipt_copl_B = np.dot(norm,np.cross(B_u,B_d))
