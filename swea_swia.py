@@ -115,7 +115,7 @@ def rango_energias_shock(E_min, E_max, dE, niveles, flujo):
 #Datos swea (cambiar con el shock de interes)
     
 path_swea = r'C:\Users\sofia\Documents\Facultad\Tesis\Datos Maven\SWEA/'
-data_swea = cdflib.CDF(path_swea+'2016/03/mvn_swe_l2_svyspec_20160318_v04_r01.cdf')
+data_swea = cdflib.CDF(path_swea+'2016/03/mvn_swe_l2_svyspec_20160319_v04_r01.cdf')
 data_swea.cdf_info()
 
 #%%
@@ -192,12 +192,12 @@ plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWEA_{}'.format(shock
 
 #momentos
 path_swia_mom = r'C:\Users\sofia\Documents\Facultad\Tesis\Datos Maven\SWIA/momentos/'
-data_swia_mom = cdflib.CDF(path_swia_mom+'2016/03/mvn_swi_l2_onboardsvymom_20160318_v01_r01.cdf')
+data_swia_mom = cdflib.CDF(path_swia_mom+'2016/03/mvn_swi_l2_onboardsvymom_20160319_v01_r01.cdf')
 data_swia_mom.cdf_info()
 
 #espectros
 path_swia_spec =r'C:\Users\sofia\Documents\Facultad\Tesis\Datos Maven\SWIA/espectros/'
-data_swia_spec = cdflib.CDF(path_swia_spec+'2016/03/mvn_swi_l2_onboardsvyspec_20160318_v01_r01.cdf')
+data_swia_spec = cdflib.CDF(path_swia_spec+'2016/03/mvn_swi_l2_onboardsvyspec_20160319_v01_r01.cdf')
 data_swia_spec.cdf_info()
 
 
