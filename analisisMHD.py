@@ -103,10 +103,10 @@ plt.legend(loc = 0, fontsize = 15)
 #%%
 
 #apoapsides antes y despues del choque marcan la orbita en la que sucede el choque
-t_apo11 = 4.45 #* cambiar a mano
-t_apo12 = 5.6 #*
-t_apo21 = 9 #*
-t_apo22 = 10 #*
+t_apo11 = 17.77 #* cambiar a mano
+t_apo12 = 19.26 #*
+t_apo21 = 22.19 #*
+t_apo22 = 23.9 #*
 R_apo1, iapo1 = orbita(t_apo11,t_apo12,t_mag,x,y,z)
 R_apo2, iapo2 = orbita(t_apo21,t_apo22,t_mag,x,y,z)
 
@@ -310,9 +310,9 @@ los determino mirando el perfil de densidad, B y vel.
 '''
 
 #indices regiones up/dowstream para t_mag
-t_id = 5.9546 #*
-t_fd = 6.0587 #*
-t_iu = 5.34 #*
+t_id = 19.55 #*
+t_fd = 19.5908 #*
+t_iu = 19.2626 #*
 i_d = (np.abs(t_mag-t_id)).argmin()
 f_d = (np.abs(t_mag-t_fd)).argmin()
 i_u = (np.abs(t_mag-t_iu)).argmin()
@@ -333,15 +333,15 @@ v_nave =  vel_nave(x,y,z,t_mag,i_u,f_d)
 norm_v_nave = np.linalg.norm(v_nave) #tiene que ser menor a 6 km/s (vel escape de Marte)
 
 #ancho temporal del shock en s
-t_ancho_temp1 =  5.7909 #*
-t_ancho_temp2 =  5.9016 #*
+t_ancho_temp1 =  19.4771 #*
+t_ancho_temp2 =  19.5478 #*
 ancho_shock_temp = 3600*abs(t_ancho_temp1 - t_ancho_temp2)
 #ancho espacial del shock en km
 ancho_shock = ancho_shock_temp*np.array([abs(v_nave[0]), abs(v_nave[1]), abs(v_nave[2])])
 norm_ancho_shock = np.linalg.norm(ancho_shock)
 
 #indice centro del shock
-tc = 5.8902 #*
+tc = 19.54 #*
 C = (np.abs(t_mag-tc)).argmin()
 #C = i_u + int((f_d-i_u)/2) #mala forma de determinar el centro
 #posicion de la nave en el centro del shock
@@ -388,15 +388,15 @@ theta_NRc = fcop.alpha(Rc,N)
 #para variar intervalos up/down
 
 #limites extremos donde encontrar posibles regiones up/down
-lim_t1u = 5.2 #*
-lim_t2u = 5.6 #*
-lim_t1d = 5.9553 #*
-lim_t2d = 6.1252 #*
+lim_t1u = 18.8 #*
+lim_t2u = 19.2 #*
+lim_t1d = 19.5478 #*
+lim_t2d = 19.61 #*
 
 #indices regiones up/dowstream para t_mag para intervalos de 5min
-t_id5 = 5.9546 #*
-t_fd5 = 6.0379 #*
-t_iu5 = 5.4 #*
+t_id5 = 19.55 #*
+t_fd5 = 19.5908 #*
+t_iu5 = 19.2626 #*
 i_d5 = (np.abs(t_mag-t_id5)).argmin()
 f_d5 = (np.abs(t_mag-t_fd5)).argmin()
 i_u5 = (np.abs(t_mag-t_iu5)).argmin()
