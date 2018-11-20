@@ -7,7 +7,7 @@ import os
 #Datos MAG
 
 path_mag = r'C:\Users\sofia\Documents\Facultad\Tesis\Datos Maven\MAG/'
-d, h, m, day_frac, Bx, By, Bz, X, Y, Z = np.loadtxt(path_mag+'2014/12/mvn_mag_l2_2014359ss1s_20141225_v01_r01.sts', skiprows = 147, usecols = (1,2,3,6,7,8,9,11,12,13),unpack = True)
+d, h, m, day_frac, Bx, By, Bz, X, Y, Z = np.loadtxt(path_mag+'2016/03/mvn_mag_l2_2016078ss1s_20160318_v01_r01.sts', skiprows = 147, usecols = (1,2,3,6,7,8,9,11,12,13),unpack = True)
 
 #paso a unidades de radios marciano
 x, y, z = X/3390, Y/3390, Z/3390
@@ -18,7 +18,7 @@ x, y, z = X/3390, Y/3390, Z/3390
 t_mag = (day_frac-d[5])*24
 
 #fecha del shock
-shock_date = dt.date(2014,12,25) #* cambiar a mano
+shock_date = dt.date(2016,3,18) #* cambiar a mano
 
 #modulo de B en coordenadas MSO
 B = np.sqrt(Bx**2 + By**2 + Bz**2)
