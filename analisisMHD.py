@@ -103,10 +103,10 @@ plt.legend(loc = 0, fontsize = 15)
 #%%
 
 #apoapsides antes y despues del choque marcan la orbita en la que sucede el choque
-t_apo11 = 7.30 #* cambiar a mano
-t_apo12 = 8.65 #*
-t_apo21 = 12 #*
-t_apo22 = 13 #*
+t_apo11 = 7.24 #* cambiar a mano
+t_apo12 = 9.24 #*
+t_apo21 = 11.69 #*
+t_apo22 = 14.19 #*
 R_apo1, iapo1 = orbita(t_apo11,t_apo12,t_mag,x,y,z)
 R_apo2, iapo2 = orbita(t_apo21,t_apo22,t_mag,x,y,z)
 
@@ -243,7 +243,7 @@ p6.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labels
 p6.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 p6.legend(loc = 0, fontsize = 15)
 
-f0.savefig(path_analisis+'datos_MAVEN_{}'.format(shock_date))
+#f0.savefig(path_analisis+'datos_MAVEN_{}'.format(shock_date))
 
 
 #para comparar con paper Cesar
@@ -300,7 +300,7 @@ par2.spines['left'].set_position(('outward', 120))
 par2.yaxis.set_label_position('left')
 par2.yaxis.set_ticks_position('left')
 
-fig.savefig(path_analisis+'B_V_densidad_{}'.format(shock_date))
+#fig.savefig(path_analisis+'B_V_densidad_{}'.format(shock_date))
 
 #%%
 
@@ -310,9 +310,9 @@ los determino mirando el perfil de densidad, B y vel.
 '''
 
 #indices regiones up/dowstream para t_mag
-t_id = 8.9474 #*
-t_fd = 9.10 #*
-t_iu = 8.43 #*
+t_id = 9.957 #*
+t_fd = 10.1868 #*
+t_iu = 9.514 #*
 i_d = (np.abs(t_mag-t_id)).argmin()
 f_d = (np.abs(t_mag-t_fd)).argmin()
 i_u = (np.abs(t_mag-t_iu)).argmin()
@@ -333,15 +333,15 @@ v_nave =  vel_nave(x,y,z,t_mag,i_u,f_d)
 norm_v_nave = np.linalg.norm(v_nave) #tiene que ser menor a 6 km/s (vel escape de Marte)
 
 #ancho temporal del shock en s
-t_ancho_temp1 =  8.77 #*
-t_ancho_temp2 =  8.94 #*
+t_ancho_temp1 =  9.8127 #*
+t_ancho_temp2 =  9.8220 #*
 ancho_shock_temp = 3600*abs(t_ancho_temp1 - t_ancho_temp2)
 #ancho espacial del shock en km
 ancho_shock = ancho_shock_temp*np.array([abs(v_nave[0]), abs(v_nave[1]), abs(v_nave[2])])
 norm_ancho_shock = np.linalg.norm(ancho_shock)
 
 #indice centro del shock
-tc = 8.9269 #*
+tc = 9.8199 #*
 C = (np.abs(t_mag-tc)).argmin()
 #C = i_u + int((f_d-i_u)/2) #mala forma de determinar el centro
 #posicion de la nave en el centro del shock
@@ -360,20 +360,52 @@ norm_vel = np.sqrt(vel[:,0]**2 + vel[:,1]**2 + vel[:,2]**2)
 
 B1 = np.array([Bx[i_u:f_u], By[i_u:f_u], Bz[i_u:f_u]]).T
 B2 = np.array([Bx[i_d:f_d], By[i_d:f_d], Bz[i_d:f_d]]).T
+
+#vectores Bu Bd
 Bu = np.mean(B1, axis = 0)
 Bd = np.mean(B2, axis = 0)
 std_Bu = np.array([st.stdev(B1[:,0]), st.stdev(B1[:,1]), st.stdev(B1[:,2])])
 std_Bd = np.array([st.stdev(B2[:,0]), st.stdev(B2[:,1]), st.stdev(B2[:,2])])
 
+#modulos de Bu y Bd
+norm_B1 = np.empty_like(B1[:,0])
+for i in range(len(B1)):
+    norm_B1[i] = np.linalg.norm([B1[i,0], B1[i,1], B1[i,2]])
+norm_Bu = np.mean(norm_B1)
+std_norm_Bu = st.stdev(norm_B1)
+
+norm_B2 = np.empty_like(B2[:,0])
+for i in range(len(B2)):
+    norm_B2[i] = np.linalg.norm([B2[i,0], B2[i,1], B2[i,2]])
+norm_Bd = np.mean(norm_B2)
+std_norm_Bd = st.stdev(norm_B2)
+
+
 V1 = np.array([vel[iu_v:fu_v,0], vel[iu_v:fu_v,1], vel[iu_v:fu_v,2]]).T
 V2 = np.array([vel[id_v:fd_v,0], vel[id_v:fd_v,1], vel[id_v:fd_v,2]]).T
+
+#ojo: por como selecciono los indices para V1 y V2 puede que no queden del mismo tamaño
+if (len(V1)) != (len(V2)): print('V1 y V2 tienen distinta cant de elementos')
+
+#vectores Vu Vd
 Vu = np.mean(V1, axis = 0)
 Vd = np.mean(V2, axis = 0)
 #no puedo calcular las std por un tema de que son float32
 #std_Vu = np.array([st.stdev(V1[:,0]), st.stdev(V1[:,1]), st.stdev(V1[:,2])])
 #std_Vd = np.array([st.stdev(V2[:,0]), st.stdev(V2[:,1]), st.stdev(V2[:,2])])
-#ojo: por como selecciono los indices para V1 y V2 puede que no queden del mismo tamaño
-if (len(V1)) != (len(V1)): print('V1 y V2 tienen distinta cant de elementos')
+
+#modulos de Vu y Vd
+norm_V1 = np.empty_like(V1[:,0])
+for i in range(len(V1)):
+    norm_V1[i] = np.linalg.norm([V1[i,0], V1[i,1], V1[i,2]])
+norm_Vu = np.mean(norm_V1)
+std_norm_Vu = st.stdev(norm_V1)
+
+norm_V2 = np.empty_like(V2[:,0])
+for i in range(len(V2)):
+    norm_V2[i] = np.linalg.norm([V2[i,0], V2[i,1], V2[i,2]])
+norm_Vd = np.mean(norm_V2)
+std_norm_Vd = st.stdev(norm_V2)
 
 
 #normal del shock reescalando el fit macro del bowshock
@@ -388,15 +420,15 @@ theta_NRc = fcop.alpha(Rc,N)
 #para variar intervalos up/down
 
 #limites extremos donde encontrar posibles regiones up/down
-lim_t1u = 8.43 #*
-lim_t2u = 8.71 #*
-lim_t1d = 8.99 #*
-lim_t2d = 9.14 #*
+lim_t1u = 9 #*
+lim_t2u = 9.7799 #*
+lim_t1d = 9.96 #*
+lim_t2d = 10.3699 #*
 
 #indices regiones up/dowstream para t_mag para intervalos de 5min
-t_id5 = 9.0 #*
-t_fd5 = 9.08 #*
-t_iu5 = 8 #*
+t_id5 = 10.065 #*
+t_fd5 = 10.1484 #*
+t_iu5 = 9.5 #*
 i_d5 = (np.abs(t_mag-t_id5)).argmin()
 f_d5 = (np.abs(t_mag-t_fd5)).argmin()
 i_u5 = (np.abs(t_mag-t_iu5)).argmin()
@@ -536,7 +568,7 @@ g6.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labels
 g6.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 g6.legend(loc = 0, fontsize = 15)
 
-f1.savefig(path_analisis+'datos_MAVEN_sombreados_{}'.format(shock_date))
+#f1.savefig(path_analisis+'datos_MAVEN_sombreados_{}'.format(shock_date))
 
 #%%#####################################################################################################
 ########################################################################################################
@@ -548,20 +580,22 @@ f1.savefig(path_analisis+'datos_MAVEN_sombreados_{}'.format(shock_date))
 
 f2, plot1 = plt.subplots()
 
-gr1, = plot1.plot(t_mag, B, linewidth = 3, color = 'C0', label = '$B$')
+gr1, = plot1.plot(t_mag, B, linewidth = 1, marker ='o', markersize = '2', color = 'C0', label = '$B$')
 plot1.set_xlabel('Tiempo\n[hora decimal]', fontsize = 30)
 plot1.set_ylabel('B\n[nT]', fontsize = 30)
+plt.xlim(t_mag[3020], t_mag[4244])
 plot1.axes.tick_params(axis = 'both', which = 'both', length = 6, width = 3, labelsize = 30)
 plot1.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 
 plot2 = plt.twinx(plot1)
-gr2, = plot2.plot(t_swia_mom, densidad_swia, linewidth = 3, color = 'C2', label = '$n_p$')
+gr2, = plot2.plot(t_swia_mom, densidad_swia, linewidth = 1, marker ='o', markersize = '2',  color = 'C2', label = '$n_p$')
+plt.xlim(t_swia_mom[755], t_swia_mom[1060])
 plot2.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = 30)
 plot2.axes.tick_params(axis = 'y', which = 'both', length = 6, width = 3, labelsize = 30)
 
 plot1.legend(handles = [gr1,gr2], loc = 0, fontsize = 20)
 
-f2.savefig(path_analisis+'fast_shock_{}'.format(shock_date))
+#f2.savefig(path_analisis+'fast_shock_{}'.format(shock_date))
 
 #%%
 
@@ -609,7 +643,7 @@ Pd = densnum_d*kB*Td
 
 mu = np.pi*4e-7 #permeabilidad mag del vacio en Wb/Am=mT/A
 v_alfv = np.linalg.norm(B_u/np.sqrt(mu*rho_u)) # m/s
-v_cs = np.sqrt(Pu/rho_u*5/3) # m/s
+v_cs = np.sqrt((Pu/rho_u)*5/3) # m/s
 
 M_A = np.linalg.norm(U_u)/v_alfv
 M_cs = np.linalg.norm(U_u)/v_cs
@@ -874,7 +908,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'hist_normalB_copl_boot_{}'.format(shock_date))
+#plt.savefig(path_analisis+'hist_normalB_copl_boot_{}'.format(shock_date))
 
 
 plt.figure(5, figsize = (30,20))
@@ -907,7 +941,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'hist_normalBuV_copl_boot_{}'.format(shock_date))
+#plt.savefig(path_analisis+'hist_normalBuV_copl_boot_{}'.format(shock_date))
 
 
 plt.figure(6, figsize = (30,20))
@@ -940,7 +974,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'hist_normalBdV_copl_boot_{}'.format(shock_date))
+#plt.savefig(path_analisis+'hist_normalBdV_copl_boot_{}'.format(shock_date))
 
 
 plt.figure(7, figsize = (30,20))
@@ -973,7 +1007,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'hist_normalBduV_copl_boot_{}'.format(shock_date))
+#plt.savefig(path_analisis+'hist_normalBduV_copl_boot_{}'.format(shock_date))
 
 
 plt.figure(8, figsize = (30,20))
@@ -1006,7 +1040,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'hist_normalV_copl_boot_{}'.format(shock_date))
+#plt.savefig(path_analisis+'hist_normalV_copl_boot_{}'.format(shock_date))
 
 
 
@@ -1072,7 +1106,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'hist_thetaBun_copl_boot_{}'.format(shock_date))
+#plt.savefig(path_analisis+'hist_thetaBun_copl_boot_{}'.format(shock_date))
 
 #%%#####################################################################################################
 ########################################################################################################
@@ -1336,7 +1370,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'BuBd_coplanarity_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'BuBd_coplanarity_variacion_up_down{}'.format(shock_date))
 
 
 #plots de campos Vu y Vd al variar intervalos
@@ -1369,7 +1403,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'VuVd_coplanarity_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'VuVd_coplanarity_variacion_up_down{}'.format(shock_date))
 
 
 
@@ -1417,7 +1451,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'nB_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'nB_copl_variacion_up_down{}'.format(shock_date))
 
 
 plt.figure(13, figsize = (30,20))
@@ -1462,7 +1496,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'nBuv_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'nBuv_copl_variacion_up_down{}'.format(shock_date))
 
 
 plt.figure(14, figsize = (30,20))
@@ -1507,7 +1541,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'nBdV_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'nBdV_copl_variacion_up_down{}'.format(shock_date))
 
 
 plt.figure(15, figsize = (30,20))
@@ -1552,7 +1586,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'nBduV_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'nBduV_copl_variacion_up_down{}'.format(shock_date))
 
 
 plt.figure(16, figsize = (30,20))
@@ -1597,7 +1631,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'nV_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'nV_copl_variacion_up_down{}'.format(shock_date))
 
 
 
@@ -1634,7 +1668,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'thetaB_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'thetaB_copl_variacion_up_down{}'.format(shock_date))
 
 
 plt.figure(18, figsize = (30,20))
@@ -1668,7 +1702,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'thetaBuV_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'thetaBuV_copl_variacion_up_down{}'.format(shock_date))
 
 
 plt.figure(19, figsize = (30,20))
@@ -1702,7 +1736,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'thetaBdV_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'thetaBdV_copl_variacion_up_down{}'.format(shock_date))
 
 
 plt.figure(20, figsize = (30,20))
@@ -1736,7 +1770,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'thetaBduV_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'thetaBduV_copl_variacion_up_down{}'.format(shock_date))
 
 
 plt.figure(21, figsize = (30,20))
@@ -1770,7 +1804,7 @@ plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize 
 plt.legend(loc = 0, fontsize = 20)
 plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
 
-plt.savefig(path_analisis+'thetaV_copl_variacion_up_down{}'.format(shock_date))
+#plt.savefig(path_analisis+'thetaV_copl_variacion_up_down{}'.format(shock_date))
 
 #%%#####################################################################################################
 ########################################################################################################
@@ -1883,7 +1917,7 @@ ax.plot_surface(x_esfera, y_esfera, z_esfera, color="r")
 
 ax.legend(loc=0, fontsize=20)
 
-plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}'.format(shock_date))
+#plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}'.format(shock_date))
 
 
 #%%#####################################################################################################

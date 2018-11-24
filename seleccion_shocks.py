@@ -50,15 +50,15 @@ def tfromtimeunix(timeunix):
 #%%
 
 #fecha del shock
-shock_date = dt.date(2016,3,19) #* cambiar a mano
+shock_date = dt.date(2017,4,6) #* cambiar a mano
 
 #Datos MAG
 path_mag = r'C:\Users\sofia\Documents\Facultad\Tesis\Datos Maven\MAG/'
-d, day_frac, Bx, By, Bz = np.loadtxt(path_mag+'2016/03/mvn_mag_l2_2016079ss1s_20160319_v01_r01.sts', skiprows = 147, usecols = (1,6,7,8,9),unpack = True)
+d, day_frac, Bx, By, Bz = np.loadtxt(path_mag+'2017/04/mvn_mag_l2_2017096ss1s_20170406_v01_r01.sts', skiprows = 155, usecols = (1,6,7,8,9),unpack = True)
 
 #Datos momentos SWIA
 path_swia_mom = r'C:\Users\sofia\Documents\Facultad\Tesis\Datos Maven\SWIA/momentos/'
-data_swia_mom = cdflib.CDF(path_swia_mom+'2016/03/mvn_swi_l2_onboardsvymom_20160319_v01_r01.cdf')
+data_swia_mom = cdflib.CDF(path_swia_mom+'2017/04/mvn_swi_l2_onboardsvymom_20170406_v01_r01.cdf')
 data_swia_mom.cdf_info()
 
 
@@ -73,22 +73,21 @@ tu_swia_mom = np.asarray(timeunix_swia_mom)
 densidad_swia = np.asarray(density_swia)
 velocidad_swia = np.asarray(velocity_swia)
 data_swia_mom.close()
-t_swia_mom = tfromtimeunix(tu_swia_mom[:-4]) #hora decimal (saco ultimas mediciones porque son del dia sig)
-velocidad_swia_norm = np.sqrt(velocidad_swia[:-4,0]**2 + velocidad_swia[:-4,1]**2 + velocidad_swia[:-4,2]**2)
+t_swia_mom = tfromtimeunix(tu_swia_mom[:-15]) #hora decimal (saco ultimas mediciones porque son del dia sig)
+velocidad_swia_norm = np.sqrt(velocidad_swia[:-15,0]**2 + velocidad_swia[:-15,1]**2 + velocidad_swia[:-15,2]**2)
 
 
 
 f1, (g1,g2,g3) = plt.subplots(3,1, sharex = True, figsize = (30,20)) #ojo con sharex y los distintos inst
 
 f1.suptitle('Datos MAVEN {}'.format(shock_date), fontsize = 20)
-f1.tight_layout()
 
 g1.plot(t_mag, B, linewidth = 2, color = 'C0')
 g1.set_ylabel('Módulo de campo magnético\n[nT]', fontsize = 20)
 g1.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
 g1.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 
-g2.plot(t_swia_mom, densidad_swia[:-4], linewidth = 2, color = 'C1')
+g2.plot(t_swia_mom, densidad_swia[:-15], linewidth = 2, color = 'C1')
 g2.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = 20)
 g2.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
 g2.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
