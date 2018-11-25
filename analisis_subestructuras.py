@@ -1,44 +1,13 @@
-#from mag import B, Bx, By, Bz, t_mag, shock_date
-#
-#from importlib import reload
-#import numpy as np
-#import matplolib.pyplot as plt
-#import os
-#
-#path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(shock_date)
-#if not os.path.exists(path_analisis):
-#    os.makedirs(path_analisis)
+from mag import B, Bx, By, Bz, t_mag, shock_date
 
-##%%
-#
-##me quedo con los datos en la orbita del shock
-#    
-#
-##estos valores los saco de 'caracteristicas_generales_shock_{}.txt'
-#Ti_orbit = 8.82096825600047     #*
-#Tf_orbit = 13.401525767999374   #*
-#
-##busco valor mas cercano porque ahora t_mag es de alta frec
-#i_orbit = (np.abs(t_mag - Ti_orbit)).argmin()
-#f_orbit = (np.abs(t_mag - Tf_orbit)).argmin()
-#
-#B = B[i_orbit:f_orbit]
-#Bx = Bx[i_orbit:f_orbit]
-#By = By[i_orbit:f_orbit]
-#Bz = Bz[i_orbit:f_orbit]
-#t_mag = t_mag[i_orbit:f_orbit]
-#
-#
-##importo Bu, Bd, sus modulos y desviaciones estandar
-#Bu = 
-#Bd = 
-#norm_Bu = 
-#norm_Bd = 
-#std_Bu = 
-#std_Bd = 
-#std_norm_Bu = 
-#std_norm_Bd = 
-#
+from importlib import reload
+import numpy as np
+import matplolib.pyplot as plt
+import os
+
+path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(shock_date)
+if not os.path.exists(path_analisis):
+    os.makedirs(path_analisis)
 
 
 #%%
