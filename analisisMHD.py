@@ -399,13 +399,13 @@ norm_V1 = np.empty_like(V1[:,0])
 for i in range(len(V1)):
     norm_V1[i] = np.linalg.norm([V1[i,0], V1[i,1], V1[i,2]])
 norm_Vu = np.mean(norm_V1)
-std_norm_Vu = st.stdev(norm_V1)
+#std_norm_Vu = st.stdev(norm_V1)
 
 norm_V2 = np.empty_like(V2[:,0])
 for i in range(len(V2)):
     norm_V2[i] = np.linalg.norm([V2[i,0], V2[i,1], V2[i,2]])
 norm_Vd = np.mean(norm_V2)
-std_norm_Vd = st.stdev(norm_V2)
+#std_norm_Vd = st.stdev(norm_V2)
 
 
 #normal del shock reescalando el fit macro del bowshock
@@ -1969,27 +1969,32 @@ np.savetxt(path_analisis+'parametros_shock_amano_{}'.format(shock_date), datos1,
 
 # caracteristicas generales del shock
 
-datos2 = np.zeros([5,4])
+datos2 = np.zeros([6,4])
+
+#tiempos en t_mag del inicio y fin de la orbita del shock
+datos2[0,0] = Tapo1
+datos2[0,1] = Tapo2
 
 #posisicon de la nave en el centro del shock
-datos2[0,0:3] = Rc
+datos2[1,0:3] = Rc
 
 #vel de la nave (xyz) y su norma
-datos2[1,0:3] = v_nave
-datos2[1,3] = norm_v_nave
+datos2[2,0:3] = v_nave
+datos2[2,3] = norm_v_nave
 
 #ancho temporal del shock
-datos2[2,0] = ancho_shock_temp
+datos2[3,0] = ancho_shock_temp
 
 #ancho espacial del shock y su modulo
-datos2[3,0:3] = ancho_shock
-datos2[3,3] = norm_ancho_shock
+datos2[4,0:3] = ancho_shock
+datos2[4,3] = norm_ancho_shock
 
 #ancho intervalos down/upstream
-datos2[4,0] = ancho_updown
+datos2[5,0] = ancho_updown
 
 np.savetxt(path_analisis+'caracteristicas_generales_shock_{}'.format(shock_date), datos2, delimiter = '\t',
-           header = '\n'.join(['{}'.format(shock_date),'(x,y,z) nave en el centro del shock [RM]',
+           header = '\n'.join(['{}'.format(shock_date), 't_mag inicio orbita y fin',
+                                                 '(x,y,z) nave en el centro del shock [RM]',
                                                  'vel nave (x,y,z) y su norma [km/s]',
                                                  'ancho temporal shock [s]',
                                                  'ancho espacial shock (x,y,z) y su norma [km]',
@@ -1998,51 +2003,68 @@ np.savetxt(path_analisis+'caracteristicas_generales_shock_{}'.format(shock_date)
 
 # coplanaridad para un sample
 
-datos3 = np.zeros([15,5])
+datos3 = np.zeros([19,5])
 
 #Bu y su devstd
 datos3[0,0:3] = Bu
 datos3[1,0:3] = std_Bu
+#modulo de Bu y su devstd
+datos3[2,0] = norm_Bu
+datos3[2,1] = std_norm_Bu
 #Bd y su desvstd
-datos3[2,0:3] = Bd
-datos3[3,0:3] = std_Bd
+datos3[3,0:3] = Bd
+datos3[4,0:3] = std_Bd
+#modulo de Bd y su devstd
+datos3[5,0] = norm_Bd
+datos3[5,1] = std_norm_Bd
 #Vu y su desvstd
-datos3[4,0:3] = Vu
-#datos3[5,:] = std_Vu
+datos3[6,0:3] = Vu
+#datos3[7,:] = std_Vu
+#modulo de Vu y su devstd
+datos3[8,0] = norm_Vu
+#datos3[8,1] = std_norm_Vu
 #Vd y su desvstd
-datos3[6,0:3] = Vd
-#datos3[7,:] = std_Vd
+datos3[9,0:3] = Vd
+#datos3[10,:] = std_Vd
+#modulo de Vd y su devstd
+datos3[11,0] = norm_Vd
+#datos3[11,1] = std_norm_Vd
+
 
 #normales nB, nBuV, nBdV, nBduV, nV
-datos3[8,0:3] = nB 
-datos3[9,0:3] = nBuV
-datos3[10,0:3] = nBdV
-datos3[11,0:3] = nBduV
-datos3[12,0:3] = nV
+datos3[12,0:3] = nB 
+datos3[13,0:3] = nBuV
+datos3[14,0:3] = nBdV
+datos3[15,0:3] = nBduV
+datos3[16,0:3] = nV
 
 #angulos entre normales y Bu
-datos3[13,0] = thetaB 
-datos3[13,1] = thetaBuV
-datos3[13,2] = thetaBdV
-datos3[13,3] = thetaBduV
-datos3[13,4] = thetaV
+datos3[17,0] = thetaB 
+datos3[17,1] = thetaBuV
+datos3[17,2] = thetaBdV
+datos3[17,3] = thetaBduV
+datos3[17,4] = thetaV
 
 #angulos entre normales y Rc
-datos3[14,0] = thetaB_Rc 
-datos3[14,1] = thetaBuV_Rc
-datos3[14,2] = thetaBdV_Rc
-datos3[14,3] = thetaBduV_Rc
-datos3[14,4] = thetaV_Rc
+datos3[18,0] = thetaB_Rc 
+datos3[18,1] = thetaBuV_Rc
+datos3[18,2] = thetaBdV_Rc
+datos3[18,3] = thetaBduV_Rc
+datos3[18,4] = thetaV_Rc
 
 np.savetxt(path_analisis+'complanaridad_1sample_shock_{}'.format(shock_date), datos3, delimiter = '\t',
            header = '\n'.join(['{}'.format(shock_date),'Bu [nT]',
                                                  'desvstd Bu [nT]',
+                                                 'modulo Bu y su desvstd',
                                                  'Bd [nT]',
                                                  'desvstd Bd [nT]',
+                                                 'modulo Bd y su desvstd',
                                                  'Vu [km/s]',
                                                  'desvstd Vu [km/s]',
+                                                 'modulo Vu y su desvstd',
                                                  'Vd [km/s]',
                                                  'desvstd Vd [km/s]',
+                                                 'modulo Vd y su desvstd',
                                                  'nB',
                                                  'nBuV',
                                                  'nBdV',
