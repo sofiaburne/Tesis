@@ -12,12 +12,6 @@ from sympy.solvers import solve
 from sympy import Symbol
 
 
-'''
-Carpeta para guardar archivos de resultados
-(puede que ya se haya creado al correr mag.py)
-ojo: para dia con mas de un shock hacer subcarpetas a mano
-'''
-
 path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(shock_date)
 if not os.path.exists(path_analisis):
     os.makedirs(path_analisis)

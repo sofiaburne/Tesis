@@ -1,9 +1,12 @@
-from mag import B, Bx, By, Bz, t_mag, shock_date
+from mag import shock_date
+from delimitacion_shock import B, Bx, By, Bz, t_mag, i_u, f_u, i_d, f_d, Bu, Bd, norm_Bu, norm_Bd, std_Bu, std_Bd, std_norm_Bu, std_norm_Bd
+
 
 from importlib import reload
 import numpy as np
 import matplolib.pyplot as plt
 import os
+
 
 path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(shock_date)
 if not os.path.exists(path_analisis):
