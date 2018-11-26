@@ -59,8 +59,8 @@ U_dn = np.dot(norm,U_d)
 U_ut = (U_u - U_un*norm)
 U_dt = (U_d - U_dn*norm)
 #B en T
-B_u = Bu*(1e-4)
-B_d = Bd*(1e-4)
+B_u = Bu*(1e-9)
+B_d = Bd*(1e-9)
 B_un = np.dot(norm,B_u)
 B_dn = np.dot(norm,B_d)
 B_ut = (B_u - B_un*norm)
@@ -85,12 +85,12 @@ Pd = densnum_d*kB*Td
 #numeros de Mach
 
 mu = np.pi*4e-7 #permeabilidad mag del vacio en Wb/Am=mT/A
-v_alfv = np.linalg.norm(B_u/np.sqrt(mu*rho_u)) # m/s
-v_cs = np.sqrt((Pu/rho_u)*5/3) # m/s
+v_alfv = (np.linalg.norm(B_u)/np.sqrt(mu*rho_u))*(1e-3) # km/s
+v_cs = (np.sqrt((Pu/rho_u)*5/3))*(1e-3) # km/s
 
-M_A = np.linalg.norm(U_u)/v_alfv
-M_cs = np.linalg.norm(U_u)/v_cs
-M_f = np.linalg.norm(U_u)/np.sqrt(v_alfv**2 + v_cs**2)
+M_A = np.linalg.norm(Vu)/v_alfv
+M_cs = np.linalg.norm(Vu)/v_cs
+M_f = np.linalg.norm(Vu)/np.sqrt(v_alfv**2 + v_cs**2)
 
 M_c = 2.7 #M_A critico para theta_Bun = 90, para angulos menores decrese
 
