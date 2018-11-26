@@ -4,7 +4,7 @@ from delimitacion_shock import B, Bx, By, Bz, t_mag, i_u, f_u, i_d, f_d, Bu, Bd,
 
 from importlib import reload
 import numpy as np
-import matplolib.pyplot as plt
+import matplotlib.pyplot as plt
 import os
 
 
@@ -36,18 +36,42 @@ def lim_int_ext(Bx, By, Bz, B, Bu, norm_Bu, std_Bu, std_norm_Bu, inicio, fin):
     return t_izq, t_der, index_izq, index_der
 
 #%%
+    
+#ploteo para ver limites a ojo
+
+plt.figure(0, tight_layout = True)
+plt.title('Delimitacion de subestructuras', fontsize = 20)
+
+plt.plot(t_mag, B, linewidth = 2)
+#regiones up/down
+plt.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+plt.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+#asintotas de Bu y Bd
+plt.axhline(y = norm_Bu, linewidth = 2, color = 'r')
+plt.axhline(y = norm_Bd, linewidth = 2, color = 'r')
+
+plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
+plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = 20)
+plt.xlim(9.5,10.5)
+plt.ylim(0,50)
+plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+plt.legend(loc = 0, fontsize = 15)
+
+
+#%%
 
 #FOOT
 
 #primero marco limites a ojo que delimiten donde buscar el foot
-Ti_foot_eye = 9.75 #*
-Tf_foot_eye = 9.8 #*
+Ti_foot_eye = 9.81375 #*
+Tf_foot_eye = 9.81939 #*
 i_foot_eye = (np.abs(t_mag - Ti_foot_eye)).argmin()
 f_foot_eye = (np.abs(t_mag - Tf_foot_eye)).argmin()
 
 
 #inicio foot, delimitacion mas fina
-ti_foot_izq, ti_foot_der, i_foot_izq, i_foot_der = lim_int_ext(Bx, By, Bz, B, Bu, norm_Bu, std_Bu, std_norm_Bu, i_foot_eye-100, i_foot_eye+100)
+ti_foot_izq, ti_foot_der, i_foot_izq, i_foot_der = lim_int_ext(Bx, By, Bz, B, Bu, norm_Bu, std_Bu, std_norm_Bu, i_foot_eye-70, i_foot_eye+70)
 
 
 #%%
@@ -55,15 +79,15 @@ ti_foot_izq, ti_foot_der, i_foot_izq, i_foot_der = lim_int_ext(Bx, By, Bz, B, Bu
 #RAMP
 
 #primero marco limites a ojo que delimiten donde buscar la ramp
-Ti_ramp_eye = 9.75 #*
-Tf_ramp_eye = 9.8 #*
+Ti_ramp_eye = 9.81947 #*
+Tf_ramp_eye = 9.8196 #*
 i_ramp_eye = (np.abs(t_mag - Ti_ramp_eye)).argmin() 
 f_ramp_eye = (np.abs(t_mag - Tf_ramp_eye)).argmin() 
 
 
 #fin de la rampa, delimitacion mas fina
 
-tf_ramp_izq, tf_ramp_der, f_ramp_izq, f_ramp_der = lim_int_ext(Bx, By, Bz, B, Bd, norm_Bd, std_Bd, std_norm_Bd, f_ramp_eye-100, f_ramp_eye+100)
+tf_ramp_izq, tf_ramp_der, f_ramp_izq, f_ramp_der = lim_int_ext(Bx, By, Bz, B, Bd, norm_Bd, std_Bd, std_norm_Bd, f_ramp_eye-5, f_ramp_eye+5)
 
 #fit lineal del intervalo tomando lim izq y der, me quedo con el que tiene menor cov
 #   !!!  no entiendo para que te sirve el fit si los limites igual van a ser los mismos
@@ -103,14 +127,14 @@ else:
 #OVERSHOOT
 
 #primero marco limites a ojo que delimiten donde buscar el overshoot
-Ti_over_eye = 9.75 #*
-Tf_over_eye = 9.8 #*
+Ti_over_eye = 9.8200 #*
+Tf_over_eye = 9.8525 #*
 i_over_eye = (np.abs(t_mag - Ti_over_eye)).argmin() 
 f_over_eye = (np.abs(t_mag - Tf_over_eye)).argmin() 
 
 
 #inicio del overshoot, delimitacion mas fina
-ti_over_izq, ti_over_der, i_over_izq, i_over_der = lim_int_ext(Bx, By, Bz, B, Bd, norm_Bd, std_Bd, std_norm_Bd, i_over_eye-100, i_over_eye+100)
+ti_over_izq, ti_over_der, i_over_izq, i_over_der = lim_int_ext(Bx, By, Bz, B, Bd, norm_Bd, std_Bd, std_norm_Bd, i_over_eye-30, i_over_eye+30)
 
 
 #fin del overshoot, delimitacion mas fina
@@ -119,7 +143,7 @@ tf_over_izq, tf_over_der, f_over_izq, f_over_der = lim_int_ext(Bx, By, Bz, B, Bd
 
 #%%
 
-plt.figure(0, tight_layout = True)
+plt.figure(1, tight_layout = True)
 plt.title('Delimitacion de subestructuras', fontsize = 20)
 
 plt.plot(t_mag, B, linewidth = 2)
@@ -130,23 +154,23 @@ plt.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15,
 plt.axhline(y = norm_Bu, linewidth = 2, color = 'r')
 plt.axhline(y = norm_Bd, linewidth = 2, color = 'r')
 #delimitacion foot
-plt.axvline(x = ti_foot_izq, linewidth = 1, linestyle = '--', color = 'g')
-plt.axvline(x = ti_foot_der, linewidth = 1, linestyle = '--', color = 'g')
-plt.axvline(x = Tf_foot_eye, linewidth = 1, linestyle = '--', color = 'g')
+plt.axvline(x = ti_foot_izq, linewidth = 2, linestyle = '-', color = 'g')
+plt.axvline(x = ti_foot_der, linewidth = 2, linestyle = '-', color = 'g')
+plt.axvline(x = Tf_foot_eye, linewidth = 2, linestyle = '-', color = 'g')
 #delimitacion ramp
-plt.axvline(x = Ti_ramp_eye, linewidth = 1, linestyle = '--', color = 'k')
-plt.axvline(x = tf_ramp_izq, linewidth = 1, linestyle = '--', color = 'k')
-plt.axvline(x = tf_ramp_der, linewidth = 1, linestyle = '--', color = 'k')
+plt.axvline(x = Ti_ramp_eye, linewidth = 2, linestyle = '-', color = 'k')
+plt.axvline(x = tf_ramp_izq, linewidth = 2, linestyle = '-', color = 'k')
+plt.axvline(x = tf_ramp_der, linewidth = 2, linestyle = '-', color = 'k')
 #delimitacion overshoot
-plt.axvline(x = ti_over_izq, linewidth = 1, linestyle = '--', color = 'm')
-plt.axvline(x = ti_over_der, linewidth = 1, linestyle = '--', color = 'm')
-plt.axvline(x = tf_over_izq, linewidth = 1, linestyle = '--', color = 'm')
-plt.axvline(x = tf_over_der, linewidth = 1, linestyle = '--', color = 'm')
+plt.axvline(x = ti_over_izq, linewidth = 2, linestyle = '-', color = 'm')
+plt.axvline(x = ti_over_der, linewidth = 2, linestyle = '-', color = 'm')
+plt.axvline(x = tf_over_izq, linewidth = 2, linestyle = '-', color = 'm')
+plt.axvline(x = tf_over_der, linewidth = 2, linestyle = '-', color = 'm')
 
 plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
 plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = 20)
-plt.xlim(8.5,14)
-plt.ylim(0,40)
+plt.xlim(9.5,10.5)
+plt.ylim(0,50)
 plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.legend(loc = 0, fontsize = 15)
