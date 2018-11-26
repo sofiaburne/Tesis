@@ -151,9 +151,9 @@ datos7[4,2] = dif_thetasBdV
 datos7[4,3] = dif_thetasBduV
 datos7[4,4] = dif_thetasV
 
-np.savetxt(path_analisis+'comparacion_fit_shock_{}'.format(shock_date), datos7, delimiter = '\t',
-           header = '\n'.join(['{}'.format(shock_date),'normal del fit',
-                                                 'angulo Bu y norm fit [grados]',
-                                                 'angulo Rc y norm fit [grados]',
-                                                 'angulo entre norm fit y nB, nBuV, nBdV, nBduV, nV [grados]',
-                                                 'diferencia entre angulo Bu y norm fit y Bu y nB, nBuV, nBdV, nBduV, nVd [grados]']))
+#np.savetxt(path_analisis+'comparacion_fit_shock_{}'.format(shock_date), datos7, delimiter = '\t',
+#           header = '\n'.join(['{}'.format(shock_date),'normal del fit',
+#                                                 'angulo Bu y norm fit [grados]',
+#                                                 'angulo Rc y norm fit [grados]',
+#                                                 'angulo entre norm fit y nB, nBuV, nBdV, nBduV, nV [grados]',
+#                                                 'diferencia entre angulo Bu y norm fit y Bu y nB, nBuV, nBdV, nBduV, nVd [grados]']))

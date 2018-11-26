@@ -23,7 +23,7 @@ if not os.path.exists(path_analisis):
 
 f2, plot1 = plt.subplots()
 
-gr1, = plot1.plot(t_mag, B, linewidth = 1, marker ='o', markersize = '2', color = 'C0', label = '$B$')
+gr1, = plot1.plot(t_mag, B, linewidth = 2, marker ='o', markersize = '4', color = 'C0', label = '$B$')
 plot1.set_xlabel('Tiempo\n[hora decimal]', fontsize = 30)
 plot1.set_ylabel('B\n[nT]', fontsize = 30)
 plt.xlim(t_mag[3020], t_mag[4244])
@@ -31,7 +31,7 @@ plot1.axes.tick_params(axis = 'both', which = 'both', length = 6, width = 3, lab
 plot1.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 
 plot2 = plt.twinx(plot1)
-gr2, = plot2.plot(t_swia_mom, densidad_swia, linewidth = 1, marker ='o', markersize = '2',  color = 'C2', label = '$n_p$')
+gr2, = plot2.plot(t_swia_mom, densidad_swia, linewidth = 2, marker ='o', markersize = '4',  color = 'C2', label = '$n_p$')
 plt.xlim(t_swia_mom[755], t_swia_mom[1060])
 plot2.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = 30)
 plot2.axes.tick_params(axis = 'y', which = 'both', length = 6, width = 3, labelsize = 30)
@@ -68,6 +68,7 @@ B_dt = (B_d - B_dn*norm)
 
 #densidad en kg/m^3
 mp = 1.67e-27 #masa del proton en kg
+#mp = 1.5e-10 #masa del proton en joules/c^2
 densnum_u = np.mean(densidad_swia[iu_v:fu_v])*(1e-6) #1/m^3
 densnum_d = np.mean(densidad_swia[id_v:fd_v])*(1e-6) #1/m^3
 rho_u = mp*densnum_u
@@ -76,8 +77,8 @@ rho_d = mp*densnum_d
 #presion suponiendo gas ideal (en Pa=J/m^3)
 kB = 1.38e-23 #cte de Boltzmann en J/K
 #por ahora supongo T = 2*Ti, tendria que ser T=Ti+Te
-Tu = 2*np.mean(temperatura_swia_norm[iu_v:fu_v])*(8.62e5) #en K
-Td = 2*np.mean(temperatura_swia_norm[id_v:fd_v])*(8.62e5) #en K
+Tu = 2*np.mean(temperatura_swia_norm[iu_v:fu_v])*(11604.5) #en K
+Td = 2*np.mean(temperatura_swia_norm[id_v:fd_v])*(11604.5) #en K
 Pu = densnum_u*kB*Tu
 Pd = densnum_d*kB*Td
 
@@ -86,7 +87,8 @@ Pd = densnum_d*kB*Td
 
 mu = np.pi*4e-7 #permeabilidad mag del vacio en Wb/Am=mT/A
 v_alfv = (np.linalg.norm(B_u)/np.sqrt(mu*rho_u))*(1e-3) # km/s
-v_cs = (np.sqrt((Pu/rho_u)*5/3))*(1e-3) # km/s
+v_cs = (np.sqrt((Pu/rho_u)*(5/3)))*(1e-3) # km/s
+#v_cs = ((5/3)*(kB*Tu)/mp)*(1e-3) #km/s
 
 M_A = np.linalg.norm(Vu)/v_alfv
 M_cs = np.linalg.norm(Vu)/v_cs
@@ -203,14 +205,14 @@ datos6[8,0:3] = cons_Et
 #hipotesis teo coplanaridad
 datos6[9,0] = hipt_copl_B
 
-np.savetxt(path_analisis+'hipotesis_MHD_shock_{}'.format(shock_date), datos6, delimiter = '\t',
-           header = '\n'.join(['{}'.format(shock_date),'normal de ref usada en calculos',
-                                                 'Tu Td [K] Pu Pd [Pa]',
-                                                 'M_Alfv M_sonico M_rapido M_critico',
-                                                 'conservacion masa',
-                                                 'conservacion impulso norm',
-                                                 'conservacion impulso tang',
-                                                 'conservacion energia',
-                                                 'conservacion Bn',
-                                                 'conservacion campo electrico tang',
-                                                 'hipotesis teo coplanaridad [nT]']))
+#np.savetxt(path_analisis+'hipotesis_MHD_shock_{}'.format(shock_date), datos6, delimiter = '\t',
+#           header = '\n'.join(['{}'.format(shock_date),'normal de ref usada en calculos',
+#                                                 'Tu Td [K] Pu Pd [Pa]',
+#                                                 'M_Alfv M_sonico M_rapido M_critico',
+#                                                 'conservacion masa',
+#                                                 'conservacion impulso norm',
+#                                                 'conservacion impulso tang',
+#                                                 'conservacion energia',
+#                                                 'conservacion Bn',
+#                                                 'conservacion campo electrico tang',
+#                                                 'hipotesis teo coplanaridad [nT]']))

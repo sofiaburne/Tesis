@@ -403,7 +403,7 @@ norm_Vd = np.mean(norm_V2)
 L = fbow.L_fit(Rc) #redefino L para que el fit contenga el centro de mi shock y calculo normal del fit
 N = fbow.norm_fit_MGS(Rc[0], Rc[1], Rc[2], L)
 #angulo entre campo upstream y normal del fit
-theta_N = alpha(Bu,N)
+theta_N = fcop.alpha(Bu,N)
 #angulo entre posicion de la nave en el centro del shock y normal del fit
 theta_NRc = fcop.alpha(Rc,N)
 
@@ -557,7 +557,7 @@ g6.set_xlabel('Tiempo\n[hora decimal]', fontsize = 20)
 g6.set_ylabel('Campo magnético\n[nT]', fontsize = 20)
 g6.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
 g6.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-g6.legend(loc = 0, fontsize = 15)
+g6.legend(loc = 2, fontsize = 15)
 
 #f1.savefig(path_analisis+'datos_MAVEN_sombreados_{}'.format(shock_date))
 
@@ -596,13 +596,13 @@ datos1[5,0] = t_id5
 datos1[5,1] = t_fd5
 datos1[5,2] = t_iu5
 
-np.savetxt(path_analisis+'parametros_shock_amano_{}'.format(shock_date), datos1, delimiter = '\t',
-           header = '\n'.join(['{}'.format(shock_date),'limites apoapsides',
-                                                 'limites regiones up/dowstream',
-                                                 'limites ancho temporal shock',
-                                                 'tiempo centro shock',
-                                                 'extremos regiones up/downstream',
-                                                 'limites regiones up/downstream de 5min para variar int']))
+#np.savetxt(path_analisis+'parametros_shock_amano_{}'.format(shock_date), datos1, delimiter = '\t',
+#header = '\n'.join(['{}'.format(shock_date),'limites apoapsides',
+#                    'limites regiones up/dowstream',
+#                    'limites ancho temporal shock',
+#                    'tiempo centro shock',
+#                    'extremos regiones up/downstream',
+#                    'limites regiones up/downstream de 5min para variar int']))
 
 
 # caracteristicas generales del shock
@@ -658,23 +658,23 @@ datos2[15,0:3] = Vd
 datos2[17,0] = norm_Vd
 #datos3[17,1] = std_norm_Vd
 
-np.savetxt(path_analisis+'caracteristicas_generales_shock_{}'.format(shock_date), datos2, delimiter = '\t',
-           header = '\n'.join(['{}'.format(shock_date), 't_mag inicio orbita y fin',
-                                                 '(x,y,z) nave en el centro del shock [RM]',
-                                                 'vel nave (x,y,z) y su norma [km/s]',
-                                                 'ancho temporal shock [s]',
-                                                 'ancho espacial shock (x,y,z) y su norma [km]',
-                                                 'ancho intervalo up/downstream [min]',
-                                                 'Bu [nT]',
-                                                 'desvstd Bu [nT]',
-                                                 'modulo Bu y su desvstd',
-                                                 'Bd [nT]',
-                                                 'desvstd Bd [nT]',
-                                                 'modulo Bd y su desvstd',
-                                                 'Vu [km/s]',
-                                                 'desvstd Vu [km/s]',
-                                                 'modulo Vu y su desvstd',
-                                                 'Vd [km/s]',
-                                                 'desvstd Vd [km/s]',
-                                                 'modulo Vd y su desvstd']))
+#np.savetxt(path_analisis+'caracteristicas_generales_shock_{}'.format(shock_date), datos2, delimiter = '\t',
+#           header = '\n'.join(['{}'.format(shock_date), 't_mag inicio orbita y fin',
+#                                                 '(x,y,z) nave en el centro del shock [RM]',
+#                                                 'vel nave (x,y,z) y su norma [km/s]',
+#                                                 'ancho temporal shock [s]',
+#                                                 'ancho espacial shock (x,y,z) y su norma [km]',
+#                                                 'ancho intervalo up/downstream [min]',
+#                                                 'Bu [nT]',
+#                                                 'desvstd Bu [nT]',
+#                                                 'modulo Bu y su desvstd',
+#                                                 'Bd [nT]',
+#                                                 'desvstd Bd [nT]',
+#                                                 'modulo Bd y su desvstd',
+#                                                 'Vu [km/s]',
+#                                                 'desvstd Vu [km/s]',
+#                                                 'modulo Vu y su desvstd',
+#                                                 'Vd [km/s]',
+#                                                 'desvstd Vd [km/s]',
+#                                                 'modulo Vd y su desvstd']))
 
