@@ -3,7 +3,7 @@ from mag import shock_date
 from delimitacion_shock import B, Bx, By, Bz, t_mag
 from delimitacion_shock import t_swea, flujosenergia_swea, nivelesenergia_swea
 from delimitacion_shock import t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
-from delimitacion_shock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, theta_N, Rc, lim_t1u, lim_t2u, lim_t1d, lim_t2d, i_u5, f_u5, i_d5, f_d5, iu_v5, fu_v5, id_v5, fd_v5, vel
+from delimitacion_shock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, N, theta_N, Rc, i_u, f_u, i_d, f_d, lim_t1u, lim_t2u, lim_t1d, lim_t2d, i_u5, f_u5, i_d5, f_d5, iu_v5, fu_v5, id_v5, fd_v5, vel
 from testeo_hipotesisMHD import M_A, M_c
 import funciones_coplanaridad as fcop
 
@@ -54,6 +54,80 @@ thetaBuV_Rc = fcop.alpha(nBuV,Rc)
 thetaBdV_Rc = fcop.alpha(nBdV,Rc)
 thetaBduV_Rc = fcop.alpha(nBduV,Rc)
 thetaV_Rc = fcop.alpha(nV,Rc)
+
+#%%
+
+#analizo que tan estables son las normales repitiendo los calculos con una y otra mitad de los intervalos
+
+half_u = int(np.abs(f_u - i_u)/2) + i_u
+half_d = int(np.abs(f_d - i_d)/2) + i_d
+
+half1_Bu = np.mean(B1[i_u:half_u,:], axis = 0)
+half1_Bd = np.mean(B2[i_d:half_d,:], axis = 0)
+std_half1_Bu = np.array([st.stdev(B1[i_u:half_u,0]), st.stdev(B1[i_u:half_u,1]), st.stdev(B1[i_u:half_u,2])])
+std_half1_Bd = np.array([st.stdev(B2[i_d:half_d,0]), st.stdev(B2[i_d:half_d,1]), st.stdev(B2[i_d:half_d,2])])
+
+half1_Vu = np.mean(V1[i_u:half_u,:], axis = 0)
+half1_Vd = np.mean(V2[i_d:half_d,:], axis = 0)
+std_half1_Vu = np.array([st.stdev(V1[i_u:half_u,0]), st.stdev(V1[i_u:half_u,1]), st.stdev(V1[i_u:half_u,2])])
+std_half1_Vd = np.array([st.stdev(V2[i_d:half_d,0]), st.stdev(V2[i_d:half_d,1]), st.stdev(V2[i_d:half_d,2])])
+
+half2_Bu = np.mean(B1[half_u:f_u,:], axis = 0)
+half2_Bd = np.mean(B2[half_d:f_d,:], axis = 0)
+std_half2_Bu = np.array([st.stdev(B1[half_u:f_u,0]), st.stdev(B1[half_u:f_u,1]), st.stdev(B1[half_u:f_u,2])])
+std_half2_Bd = np.array([st.stdev(B2[half_d:f_d,0]), st.stdev(B2[half_d:f_d,1]), st.stdev(B2[half_d:f_d,2])])
+
+half2_Vu = np.mean(V1[half_u:f_u,:], axis = 0)
+half2_Vd = np.mean(V2[half_d:f_d,:], axis = 0)
+std_half2_Vu = np.array([st.stdev(V1[half_u:f_u,0]), st.stdev(V1[half_u:f_u,1]), st.stdev(V1[half_u:f_u,2])])
+std_half2_Vd = np.array([st.stdev(V2[half_d:f_d,0]), st.stdev(V2[half_d:f_d,1]), st.stdev(V2[half_d:f_d,2])])
+
+
+half1_nB, half1_nBuV, half1_nBdV, half1_nBduV, half1_nV = fcop.norm_coplanar(half1_Bd,half1_Bu,half1_Vd,half1_Vu)
+half2_nB, half2_nBuV, half2_nBdV, half2_nBduV, half2_nV = fcop.norm_coplanar(half2_Bd,half2_Bu,half2_Vd,half2_Vu)
+
+
+#compara las normales de cada mitad con la del fit
+
+ang_N_half1_nB = fcop.alpha(half1_nB,N)
+ang_N_half1_nBuV = fcop.alpha(half1_nBuV,N)
+ang_N_half1_nBdV = fcop.alpha(half1_nBdV,N)
+ang_N_half1_nBduV = fcop.alpha(half1_nBduV,N)
+ang_N_half1_nV = fcop.alpha(half1_nV,N)
+
+ang_N_half2_nB = fcop.alpha(half2_nB,N)
+ang_N_half2_nBuV = fcop.alpha(half2_nBuV,N)
+ang_N_half2_nBdV = fcop.alpha(half2_nBdV,N)
+ang_N_half2_nBduV = fcop.alpha(half2_nBduV,N)
+ang_N_half2_nV = fcop.alpha(half2_nV,N)
+
+
+if ang_N_half1_nB > 2*ang_N_half2_nB:
+    print('mejor nB en segunda mitad')
+elif ang_N_half2_nB > 2*ang_N_half1_nB:
+    print('mejor nB en primera mitad')
+
+if ang_N_half1_nBuV > 2*ang_N_half2_nBuV:
+    print('mejor nBuV en segunda mitad')
+elif ang_N_half2_nBuV > 2*ang_N_half1_nBuV:
+    print('mejor nBuV en primera mitad')
+
+if ang_N_half1_nBdV > 2*ang_N_half2_nBdV:
+    print('mejor nBdV en segunda mitad')
+elif ang_N_half2_nBdV > 2*ang_N_half1_nBdV:
+    print('mejor nBdV en primera mitad')
+
+if ang_N_half1_nBduV > 2*ang_N_half2_nBduV:
+    print('mejor nBduV en segunda mitad')
+elif ang_N_half2_nBduV > 2*ang_N_half1_nBduV:
+    print('mejor nBduV en primera mitad')
+
+if ang_N_half1_nV > 2*ang_N_half2_nV:
+    print('mejor nV en segunda mitad')
+elif ang_N_half2_nV > 2*ang_N_half1_nV:
+    print('mejor nV en primera mitad')
+
+
 
 #%%#####################################################################################################
 ########################################################################################################

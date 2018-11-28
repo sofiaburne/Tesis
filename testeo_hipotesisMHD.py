@@ -85,7 +85,7 @@ Pd = densnum_d*kB*Td
 
 #numeros de Mach
 
-mu = np.pi*4e-7 #permeabilidad mag del vacio en Wb/Am=mT/A
+mu = (np.pi*4)*(1e-7) #permeabilidad mag del vacio en Wb/Am=mT/A
 v_alfv = (np.linalg.norm(B_u)/np.sqrt(mu*rho_u))*(1e-3) # km/s
 v_cs = (np.sqrt((Pu/rho_u)*(5/3)))*(1e-3) # km/s
 #v_cs = ((5/3)*(kB*Tu)/mp)*(1e-3) #km/s
