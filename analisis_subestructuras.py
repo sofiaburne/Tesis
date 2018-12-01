@@ -181,13 +181,45 @@ def fit_ramp(t_mag, B, i1_ramp_eye, i2_ramp_eye, i1_over_eye, i2_over_eye):
 
 
 
+def filter_data(data, fs_new = 8, fs_data = 32):
+    
+    '''
+    Toma data y promedia cada j_av puntos tal que se pasa de tener
+    una frecuencia de muestreo de fs_data mediciones por seg a fs_new
+    mediciones por seg. Si el tamaño de data no es divisible en j_av
+    puntos, entonces elimino los primeros m puntos necesarios para que
+    lo sea.
+    '''
+  
+    j_av = int(fs_data/fs_new)  #para tener frec de sampleo: fs_new Hz, tengo que promediar mis datos cada j_av puntos 
+    
+    if len(data)%j_av == 0:
+        data_new = np.mean(data.reshape(-1, j_av), axis=1)
+    
+    else:
+        m = len(data) - j_av*int(len(data)/j_av)
+        data_new_ = data[m:]
+        data_new = np.mean(data_new_.reshape(-1, j_av), axis=1)
+    
+    return data_new
+
+
 #%% ploteo para elegir limites a ojo
+
+
+# me genero un set de datos de 8 mediciones/s (una frec intermedia entre 32 y 1)
+B_mid = filter_data(B)
+t_mag_mid = filter_data(t_mag)
+
+
+
+
 
 
 plt.figure(0, tight_layout = True)
 plt.suptitle('Delimitacion de subestructuras', fontsize = 20)
 
-plt.subplot(211)
+plot1 = plt.subplot(311)
 plt.plot(t_mag, B, linewidth = 2, marker = 'o', markersize = 5)
 #regiones up/down
 plt.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
@@ -198,7 +230,7 @@ plt.axhline(y = norm_Bd, linewidth = 2, color = 'r')
 plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.1)
 plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.1)
 
-plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = 20)
+plt.ylabel(r'$|\vec{B}|$ [nT]\n32 Hz', fontsize = 20)
 plt.xlim(9.5,10.5)
 plt.ylim(0,50)
 plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
@@ -206,14 +238,33 @@ plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = 
 plt.legend(loc = 0, fontsize = 15)
 
 
-plt.subplot(212)
+plt.subplot(312, sharex = plot1)
+plt.plot(t_mag_mid, B_mid, linewidth = 2, marker = 'o', markersize = 5)
+#regiones up/down
+plt.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+plt.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+#asintotas de Bu y Bd
+plt.axhline(y = norm_Bu, linewidth = 2, color = 'r')
+plt.axhline(y = norm_Bd, linewidth = 2, color = 'r')
+plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.1)
+plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.1)
+
+plt.ylabel(r'$|\vec{B}|$ [nT]\n8 Hz', fontsize = 20)
+plt.xlim(9.5,10.5)
+plt.ylim(0,50)
+plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+plt.legend(loc = 0, fontsize = 15)
+
+
+plt.subplot(313, sharex = plot1)
 plt.plot(t_mag_low, B_low, linewidth = 2, marker = 'o', markersize = 5)
 #regiones up/down
 plt.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
 plt.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
 
 plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
-plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = 20)
+plt.ylabel(r'$|\vec{B}|$ [nT]\n1 Hz', fontsize = 20)
 plt.xlim(9.5,10.5)
 plt.ylim(0,50)
 plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
