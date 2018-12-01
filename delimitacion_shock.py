@@ -301,17 +301,21 @@ los determino mirando el perfil de densidad, B y vel.
 '''
 
 #indices regiones up/dowstream para t_mag
-t_id = 9.957 #*
-t_fd = 10.1868 #*
-t_iu = 9.514 #*
+t_id = 9.89378 #*
+t_fd = 9.99986 #*
+t_iu = 9.7333 #*
+t_fu = 9.8116 #*
+
 i_d = (np.abs(t_mag-t_id)).argmin()
 f_d = (np.abs(t_mag-t_fd)).argmin()
 i_u = (np.abs(t_mag-t_iu)).argmin()
-f_u = i_u + np.abs(i_d-f_d)
+f_u = (np.abs(t_mag-t_fu)).argmin()
+#f_u = i_u + np.abs(i_d-f_d) #esto es si quiero que tengan en el mismo ancho up y down
 
 #ancho en minutos de los intervalos up/downstream
-ancho_updown = (t_mag[f_u]-t_mag[i_u])*60
-print(ancho_updown)
+ancho_up = (t_mag[f_u]-t_mag[i_u])*60
+ancho_down = (t_mag[f_d]-t_mag[i_d])*60
+print(ancho_up, ancho_down)
 
 #busco los indices correspondientes para el campo de vel
 iu_v = (np.abs(t_mag[i_u]-t_swia_mom)).argmin()
@@ -542,7 +546,7 @@ g5.axes.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0
 g5.set_ylabel('Velocidad MSO\nen referencial shock\n[km/s]', fontsize = 20)
 g5.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
 g5.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-g5.legend(loc = 0, fontsize = 15)
+g5.legend(loc = 4, fontsize = 15)
 
 
 #plots de modulo de B y de sus componentes
@@ -557,106 +561,106 @@ g6.set_xlabel('Tiempo\n[hora decimal]', fontsize = 20)
 g6.set_ylabel('Campo magnético\n[nT]', fontsize = 20)
 g6.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
 g6.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-g6.legend(loc = 2, fontsize = 15)
+g6.legend(loc = 4, fontsize = 15)
 
 #f1.savefig(path_analisis+'datos_MAVEN_sombreados_{}'.format(shock_date))
 
 
 #%%------------------------------- GUARDO RESULTADOS ------------------------------
 
-
-# parametros que cambio a mano para la delimitacion del shock
-
-datos1 = np.zeros([6,4])
-
-#limites t_mag apoapsides
-datos1[0,0] = t_apo11
-datos1[0,1] = t_apo12
-datos1[0,2] = t_apo21
-datos1[0,3] = t_apo22
-
-#limites t_mag regiones up/downstream
-datos1[1,0] = t_id
-datos1[1,1] = t_fd
-datos1[1,2] = t_iu
-
-#limites t_mag ancho temporal del shock
-datos1[2,0] = t_ancho_temp1
-datos1[2,1] = t_ancho_temp2
-#t_mag centro del shock
-datos1[3,0] = tc
-
-#limites t_mag extremos para encontrar regiones up/downstream
-datos1[4,0] = lim_t1u
-datos1[4,1] = lim_t2u
-datos1[4,2] = lim_t1d
-datos1[4,3] = lim_t2d
-#limites t_mag regiones up/down de 5min para variar intervalos
-datos1[5,0] = t_id5
-datos1[5,1] = t_fd5
-datos1[5,2] = t_iu5
-
-#np.savetxt(path_analisis+'parametros_shock_amano_{}'.format(shock_date), datos1, delimiter = '\t',
-#header = '\n'.join(['{}'.format(shock_date),'limites apoapsides',
-#                    'limites regiones up/dowstream',
-#                    'limites ancho temporal shock',
-#                    'tiempo centro shock',
-#                    'extremos regiones up/downstream',
-#                    'limites regiones up/downstream de 5min para variar int']))
-
-
-# caracteristicas generales del shock
-
-datos2 = np.zeros([18,4])
-
-#tiempos en t_mag del inicio y fin de la orbita del shock
-datos2[0,0] = Tapo1
-datos2[0,1] = Tapo2
-
-#posisicon de la nave en el centro del shock
-datos2[1,0:3] = Rc
-
-#vel de la nave (xyz) y su norma
-datos2[2,0:3] = v_nave
-datos2[2,3] = norm_v_nave
-
-#ancho temporal del shock
-datos2[3,0] = ancho_shock_temp
-
-#ancho espacial del shock y su modulo
-datos2[4,0:3] = ancho_shock
-datos2[4,3] = norm_ancho_shock
-
-#ancho intervalos down/upstream
-datos2[5,0] = ancho_updown
-
-#Bu y su devstd
-datos2[6,0:3] = Bu
-datos2[7,0:3] = std_Bu
-#modulo de Bu y su devstd
-datos2[8,0] = norm_Bu
-datos2[8,1] = std_norm_Bu
-
-#Bd y su desvstd
-datos2[9,0:3] = Bd
-datos2[10,0:3] = std_Bd
-#modulo de Bd y su devstd
-datos2[11,0] = norm_Bd
-datos2[11,1] = std_norm_Bd
-
-#Vu y su desvstd
-datos2[12,0:3] = Vu
-#datos3[13,:] = std_Vu
-#modulo de Vu y su devstd
-datos2[14,0] = norm_Vu
-#datos3[14,1] = std_norm_Vu
-
-#Vd y su desvstd
-datos2[15,0:3] = Vd
-#datos3[16,:] = std_Vd
-#modulo de Vd y su devstd
-datos2[17,0] = norm_Vd
-#datos3[17,1] = std_norm_Vd
+#
+## parametros que cambio a mano para la delimitacion del shock
+#
+#datos1 = np.zeros([6,4])
+#
+##limites t_mag apoapsides
+#datos1[0,0] = t_apo11
+#datos1[0,1] = t_apo12
+#datos1[0,2] = t_apo21
+#datos1[0,3] = t_apo22
+#
+##limites t_mag regiones up/downstream
+#datos1[1,0] = t_id
+#datos1[1,1] = t_fd
+#datos1[1,2] = t_iu
+#
+##limites t_mag ancho temporal del shock
+#datos1[2,0] = t_ancho_temp1
+#datos1[2,1] = t_ancho_temp2
+##t_mag centro del shock
+#datos1[3,0] = tc
+#
+##limites t_mag extremos para encontrar regiones up/downstream
+#datos1[4,0] = lim_t1u
+#datos1[4,1] = lim_t2u
+#datos1[4,2] = lim_t1d
+#datos1[4,3] = lim_t2d
+##limites t_mag regiones up/down de 5min para variar intervalos
+#datos1[5,0] = t_id5
+#datos1[5,1] = t_fd5
+#datos1[5,2] = t_iu5
+#
+##np.savetxt(path_analisis+'parametros_shock_amano_{}'.format(shock_date), datos1, delimiter = '\t',
+##header = '\n'.join(['{}'.format(shock_date),'limites apoapsides',
+##                    'limites regiones up/dowstream',
+##                    'limites ancho temporal shock',
+##                    'tiempo centro shock',
+##                    'extremos regiones up/downstream',
+##                    'limites regiones up/downstream de 5min para variar int']))
+#
+#
+## caracteristicas generales del shock
+#
+#datos2 = np.zeros([18,4])
+#
+##tiempos en t_mag del inicio y fin de la orbita del shock
+#datos2[0,0] = Tapo1
+#datos2[0,1] = Tapo2
+#
+##posisicon de la nave en el centro del shock
+#datos2[1,0:3] = Rc
+#
+##vel de la nave (xyz) y su norma
+#datos2[2,0:3] = v_nave
+#datos2[2,3] = norm_v_nave
+#
+##ancho temporal del shock
+#datos2[3,0] = ancho_shock_temp
+#
+##ancho espacial del shock y su modulo
+#datos2[4,0:3] = ancho_shock
+#datos2[4,3] = norm_ancho_shock
+#
+##ancho intervalos down/upstream
+#datos2[5,0] = ancho_updown
+#
+##Bu y su devstd
+#datos2[6,0:3] = Bu
+#datos2[7,0:3] = std_Bu
+##modulo de Bu y su devstd
+#datos2[8,0] = norm_Bu
+#datos2[8,1] = std_norm_Bu
+#
+##Bd y su desvstd
+#datos2[9,0:3] = Bd
+#datos2[10,0:3] = std_Bd
+##modulo de Bd y su devstd
+#datos2[11,0] = norm_Bd
+#datos2[11,1] = std_norm_Bd
+#
+##Vu y su desvstd
+#datos2[12,0:3] = Vu
+##datos3[13,:] = std_Vu
+##modulo de Vu y su devstd
+#datos2[14,0] = norm_Vu
+##datos3[14,1] = std_norm_Vu
+#
+##Vd y su desvstd
+#datos2[15,0:3] = Vd
+##datos3[16,:] = std_Vd
+##modulo de Vd y su devstd
+#datos2[17,0] = norm_Vd
+##datos3[17,1] = std_norm_Vd
 
 #np.savetxt(path_analisis+'caracteristicas_generales_shock_{}'.format(shock_date), datos2, delimiter = '\t',
 #           header = '\n'.join(['{}'.format(shock_date), 't_mag inicio orbita y fin',
