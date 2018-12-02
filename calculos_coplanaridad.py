@@ -70,6 +70,54 @@ thetaBdV_vnave = fcop.alpha(v_nave,nBdV)
 thetaBduV_vnave = fcop.alpha(v_nave,nBduV)
 thetaV_vnave = fcop.alpha(v_nave,nV)
 
+#%% analisis de Bn
+
+Bn_B = np.dot(np.array([Bx,By,Bz]), nB)
+Bn_BuV = np.dot(np.array([Bx,By,Bz]), nBuV)
+Bn_BdV = np.dot(np.array([Bx,By,Bz]), nBdV)
+Bn_BduV = np.dot(np.array([Bx,By,Bz]), nBduV)
+Bn_V = np.dot(np.array([Bx,By,Bz]), nV)
+
+
+plt.figure(100, figsize = (30,20))
+plt.suptitle(r'Componente normal del campo magnético', fontsize = 30)
+
+plot0 = plt.subplot(511)
+plt.title('n1', fontsize = 20)
+plt.plot(t_mag, Bn_B, linewidth = 3, color = 'C0')
+plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
+plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+
+plt.subplot(512, sharex = plot0)
+plt.title('n2', fontsize = 20)
+plt.plot(t_mag, Bn_BuV, linewidth = 3, color = 'C1')
+plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
+plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+
+plt.subplot(513, sharex = plot0)
+plt.title('n3', fontsize = 20)
+plt.plot(t_mag, Bn_BdV, linewidth = 3, color = 'C1')
+plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
+plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+
+plt.subplot(514, sharex = plot0)
+plt.title('n4', fontsize = 20)
+plt.plot(t_mag, Bn_BduV, linewidth = 3, color = 'C1')
+plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
+plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+
+plt.subplot(515, sharex = plot0)
+plt.title('n5', fontsize = 20)
+plt.plot(t_mag, Bn_V, linewidth = 3, color = 'C1')
+plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
+plt.xlabel(r'Tiempo [hora decimal]', fontsize = 20)
+plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+
 
 #%%
 
