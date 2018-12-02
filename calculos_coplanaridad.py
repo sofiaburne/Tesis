@@ -3,7 +3,7 @@ from mag import shock_date
 from delimitacion_shock import B, Bx, By, Bz, t_mag
 from delimitacion_shock import t_swea, flujosenergia_swea, nivelesenergia_swea
 from delimitacion_shock import t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
-from delimitacion_shock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, i_u, f_u, i_d, f_d, lim_t1u, lim_t2u, lim_t1d, lim_t2d, i_u5, f_u5, i_d5, f_d5, iu_v5, fu_v5, id_v5, fd_v5, vel
+from delimitacion_shock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, i_u, f_u, i_d, f_d, lim_t1u, lim_t2u, lim_t1d, lim_t2d, i_u5, f_u5, i_d5, f_d5, iu_v5, fu_v5, id_v5, fd_v5, vel, v_nave
 from analisis_subestructuras import N, theta_N, Rc
 from testeo_hipotesisMHD import M_A, M_c
 import funciones_coplanaridad as fcop
@@ -55,6 +55,21 @@ thetaBuV_Rc = fcop.alpha(nBuV,Rc)
 thetaBdV_Rc = fcop.alpha(nBdV,Rc)
 thetaBduV_Rc = fcop.alpha(nBduV,Rc)
 thetaV_Rc = fcop.alpha(nV,Rc)
+
+#angulos entre Vu y normales
+thetaB_Vu = fcop.alpha(Vu,nB)
+thetaBuV_Vu = fcop.alpha(Vu,nBuV)
+thetaBdV_Vu = fcop.alpha(Vu,nBdV)
+thetaBduV_Vu = fcop.alpha(Vu,nBduV)
+thetaV_Vu = fcop.alpha(Vu,nV)
+
+#angulos entre vel nave y normales
+thetaB_vnave = fcop.alpha(v_nave,nB)
+thetaBuV_vnave = fcop.alpha(v_nave,nBuV)
+thetaBdV_vnave = fcop.alpha(v_nave,nBdV)
+thetaBduV_vnave = fcop.alpha(v_nave,nBduV)
+thetaV_vnave = fcop.alpha(v_nave,nV)
+
 
 #%%
 
