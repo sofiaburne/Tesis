@@ -1,7 +1,10 @@
 
 from mag import shock_date
 import delimitacion_shock as ds
-from delimitacion_shock import t_apo11, t_apo12, t_apo21, t_apo22, B, Bx, By, Bz, t_mag, t_swia_mom, densidad_swia, t_swea, nivelesenergia_swea, flujosenergia_swea, t_swia_spec, nivelesenergia_swia, flujosenergia_swia, i_u, f_u, i_d, f_d, Bu, Bd, norm_Bu, norm_Bd, std_Bu, std_Bd, std_norm_Bu, std_norm_Bd
+from delimitacion_shock import v_nave, t_apo11, t_apo12, t_apo21, t_apo22, x, y, z, B, Bx, By, Bz, t_mag, t_swia_mom, densidad_swia, t_swea, nivelesenergia_swea, flujosenergia_swea, t_swia_spec, nivelesenergia_swia, flujosenergia_swia, i_u, f_u, i_d, f_d, Bu, Bd, norm_Bu, norm_Bd, std_Bu, std_Bd, std_norm_Bu, std_norm_Bd
+import funciones_fit_bowshock as fbow
+import funciones_coplanaridad as fcop
+
 
 from importlib import reload
 import numpy as np
@@ -611,4 +614,44 @@ plt.ylim(0,50)
 plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
 plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 plt.legend(loc = 0, fontsize = 15)
+
+
+#%%
+
+#centro del shock (centro de la rampa)
+tc = abs(ti_over - ti_ramp)/2 + np.min(ti_ramp,ti_over)
+C = (np.abs(t_mag-tc)).argmin()
+#posicion de la nave en el centro del shock
+Rc = np.array([x[C], y[C], z[C]])
+
+
+#ancho temporal del shock en seg (inicio foot : final ramp)
+ancho_shock_temp = 3600*abs(ti_foot - ti_over)
+#ancho espacial del shock en km
+ancho_shock = ancho_shock_temp*np.array([abs(v_nave[0]), abs(v_nave[1]), abs(v_nave[2])])
+norm_ancho_shock = np.linalg.norm(ancho_shock)
+
+
+#normal del shock reescalando el fit macro del bowshock
+L = fbow.L_fit(Rc) #redefino L para que el fit contenga el centro de mi shock y calculo normal del fit
+N = fbow.norm_fit_MGS(Rc[0], Rc[1], Rc[2], L)
+#angulo entre campo upstream y normal del fit
+theta_N = fcop.alpha(Bu,N)
+#angulo entre posicion de la nave en el centro del shock y normal del fit
+theta_NRc = fcop.alpha(Rc,N)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

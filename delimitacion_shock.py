@@ -323,25 +323,40 @@ fu_v = (np.abs(t_mag[f_u]-t_swia_mom)).argmin()
 id_v = (np.abs(t_mag[i_d]-t_swia_mom)).argmin()
 fd_v = (np.abs(t_mag[f_d]-t_swia_mom)).argmin()
 
+
+
+#para variar intervalos up/down
+
+#limites extremos donde encontrar posibles regiones up/down
+lim_t1u = 9 #*
+lim_t2u = 9.7799 #*
+lim_t1d = 9.96 #*
+lim_t2d = 10.3699 #*
+
+#indices regiones up/dowstream para t_mag para intervalos de 5min
+t_id5 = 10.065 #*
+t_fd5 = 10.1484 #*
+t_iu5 = 9.5 #*
+i_d5 = (np.abs(t_mag-t_id5)).argmin()
+f_d5 = (np.abs(t_mag-t_fd5)).argmin()
+i_u5 = (np.abs(t_mag-t_iu5)).argmin()
+f_u5 = i_u5 + np.abs(i_d5-f_d5)
+
+#ancho en minutos de los intervalos up/downstream
+ancho_updown5 = (t_mag[f_u5]-t_mag[i_u5])*60
+print(ancho_updown5)
+
+#busco los indices correspondientes para el campo de vel
+iu_v5 = (np.abs(t_mag[i_u5]-t_swia_mom)).argmin()
+fu_v5 = (np.abs(t_mag[f_u5]-t_swia_mom)).argmin()
+id_v5 = (np.abs(t_mag[i_d5]-t_swia_mom)).argmin()
+fd_v5 = (np.abs(t_mag[f_d5]-t_swia_mom)).argmin()
+
+#%%
+
 #velocidad de la nave en km/s
 v_nave =  vel_nave(x,y,z,t_mag,i_u,f_d)
 norm_v_nave = np.linalg.norm(v_nave) #tiene que ser menor a 6 km/s (vel escape de Marte)
-
-#ancho temporal del shock en s
-t_ancho_temp1 =  9.8127 #*
-t_ancho_temp2 =  9.8220 #*
-ancho_shock_temp = 3600*abs(t_ancho_temp1 - t_ancho_temp2)
-#ancho espacial del shock en km
-ancho_shock = ancho_shock_temp*np.array([abs(v_nave[0]), abs(v_nave[1]), abs(v_nave[2])])
-norm_ancho_shock = np.linalg.norm(ancho_shock)
-
-#indice centro del shock
-tc = 9.8199 #*
-C = (np.abs(t_mag-tc)).argmin()
-#C = i_u + int((f_d-i_u)/2) #mala forma de determinar el centro
-#posicion de la nave en el centro del shock
-Rc = np.array([x[C], y[C], z[C]])
-
 
 #paso a medir velocidades en SR shock
 vel = np.empty_like(velocidad_swia)
@@ -350,6 +365,7 @@ for i in range(3):
 
 norm_vel = np.sqrt(vel[:,0]**2 + vel[:,1]**2 + vel[:,2]**2)
 
+#%%
 
 #campos en regiones upstream y downstream
 
@@ -403,41 +419,8 @@ norm_Vd = np.mean(norm_V2)
 #std_norm_Vd = st.stdev(norm_V2)
 
 
-#normal del shock reescalando el fit macro del bowshock
-L = fbow.L_fit(Rc) #redefino L para que el fit contenga el centro de mi shock y calculo normal del fit
-N = fbow.norm_fit_MGS(Rc[0], Rc[1], Rc[2], L)
-#angulo entre campo upstream y normal del fit
-theta_N = fcop.alpha(Bu,N)
-#angulo entre posicion de la nave en el centro del shock y normal del fit
-theta_NRc = fcop.alpha(Rc,N)
-
-
-#para variar intervalos up/down
-
-#limites extremos donde encontrar posibles regiones up/down
-lim_t1u = 9 #*
-lim_t2u = 9.7799 #*
-lim_t1d = 9.96 #*
-lim_t2d = 10.3699 #*
-
-#indices regiones up/dowstream para t_mag para intervalos de 5min
-t_id5 = 10.065 #*
-t_fd5 = 10.1484 #*
-t_iu5 = 9.5 #*
-i_d5 = (np.abs(t_mag-t_id5)).argmin()
-f_d5 = (np.abs(t_mag-t_fd5)).argmin()
-i_u5 = (np.abs(t_mag-t_iu5)).argmin()
-f_u5 = i_u5 + np.abs(i_d5-f_d5)
-
-#ancho en minutos de los intervalos up/downstream
-ancho_updown5 = (t_mag[f_u5]-t_mag[i_u5])*60
-print(ancho_updown5)
-
-#busco los indices correspondientes para el campo de vel
-iu_v5 = (np.abs(t_mag[i_u5]-t_swia_mom)).argmin()
-fu_v5 = (np.abs(t_mag[f_u5]-t_swia_mom)).argmin()
-id_v5 = (np.abs(t_mag[i_d5]-t_swia_mom)).argmin()
-fd_v5 = (np.abs(t_mag[f_d5]-t_swia_mom)).argmin()
+#pitch angle
+pitch = fcop.alpha(Vu,Bu)
 
 #%%
 
@@ -571,7 +554,7 @@ g6.legend(loc = 4, fontsize = 15)
 #
 ## parametros que cambio a mano para la delimitacion del shock
 #
-#datos1 = np.zeros([6,4])
+#datos1 = np.zeros([4,4])
 #
 ##limites t_mag apoapsides
 #datos1[0,0] = t_apo11
@@ -584,90 +567,69 @@ g6.legend(loc = 4, fontsize = 15)
 #datos1[1,1] = t_fd
 #datos1[1,2] = t_iu
 #
-##limites t_mag ancho temporal del shock
-#datos1[2,0] = t_ancho_temp1
-#datos1[2,1] = t_ancho_temp2
-##t_mag centro del shock
-#datos1[3,0] = tc
-#
 ##limites t_mag extremos para encontrar regiones up/downstream
-#datos1[4,0] = lim_t1u
-#datos1[4,1] = lim_t2u
-#datos1[4,2] = lim_t1d
-#datos1[4,3] = lim_t2d
+#datos1[2,0] = lim_t1u
+#datos1[2,1] = lim_t2u
+#datos1[2,2] = lim_t1d
+#datos1[2,3] = lim_t2d
 ##limites t_mag regiones up/down de 5min para variar intervalos
-#datos1[5,0] = t_id5
-#datos1[5,1] = t_fd5
-#datos1[5,2] = t_iu5
+#datos1[3,0] = t_id5
+#datos1[3,1] = t_fd5
+#datos1[3,2] = t_iu5
 #
 ##np.savetxt(path_analisis+'parametros_shock_amano_{}'.format(shock_date), datos1, delimiter = '\t',
 ##header = '\n'.join(['{}'.format(shock_date),'limites apoapsides',
 ##                    'limites regiones up/dowstream',
-##                    'limites ancho temporal shock',
-##                    'tiempo centro shock',
 ##                    'extremos regiones up/downstream',
 ##                    'limites regiones up/downstream de 5min para variar int']))
 #
 #
 ## caracteristicas generales del shock
 #
-#datos2 = np.zeros([18,4])
+#datos2 = np.zeros([15,4])
 #
 ##tiempos en t_mag del inicio y fin de la orbita del shock
 #datos2[0,0] = Tapo1
 #datos2[0,1] = Tapo2
 #
-##posisicon de la nave en el centro del shock
-#datos2[1,0:3] = Rc
-#
 ##vel de la nave (xyz) y su norma
-#datos2[2,0:3] = v_nave
-#datos2[2,3] = norm_v_nave
-#
-##ancho temporal del shock
-#datos2[3,0] = ancho_shock_temp
-#
-##ancho espacial del shock y su modulo
-#datos2[4,0:3] = ancho_shock
-#datos2[4,3] = norm_ancho_shock
+#datos2[1,0:3] = v_nave
+#datos2[1,3] = norm_v_nave
 #
 ##ancho intervalos down/upstream
-#datos2[5,0] = ancho_updown
+#datos2[2,0] = ancho_updown
 #
 ##Bu y su devstd
-#datos2[6,0:3] = Bu
-#datos2[7,0:3] = std_Bu
+#datos2[3,0:3] = Bu
+#datos2[4,0:3] = std_Bu
 ##modulo de Bu y su devstd
-#datos2[8,0] = norm_Bu
-#datos2[8,1] = std_norm_Bu
+#datos2[5,0] = norm_Bu
+#datos2[5,1] = std_norm_Bu
 #
 ##Bd y su desvstd
-#datos2[9,0:3] = Bd
-#datos2[10,0:3] = std_Bd
+#datos2[6,0:3] = Bd
+#datos2[7,0:3] = std_Bd
 ##modulo de Bd y su devstd
-#datos2[11,0] = norm_Bd
-#datos2[11,1] = std_norm_Bd
+#datos2[8,0] = norm_Bd
+#datos2[8,1] = std_norm_Bd
 #
 ##Vu y su desvstd
-#datos2[12,0:3] = Vu
-##datos3[13,:] = std_Vu
+#datos2[9,0:3] = Vu
+##datos3[10,:] = std_Vu
 ##modulo de Vu y su devstd
-#datos2[14,0] = norm_Vu
-##datos3[14,1] = std_norm_Vu
+#datos2[11,0] = norm_Vu
+##datos3[11,1] = std_norm_Vu
 #
 ##Vd y su desvstd
-#datos2[15,0:3] = Vd
-##datos3[16,:] = std_Vd
+#datos2[12,0:3] = Vd
+##datos3[13,:] = std_Vd
 ##modulo de Vd y su devstd
-#datos2[17,0] = norm_Vd
-##datos3[17,1] = std_norm_Vd
+#datos2[14,0] = norm_Vd
+##datos3[14,1] = std_norm_Vd
 
 #np.savetxt(path_analisis+'caracteristicas_generales_shock_{}'.format(shock_date), datos2, delimiter = '\t',
 #           header = '\n'.join(['{}'.format(shock_date), 't_mag inicio orbita y fin',
-#                                                 '(x,y,z) nave en el centro del shock [RM]',
 #                                                 'vel nave (x,y,z) y su norma [km/s]',
-#                                                 'ancho temporal shock [s]',
-#                                                 'ancho espacial shock (x,y,z) y su norma [km]',
 #                                                 'ancho intervalo up/downstream [min]',
 #                                                 'Bu [nT]',
 #                                                 'desvstd Bu [nT]',
