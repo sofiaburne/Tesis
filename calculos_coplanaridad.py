@@ -1214,6 +1214,20 @@ datos3[6,2] = thetaBdV_Rc
 datos3[6,3] = thetaBduV_Rc
 datos3[6,4] = thetaV_Rc
 
+#angulos entre normales y Vu
+datos3[7,0] = thetaB_Vu
+datos3[7,1] = thetaBuV_Vu
+datos3[7,2] = thetaBdV_Vu
+datos3[7,3] = thetaBduV_Vu
+datos3[7,4] = thetaV_Vu
+
+#angulos entre normales y vel nave
+datos3[8,0] = thetaB_vnave
+datos3[8,1] = thetaBuV_vnave
+datos3[8,2] = thetaBdV_vnave
+datos3[8,3] = thetaBduV_vnave
+datos3[8,4] = thetaV_vnave
+
 #np.savetxt(path_analisis+'complanaridad_1sample_shock_{}'.format(shock_date), datos3, delimiter = '\t',
 #           header = '\n'.join(['{}'.format(shock_date),'nB',
 #                                                 'nBuV',
@@ -1221,7 +1235,9 @@ datos3[6,4] = thetaV_Rc
 #                                                 'nBduV',
 #                                                 'nV',
 #                                                 'angulos entre normales y Bu [grados]',
-#                                                 'angulos entre normales y Rc [grados]']))
+#                                                 'angulos entre normales y Rc [grados]',
+#                                                 'angulos entre normales y Vu',
+#                                                 'angulos entre normales y v nave']))
 
 
 # bootstrap coplanaridad para un sample
