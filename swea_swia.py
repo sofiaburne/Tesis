@@ -1,3 +1,7 @@
+# 0 uso modulo desde otro modulo
+# 1 uso modulo y quiero que me haga plots y los guarde
+MODO_swiaswea = 0
+
 '''
 This is a python script to read CDF files without needing to install the
 CDF NASA library. You will need Python version 3, as well as the Numpy
@@ -137,54 +141,56 @@ t_swea = tfromtimeunix(tu_swea) #tomo t_swea como la hora decimal
 
 #%%
 
-'''
-plot de intervalo entre mediciones para checkear si hay agujeros donde la nave no haya medido
-(Si algun intervalo es >4s entonces ahi la nave no midio)
-'''
-
-Dt_swea = np.empty([len(t_swea)-1])     
-for i in range(len(t_swea)):
-    Dt_swea[i-1] = t_swea[i]-t_swea[i-1]
-Dt_swea = Dt_swea*3600 #expreso los intervalos en segundos
-
-plt.figure(3, figsize = (30,20), tight_layout = True)
-plt.title('Intervalos temporales entre mediciones SWEA', fontsize = 30)
-plt.plot(t_swea[:-1], Dt_swea, 'o-', linewidth = 2)
-plt.ylabel('Intervalo entre mediciones [s]', fontsize = 20)
-plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.show()
-
-#plt.savefig(path_analisis+'intervalos_mediciones_SWEA_{}'.format(shock_date))
+if MODO_swiaswea == 1:
     
-
-#lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
-
-plt.figure(4, figsize = (30,20), tight_layout = True)
-plt.title('Intervalos temporales entre mediciones SWEA', fontsize = 30)   
-plt.hist(Dt_swea, 30)
-plt.ylabel('Cantidad de eventos', fontsize = 20)
-plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.show()
-
-#plt.savefig(path_analisis+'hist_intervalos_mediciones_SWEA_{}'.format(shock_date))
-
-#zoom del hsitograma
-
-plt.figure(5, figsize = (30,20), tight_layout = True)
-plt.title('Intervalos temporales entre mediciones SWEA - ampliación del histograma', fontsize = 30)   
-plt.hist(Dt_swea, 30)
-plt.ylabel('Cantidad de eventos', fontsize = 20)
-plt.ylim(ymin = 0, ymax = 100)
-plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.show()
-
-#plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWEA_{}'.format(shock_date))
+    '''
+    plot de intervalo entre mediciones para checkear si hay agujeros donde la nave no haya medido
+    (Si algun intervalo es >4s entonces ahi la nave no midio)
+    '''
+    
+    Dt_swea = np.empty([len(t_swea)-1])     
+    for i in range(len(t_swea)):
+        Dt_swea[i-1] = t_swea[i]-t_swea[i-1]
+    Dt_swea = Dt_swea*3600 #expreso los intervalos en segundos
+    
+    plt.figure(3, figsize = (30,20), tight_layout = True)
+    plt.title('Intervalos temporales entre mediciones SWEA', fontsize = 30)
+    plt.plot(t_swea[:-1], Dt_swea, 'o-', linewidth = 2)
+    plt.ylabel('Intervalo entre mediciones [s]', fontsize = 20)
+    plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.show()
+    
+    plt.savefig(path_analisis+'intervalos_mediciones_SWEA_{}'.format(shock_date))
+        
+    
+    #lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
+    
+    plt.figure(4, figsize = (30,20), tight_layout = True)
+    plt.title('Intervalos temporales entre mediciones SWEA', fontsize = 30)   
+    plt.hist(Dt_swea, 30)
+    plt.ylabel('Cantidad de eventos', fontsize = 20)
+    plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.show()
+    
+    plt.savefig(path_analisis+'hist_intervalos_mediciones_SWEA_{}'.format(shock_date))
+    
+    #zoom del hsitograma
+    
+    plt.figure(5, figsize = (30,20), tight_layout = True)
+    plt.title('Intervalos temporales entre mediciones SWEA - ampliación del histograma', fontsize = 30)   
+    plt.hist(Dt_swea, 30)
+    plt.ylabel('Cantidad de eventos', fontsize = 20)
+    plt.ylim(ymin = 0, ymax = 100)
+    plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.show()
+    
+    plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWEA_{}'.format(shock_date))
 
 #%%
 
@@ -237,100 +243,102 @@ temperatura_swia_norm = np.sqrt(temperatura_swia[:-4,0]**2 + temperatura_swia[:-
 
 #%%
 
-'''
-plot de intervalo entre mediciones para checkear si hay agujeros donde la nave no haya medido
-(Si algun intervalo es >4s entonces ahi la nave no midio)
-'''
-
-#para los momentos
-
-Dt_swia_mom = np.empty([len(t_swia_mom)-1])     
-for i in range(len(t_swia_mom)):
-    Dt_swia_mom[i-1] = t_swia_mom[i]-t_swia_mom[i-1]
-Dt_swia_mom = Dt_swia_mom*3600 #expreso los intervalos en segundos
-
-plt.figure(6, figsize = (30,20), tight_layout = True)
-plt.title('Intervalos temporales entre mediciones de momentos SWIA', fontsize = 30)
-plt.plot(t_swia_mom[:-1], Dt_swia_mom, 'o-', linewidth = 2)
-plt.ylabel('Intervalo entre mediciones [s]', fontsize = 20)
-plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.show()
-
-#plt.savefig(path_analisis+'intervalos_mediciones_SWIAmom_{}'.format(shock_date))
+if MODO_swiaswea == 1:
     
-
-#lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
-
-plt.figure(7, figsize = (30,20), tight_layout = True)
-plt.title('Intervalos temporales entre mediciones de momentos SWIA', fontsize = 30)   
-plt.hist(Dt_swia_mom, 30)
-plt.ylabel('Cantidad de eventos', fontsize = 20)
-plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.show()
-
-#plt.savefig(path_analisis+'hist_intervalos_mediciones_SWIAmom_{}'.format(shock_date))
-
-#zoom del hsitograma
-
-plt.figure(8, figsize = (30,20), tight_layout = True)
-plt.title('Intervalos temporales entre mediciones de momentos SWIA - ampliación del histograma', fontsize = 30)   
-plt.hist(Dt_swia_mom, 30)
-plt.ylabel('Cantidad de eventos', fontsize = 20)
-plt.ylim(ymin = 0, ymax = 100)
-plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.show()
-
-#plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWIAmom_{}'.format(shock_date))
-
-
-#para los espectros
-
-Dt_swia_spec = np.empty([len(t_swia_spec)-1])     
-for i in range(len(t_swia_spec)):
-    Dt_swia_spec[i-1] = t_swia_spec[i]-t_swia_spec[i-1]
-Dt_swia_spec = Dt_swia_spec*3600 #expreso los intervalos en segundos
-
-plt.figure(9, figsize = (30,20), tight_layout = True)
-plt.title('Intervalos temporales entre mediciones de espectros SWIA', fontsize = 30)
-plt.plot(t_swia_spec[:-1], Dt_swia_spec, 'o-', linewidth = 2)
-plt.ylabel('Intervalo entre mediciones [s]', fontsize = 20)
-plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.show()
-
-#plt.savefig(path_analisis+'intervalos_mediciones_SWIAspec_{}'.format(shock_date))
+    '''
+    plot de intervalo entre mediciones para checkear si hay agujeros donde la nave no haya medido
+    (Si algun intervalo es >4s entonces ahi la nave no midio)
+    '''
     
-
-#lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
-
-plt.figure(10, figsize = (30,20), tight_layout = True)
-plt.title('Intervalos temporales entre mediciones de espectros SWIA', fontsize = 30)   
-plt.hist(Dt_swia_spec, 30)
-plt.ylabel('Cantidad de eventos', fontsize = 20)
-plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.show()
-
-#plt.savefig(path_analisis+'hist_intervalos_mediciones_SWIAspec_{}'.format(shock_date))
-
-#zoom del hsitograma
-
-plt.figure(11, figsize = (30,20), tight_layout = True)
-plt.title('Intervalos temporales entre mediciones de espectros SWIA - ampliación del histograma', fontsize = 30)   
-plt.hist(Dt_swia_spec, 30)
-plt.ylabel('Cantidad de eventos', fontsize = 20)
-plt.ylim(ymin = 0, ymax = 100)
-plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.show()
-
-#plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWIAspec_{}'.format(shock_date))
+    #para los momentos
+    
+    Dt_swia_mom = np.empty([len(t_swia_mom)-1])     
+    for i in range(len(t_swia_mom)):
+        Dt_swia_mom[i-1] = t_swia_mom[i]-t_swia_mom[i-1]
+    Dt_swia_mom = Dt_swia_mom*3600 #expreso los intervalos en segundos
+    
+    plt.figure(6, figsize = (30,20), tight_layout = True)
+    plt.title('Intervalos temporales entre mediciones de momentos SWIA', fontsize = 30)
+    plt.plot(t_swia_mom[:-1], Dt_swia_mom, 'o-', linewidth = 2)
+    plt.ylabel('Intervalo entre mediciones [s]', fontsize = 20)
+    plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.show()
+    
+    plt.savefig(path_analisis+'intervalos_mediciones_SWIAmom_{}'.format(shock_date))
+        
+    
+    #lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
+    
+    plt.figure(7, figsize = (30,20), tight_layout = True)
+    plt.title('Intervalos temporales entre mediciones de momentos SWIA', fontsize = 30)   
+    plt.hist(Dt_swia_mom, 30)
+    plt.ylabel('Cantidad de eventos', fontsize = 20)
+    plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.show()
+    
+    plt.savefig(path_analisis+'hist_intervalos_mediciones_SWIAmom_{}'.format(shock_date))
+    
+    #zoom del hsitograma
+    
+    plt.figure(8, figsize = (30,20), tight_layout = True)
+    plt.title('Intervalos temporales entre mediciones de momentos SWIA - ampliación del histograma', fontsize = 30)   
+    plt.hist(Dt_swia_mom, 30)
+    plt.ylabel('Cantidad de eventos', fontsize = 20)
+    plt.ylim(ymin = 0, ymax = 100)
+    plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.show()
+    
+    plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWIAmom_{}'.format(shock_date))
+    
+    
+    #para los espectros
+    
+    Dt_swia_spec = np.empty([len(t_swia_spec)-1])     
+    for i in range(len(t_swia_spec)):
+        Dt_swia_spec[i-1] = t_swia_spec[i]-t_swia_spec[i-1]
+    Dt_swia_spec = Dt_swia_spec*3600 #expreso los intervalos en segundos
+    
+    plt.figure(9, figsize = (30,20), tight_layout = True)
+    plt.title('Intervalos temporales entre mediciones de espectros SWIA', fontsize = 30)
+    plt.plot(t_swia_spec[:-1], Dt_swia_spec, 'o-', linewidth = 2)
+    plt.ylabel('Intervalo entre mediciones [s]', fontsize = 20)
+    plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.show()
+    
+    plt.savefig(path_analisis+'intervalos_mediciones_SWIAspec_{}'.format(shock_date))
+        
+    
+    #lo veo en forma de histograma para mostrar que la mayoria de las mediciones respetan la frecuencia de muestreo
+    
+    plt.figure(10, figsize = (30,20), tight_layout = True)
+    plt.title('Intervalos temporales entre mediciones de espectros SWIA', fontsize = 30)   
+    plt.hist(Dt_swia_spec, 30)
+    plt.ylabel('Cantidad de eventos', fontsize = 20)
+    plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.show()
+    
+    plt.savefig(path_analisis+'hist_intervalos_mediciones_SWIAspec_{}'.format(shock_date))
+    
+    #zoom del hsitograma
+    
+    plt.figure(11, figsize = (30,20), tight_layout = True)
+    plt.title('Intervalos temporales entre mediciones de espectros SWIA - ampliación del histograma', fontsize = 30)   
+    plt.hist(Dt_swia_spec, 30)
+    plt.ylabel('Cantidad de eventos', fontsize = 20)
+    plt.ylim(ymin = 0, ymax = 100)
+    plt.xlabel('Intervalo entre mediciones [s]', fontsize = 20)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.show()
+    
+    plt.savefig(path_analisis+'hist_zoom_intervalos_mediciones_SWIAspec_{}'.format(shock_date))

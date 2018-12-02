@@ -1,3 +1,7 @@
+# 0 uso modulo desde otro modulo
+# 1 uso modulo y quiero que me haga plots y los guarde
+MODO_hipotesisMHD = 0
+
 
 from mag import shock_date
 from delimitacion_shock import B, t_mag
@@ -20,27 +24,29 @@ if not os.path.exists(path_analisis):
 
 
 #%%
-
-#plot de densidad y B para ver que es un shock rapido
-
-f2, plot1 = plt.subplots()
-
-gr1, = plot1.plot(t_mag, B, linewidth = 2, marker ='o', markersize = '4', color = 'C0', label = '$B$')
-plot1.set_xlabel('Tiempo\n[hora decimal]', fontsize = 30)
-plot1.set_ylabel('B\n[nT]', fontsize = 30)
-plt.xlim(t_mag[3020], t_mag[4244])
-plot1.axes.tick_params(axis = 'both', which = 'both', length = 6, width = 3, labelsize = 30)
-plot1.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-
-plot2 = plt.twinx(plot1)
-gr2, = plot2.plot(t_swia_mom, densidad_swia, linewidth = 2, marker ='o', markersize = '4',  color = 'C2', label = '$n_p$')
-plt.xlim(t_swia_mom[755], t_swia_mom[1060])
-plot2.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = 30)
-plot2.axes.tick_params(axis = 'y', which = 'both', length = 6, width = 3, labelsize = 30)
-
-plot1.legend(handles = [gr1,gr2], loc = 0, fontsize = 20)
-
-#f2.savefig(path_analisis+'fast_shock_{}'.format(shock_date))
+    
+if MODO_hipotesisMHD == 1:
+    
+    #plot de densidad y B para ver que es un shock rapido
+    
+    f2, plot1 = plt.subplots()
+    
+    gr1, = plot1.plot(t_mag, B, linewidth = 2, marker ='o', markersize = '4', color = 'C0', label = '$B$')
+    plot1.set_xlabel('Tiempo\n[hora decimal]', fontsize = 30)
+    plot1.set_ylabel('B\n[nT]', fontsize = 30)
+    plt.xlim(t_mag[3020], t_mag[4244])
+    plot1.axes.tick_params(axis = 'both', which = 'both', length = 6, width = 3, labelsize = 30)
+    plot1.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    
+    plot2 = plt.twinx(plot1)
+    gr2, = plot2.plot(t_swia_mom, densidad_swia, linewidth = 2, marker ='o', markersize = '4',  color = 'C2', label = '$n_p$')
+    plt.xlim(t_swia_mom[755], t_swia_mom[1060])
+    plot2.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = 30)
+    plot2.axes.tick_params(axis = 'y', which = 'both', length = 6, width = 3, labelsize = 30)
+    
+    plot1.legend(handles = [gr1,gr2], loc = 0, fontsize = 20)
+    
+    f2.savefig(path_analisis+'fast_shock_{}'.format(shock_date))
 
 #%%
 
@@ -181,46 +187,47 @@ hipt_copl_B = np.dot(norm,np.cross(B_u,B_d))
 
 #%%------------------------------- GUARDO RESULTADOS ------------------------------
 
-
-#datos6 = np.zeros([10,5])
-#
-##normal de referencia
-#datos6[0,0:3] = norm
-#
-##Tu Td Pu Pd
-#datos6[1,0] = Tu
-#datos6[1,1] = Td
-#datos6[1,2] = Pu
-#datos6[1,3] = Pd
-#
-##numeros de Mach
-#datos6[2,0] = M_A
-#datos6[2,1] = M_cs
-#datos6[2,2] = M_f
-#datos6[2,3] = M_c
-#
-##beta upstream
-#datos6[3,0] = beta
-#
-##conservaciones
-#datos6[4,0] = cons_masa
-#datos6[5,0:3] = cons_impul_n
-#datos6[6,0:3] = cons_impul_t
-#datos6[7,0:3] = cons_energ
-#datos6[8,0] = cons_Bn
-#datos6[9,0:3] = cons_Et
-#
-##hipotesis teo coplanaridad
-#datos6[10,0] = hipt_copl_B
-#
-#np.savetxt(path_analisis+'hipotesis_MHD_shock_{}'.format(shock_date), datos6, delimiter = '\t',
-#           header = '\n'.join(['{}'.format(shock_date),'normal de ref usada en calculos',
-#                                                 'Tu Td [K] Pu Pd [Pa]',
-#                                                 'M_Alfv M_sonico M_rapido M_critico', 'beta',
-#                                                 'conservacion masa',
-#                                                 'conservacion impulso norm',
-#                                                 'conservacion impulso tang',
-#                                                 'conservacion energia',
-#                                                 'conservacion Bn',
-#                                                 'conservacion campo electrico tang',
-#                                                 'hipotesis teo coplanaridad [nT]']))
+if MODO_hipotesisMHD == 1:
+    
+    datos6 = np.zeros([10,5])
+    
+    #normal de referencia
+    datos6[0,0:3] = norm
+    
+    #Tu Td Pu Pd
+    datos6[1,0] = Tu
+    datos6[1,1] = Td
+    datos6[1,2] = Pu
+    datos6[1,3] = Pd
+    
+    #numeros de Mach
+    datos6[2,0] = M_A
+    datos6[2,1] = M_cs
+    datos6[2,2] = M_f
+    datos6[2,3] = M_c
+    
+    #beta upstream
+    datos6[3,0] = beta
+    
+    #conservaciones
+    datos6[4,0] = cons_masa
+    datos6[5,0:3] = cons_impul_n
+    datos6[6,0:3] = cons_impul_t
+    datos6[7,0:3] = cons_energ
+    datos6[8,0] = cons_Bn
+    datos6[9,0:3] = cons_Et
+    
+    #hipotesis teo coplanaridad
+    datos6[10,0] = hipt_copl_B
+    
+    np.savetxt(path_analisis+'hipotesis_MHD_shock_{}'.format(shock_date), datos6, delimiter = '\t',
+               header = '\n'.join(['{}'.format(shock_date),'normal de ref usada en calculos',
+                                                     'Tu Td [K] Pu Pd [Pa]',
+                                                     'M_Alfv M_sonico M_rapido M_critico', 'beta',
+                                                     'conservacion masa',
+                                                     'conservacion impulso norm',
+                                                     'conservacion impulso tang',
+                                                     'conservacion energia',
+                                                     'conservacion Bn',
+                                                     'conservacion campo electrico tang',
+                                                     'hipotesis teo coplanaridad [nT]']))

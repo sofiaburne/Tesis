@@ -1,3 +1,7 @@
+# 0 uso modulo desde otro modulo
+# 1 uso modulo y quiero que me haga plots y los guarde
+MODO_subestructuras = 0
+
 
 from mag import shock_date
 import delimitacion_shock as ds
@@ -209,106 +213,111 @@ def filter_data(data, fs_new = 8, fs_data = 32):
     return data_new
 
 
-#%% ploteo para elegir limites a ojo
+#%% 
 
-
-# me genero un set de datos de 8 mediciones/s (una frec intermedia entre 32 y 1)
-B_mid = filter_data(B)
-t_mag_mid = filter_data(t_mag)
-
-
-
-f0, ((p3,p1), (p5,p2), (p6,p4)) = plt.subplots(3,2, sharex = True) #ojo con sharex y los distintos inst
-
-f0.suptitle('Datos MAVEN {}'.format(shock_date), fontsize = 20)
-f0.tight_layout()
-
-#B alta frec
-p3.plot(t_mag, B, linewidth = 2, marker = 'o', markersize = 5)
-#regiones up/down
-p3.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p3.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#asintotas de Bu y Bd
-p3.axhline(y = norm_Bu, linewidth = 2, color = 'r')
-p3.axhline(y = norm_Bd, linewidth = 2, color = 'r')
-p3.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.4)
-p3.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.4)
-p3.set_ylabel('$B$ [nT]\n32 Hz', fontsize = 20)
-p3.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p3.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-p3.legend(loc = 0, fontsize = 15)
-
-#B media frec
-p5.plot(t_mag_mid, B_mid, linewidth = 2, marker = 'o', markersize = 5)
-#regiones up/down
-p5.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p5.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#asintotas de Bu y Bd
-p5.axhline(y = norm_Bu, linewidth = 2, color = 'r')
-p5.axhline(y = norm_Bd, linewidth = 2, color = 'r')
-p5.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.4)
-p5.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.4)
-p5.set_ylabel('$B$ [nT]\n8 Hz', fontsize = 20)
-#p5.set_xlim(9.5,10.5)
-#p5.set_ylim(0,50)
-p5.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p5.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-p5.legend(loc = 0, fontsize = 15)
-
-#B baja frec
-p6.plot(t_mag_low, B_low, linewidth = 2, marker = 'o', markersize = 5)
-#regiones up/down
-p6.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p6.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#asintotas de Bu y Bd
-p6.axhline(y = norm_Bu, linewidth = 2, color = 'r')
-p6.axhline(y = norm_Bd, linewidth = 2, color = 'r')
-p6.set_ylabel('$B$ [nT]\n1 Hz', fontsize = 20)
-p6.set_xlabel('Tiempo [hora decimal]', fontsize = 20)
-p6.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p6.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-p6.legend(loc = 0, fontsize = 15)
-
-
-#espectros electrones
-spec1 = p1.contourf(t_swea, nivelesenergia_swea, flujosenergia_swea.T, locator=ticker.LogLocator(), cmap='jet')
-divider = make_axes_locatable(p1)
-cax = divider.append_axes('top', size='5%', pad=0.3)
-f0.colorbar(spec1, cax=cax, orientation='horizontal')
-p1.axes.set_yscale('log')
-#regiones up/down
-p1.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p1.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-p1.set_ylabel('Flujo electrones\n[$(cm^2 sr s)^{-1}$]', fontsize = 20)
-p1.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p1.axes.grid(axis = 'both', which = 'major', alpha = 0.8, linewidth = 2, linestyle = '--')
-
-
-
-#espectros iones
-spec2 = p2.contourf(t_swia_spec, nivelesenergia_swia, flujosenergia_swia.T, locator=ticker.LogLocator(), cmap='jet')
-divider = make_axes_locatable(p2)
-cax = divider.append_axes('top', size='5%', pad=0.3)
-f0.colorbar(spec2, cax=cax, orientation='horizontal')
-p2.axes.set_yscale('log')
-#regiones up/down
-p2.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p2.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-p2.set_ylabel('Flujo iones\n[$(cm^2 sr s)^{-1}$]', fontsize = 20)
-p2.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p2.axes.grid(axis = 'both', which = 'major', alpha = 0.8, linewidth = 2, linestyle = '--')
-
-
-
-#plot densidad swia
-p4.plot(t_swia_mom, densidad_swia, linewidth = 2)
-#regiones up/down
-p4.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p4.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-p4.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = 20)
-p4.set_xlabel('Tiempo [hora decimal]', fontsize = 20)
-p4.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p4.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+if MODO_subestructuras == 1:
+    
+    
+    #ploteo para elegir limites a ojo
+    
+    
+    # me genero un set de datos de 8 mediciones/s (una frec intermedia entre 32 y 1)
+    B_mid = filter_data(B)
+    t_mag_mid = filter_data(t_mag)
+    
+    
+    
+    f0, ((p3,p1), (p5,p2), (p6,p4)) = plt.subplots(3,2, sharex = True) #ojo con sharex y los distintos inst
+    
+    f0.suptitle('Datos MAVEN {}'.format(shock_date), fontsize = 20)
+    f0.tight_layout()
+    
+    #B alta frec
+    p3.plot(t_mag, B, linewidth = 2, marker = 'o', markersize = 5)
+    #regiones up/down
+    p3.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p3.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #asintotas de Bu y Bd
+    p3.axhline(y = norm_Bu, linewidth = 2, color = 'r')
+    p3.axhline(y = norm_Bd, linewidth = 2, color = 'r')
+    p3.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.4)
+    p3.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.4)
+    p3.set_ylabel('$B$ [nT]\n32 Hz', fontsize = 20)
+    p3.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p3.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    p3.legend(loc = 0, fontsize = 15)
+    
+    #B media frec
+    p5.plot(t_mag_mid, B_mid, linewidth = 2, marker = 'o', markersize = 5)
+    #regiones up/down
+    p5.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p5.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #asintotas de Bu y Bd
+    p5.axhline(y = norm_Bu, linewidth = 2, color = 'r')
+    p5.axhline(y = norm_Bd, linewidth = 2, color = 'r')
+    p5.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.4)
+    p5.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.4)
+    p5.set_ylabel('$B$ [nT]\n8 Hz', fontsize = 20)
+    #p5.set_xlim(9.5,10.5)
+    #p5.set_ylim(0,50)
+    p5.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p5.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    p5.legend(loc = 0, fontsize = 15)
+    
+    #B baja frec
+    p6.plot(t_mag_low, B_low, linewidth = 2, marker = 'o', markersize = 5)
+    #regiones up/down
+    p6.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p6.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #asintotas de Bu y Bd
+    p6.axhline(y = norm_Bu, linewidth = 2, color = 'r')
+    p6.axhline(y = norm_Bd, linewidth = 2, color = 'r')
+    p6.set_ylabel('$B$ [nT]\n1 Hz', fontsize = 20)
+    p6.set_xlabel('Tiempo [hora decimal]', fontsize = 20)
+    p6.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p6.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    p6.legend(loc = 0, fontsize = 15)
+    
+    
+    #espectros electrones
+    spec1 = p1.contourf(t_swea, nivelesenergia_swea, flujosenergia_swea.T, locator=ticker.LogLocator(), cmap='jet')
+    divider = make_axes_locatable(p1)
+    cax = divider.append_axes('top', size='5%', pad=0.3)
+    f0.colorbar(spec1, cax=cax, orientation='horizontal')
+    p1.axes.set_yscale('log')
+    #regiones up/down
+    p1.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p1.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    p1.set_ylabel('Flujo electrones\n[$(cm^2 sr s)^{-1}$]', fontsize = 20)
+    p1.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p1.axes.grid(axis = 'both', which = 'major', alpha = 0.8, linewidth = 2, linestyle = '--')
+    
+    
+    
+    #espectros iones
+    spec2 = p2.contourf(t_swia_spec, nivelesenergia_swia, flujosenergia_swia.T, locator=ticker.LogLocator(), cmap='jet')
+    divider = make_axes_locatable(p2)
+    cax = divider.append_axes('top', size='5%', pad=0.3)
+    f0.colorbar(spec2, cax=cax, orientation='horizontal')
+    p2.axes.set_yscale('log')
+    #regiones up/down
+    p2.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p2.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    p2.set_ylabel('Flujo iones\n[$(cm^2 sr s)^{-1}$]', fontsize = 20)
+    p2.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p2.axes.grid(axis = 'both', which = 'major', alpha = 0.8, linewidth = 2, linestyle = '--')
+    
+    
+    
+    #plot densidad swia
+    p4.plot(t_swia_mom, densidad_swia, linewidth = 2)
+    #regiones up/down
+    p4.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p4.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    p4.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = 20)
+    p4.set_xlabel('Tiempo [hora decimal]', fontsize = 20)
+    p4.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p4.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 
 
 #%% limites a ojo
@@ -360,172 +369,176 @@ f1_over_eye = (np.abs(t_mag - Tf1_over_eye)).argmin()
 f2_over_eye = (np.abs(t_mag - Tf2_over_eye)).argmin()
 
 
-#%% ploteo para ver si elegi bien los limites a ojo
+#%%
 
-
-f1, ((p3,p1), (p5,p2), (p6,p4)) = plt.subplots(3,2, sharex = True)
-
-f1.suptitle('Datos MAVEN {}'.format(shock_date), fontsize = 20)
-f1.tight_layout()
-
-#B alta frec
-p3.plot(t_mag, B, linewidth = 2, marker = 'o', markersize = 5)
-#regiones up/down
-p3.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p3.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#asintotas de Bu y Bd
-p3.axhline(y = norm_Bu, linewidth = 2, color = 'r')
-p3.axhline(y = norm_Bd, linewidth = 2, color = 'r')
-p3.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.4)
-p3.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.4)
-#inicio foot
-p3.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-p3.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio ramp
-p3.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-p3.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio overshoot
-p3.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p3.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-#final overshoot
-p3.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p3.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p3.set_ylabel('$B$ [nT]\n32 Hz', fontsize = 20)
-p3.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p3.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-p3.legend(loc = 0, fontsize = 15)
-
-#B media frec
-p5.plot(t_mag_mid, B_mid, linewidth = 2, marker = 'o', markersize = 5)
-#regiones up/down
-p5.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p5.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#asintotas de Bu y Bd
-p5.axhline(y = norm_Bu, linewidth = 2, color = 'r')
-p5.axhline(y = norm_Bd, linewidth = 2, color = 'r')
-p5.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.4)
-p5.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.4)
-#inicio foot
-p5.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-p5.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio ramp
-p5.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-p5.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio overshoot
-p5.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p5.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-#final overshoot
-p5.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p5.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p5.set_ylabel('$B$ [nT]\n8 Hz', fontsize = 20)
-#p5.set_xlim(9.5,10.5)
-#p5.set_ylim(0,50)
-p5.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p5.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-p5.legend(loc = 0, fontsize = 15)
-
-#B baja frec
-p6.plot(t_mag_low, B_low, linewidth = 2, marker = 'o', markersize = 5)
-#regiones up/down
-p6.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p6.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#inicio foot
-p6.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-p6.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio ramp
-p6.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-p6.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio overshoot
-p6.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p6.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-#final overshoot
-p6.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p6.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-#asintotas de Bu y Bd
-p6.axhline(y = norm_Bu, linewidth = 2, color = 'r')
-p6.axhline(y = norm_Bd, linewidth = 2, color = 'r')
-p6.set_ylabel('$B$ [nT]\n1 Hz', fontsize = 20)
-p6.set_xlabel('Tiempo [hora decimal]', fontsize = 20)
-p6.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p6.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-p6.legend(loc = 0, fontsize = 15)
-
-
-#espectros electrones
-spec1 = p1.contourf(t_swea, nivelesenergia_swea, flujosenergia_swea.T, locator=ticker.LogLocator(), cmap='jet')
-divider = make_axes_locatable(p1)
-cax = divider.append_axes('top', size='5%', pad=0.3)
-f1.colorbar(spec1, cax=cax, orientation='horizontal')
-p1.axes.set_yscale('log')
-#regiones up/down
-p1.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p1.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#inicio foot
-p1.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-p1.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio ramp
-p1.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-p1.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio overshoot
-p1.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p1.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-#final overshoot
-p1.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p1.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p1.set_ylabel('Flujo electrones\n[$(cm^2 sr s)^{-1}$]', fontsize = 20)
-p1.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p1.axes.grid(axis = 'both', which = 'major', alpha = 0.8, linewidth = 2, linestyle = '--')
-
-
-
-#espectros iones
-spec2 = p2.contourf(t_swia_spec, nivelesenergia_swia, flujosenergia_swia.T, locator=ticker.LogLocator(), cmap='jet')
-divider = make_axes_locatable(p2)
-cax = divider.append_axes('top', size='5%', pad=0.3)
-f1.colorbar(spec2, cax=cax, orientation='horizontal')
-p2.axes.set_yscale('log')
-#regiones up/down
-p2.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p2.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#inicio foot
-p2.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-p2.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio ramp
-p2.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-p2.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio overshoot
-p2.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p2.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-#final overshoot
-p2.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p2.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p2.set_ylabel('Flujo iones\n[$(cm^2 sr s)^{-1}$]', fontsize = 20)
-p2.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p2.axes.grid(axis = 'both', which = 'major', alpha = 0.8, linewidth = 2, linestyle = '--')
-
-
-
-#plot densidad swia
-p4.plot(t_swia_mom, densidad_swia, linewidth = 2)
-#regiones up/down
-p4.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-p4.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#inicio foot
-p4.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-p4.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio ramp
-p4.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-p4.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-#inicio overshoot
-p4.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p4.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-#final overshoot
-p4.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p4.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-p4.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = 20)
-p4.set_xlabel('Tiempo [hora decimal]', fontsize = 20)
-p4.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-p4.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+if MODO_subestructuras == 1:
+    
+    #ploteo para ver si elegi bien los limites a ojo
+    
+    
+    f1, ((p3,p1), (p5,p2), (p6,p4)) = plt.subplots(3,2, sharex = True)
+    
+    f1.suptitle('Datos MAVEN {}'.format(shock_date), fontsize = 20)
+    f1.tight_layout()
+    
+    #B alta frec
+    p3.plot(t_mag, B, linewidth = 2, marker = 'o', markersize = 5)
+    #regiones up/down
+    p3.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p3.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #asintotas de Bu y Bd
+    p3.axhline(y = norm_Bu, linewidth = 2, color = 'r')
+    p3.axhline(y = norm_Bd, linewidth = 2, color = 'r')
+    p3.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.4)
+    p3.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.4)
+    #inicio foot
+    p3.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p3.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio ramp
+    p3.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p3.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio overshoot
+    p3.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p3.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #final overshoot
+    p3.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p3.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p3.set_ylabel('$B$ [nT]\n32 Hz', fontsize = 20)
+    p3.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p3.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    p3.legend(loc = 0, fontsize = 15)
+    
+    #B media frec
+    p5.plot(t_mag_mid, B_mid, linewidth = 2, marker = 'o', markersize = 5)
+    #regiones up/down
+    p5.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p5.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #asintotas de Bu y Bd
+    p5.axhline(y = norm_Bu, linewidth = 2, color = 'r')
+    p5.axhline(y = norm_Bd, linewidth = 2, color = 'r')
+    p5.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.4)
+    p5.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.4)
+    #inicio foot
+    p5.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p5.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio ramp
+    p5.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p5.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio overshoot
+    p5.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p5.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #final overshoot
+    p5.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p5.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p5.set_ylabel('$B$ [nT]\n8 Hz', fontsize = 20)
+    #p5.set_xlim(9.5,10.5)
+    #p5.set_ylim(0,50)
+    p5.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p5.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    p5.legend(loc = 0, fontsize = 15)
+    
+    #B baja frec
+    p6.plot(t_mag_low, B_low, linewidth = 2, marker = 'o', markersize = 5)
+    #regiones up/down
+    p6.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p6.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #inicio foot
+    p6.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p6.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio ramp
+    p6.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p6.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio overshoot
+    p6.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p6.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #final overshoot
+    p6.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p6.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #asintotas de Bu y Bd
+    p6.axhline(y = norm_Bu, linewidth = 2, color = 'r')
+    p6.axhline(y = norm_Bd, linewidth = 2, color = 'r')
+    p6.set_ylabel('$B$ [nT]\n1 Hz', fontsize = 20)
+    p6.set_xlabel('Tiempo [hora decimal]', fontsize = 20)
+    p6.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p6.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    p6.legend(loc = 0, fontsize = 15)
+    
+    
+    #espectros electrones
+    spec1 = p1.contourf(t_swea, nivelesenergia_swea, flujosenergia_swea.T, locator=ticker.LogLocator(), cmap='jet')
+    divider = make_axes_locatable(p1)
+    cax = divider.append_axes('top', size='5%', pad=0.3)
+    f1.colorbar(spec1, cax=cax, orientation='horizontal')
+    p1.axes.set_yscale('log')
+    #regiones up/down
+    p1.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p1.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #inicio foot
+    p1.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p1.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio ramp
+    p1.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p1.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio overshoot
+    p1.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p1.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #final overshoot
+    p1.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p1.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p1.set_ylabel('Flujo electrones\n[$(cm^2 sr s)^{-1}$]', fontsize = 20)
+    p1.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p1.axes.grid(axis = 'both', which = 'major', alpha = 0.8, linewidth = 2, linestyle = '--')
+    
+    
+    
+    #espectros iones
+    spec2 = p2.contourf(t_swia_spec, nivelesenergia_swia, flujosenergia_swia.T, locator=ticker.LogLocator(), cmap='jet')
+    divider = make_axes_locatable(p2)
+    cax = divider.append_axes('top', size='5%', pad=0.3)
+    f1.colorbar(spec2, cax=cax, orientation='horizontal')
+    p2.axes.set_yscale('log')
+    #regiones up/down
+    p2.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p2.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #inicio foot
+    p2.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p2.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio ramp
+    p2.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p2.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio overshoot
+    p2.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p2.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #final overshoot
+    p2.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p2.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p2.set_ylabel('Flujo iones\n[$(cm^2 sr s)^{-1}$]', fontsize = 20)
+    p2.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p2.axes.grid(axis = 'both', which = 'major', alpha = 0.8, linewidth = 2, linestyle = '--')
+    
+    
+    
+    #plot densidad swia
+    p4.plot(t_swia_mom, densidad_swia, linewidth = 2)
+    #regiones up/down
+    p4.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    p4.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #inicio foot
+    p4.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p4.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio ramp
+    p4.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p4.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #inicio overshoot
+    p4.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p4.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    #final overshoot
+    p4.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p4.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    p4.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = 20)
+    p4.set_xlabel('Tiempo [hora decimal]', fontsize = 20)
+    p4.axes.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    p4.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
 
 
 #%% automatizo delimitaciones
@@ -533,7 +546,6 @@ p4.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyl
 
 #FOOT inicio
 
-#como en la region del foot hay muchas mediciones considero moverme 30 mediciones afuer del range a ojo
 #como Bu varia poco, miro variaciones de 3 sigmas
 
 fact_sigma_foot = 3
@@ -546,8 +558,6 @@ ti_foot = t_mag[i_foot]
 
 #inicio
 
-#como hacia la rampa hay pocas mediciones, me muevo hasta 1 mediciones a la izq de el incio del overshoot a ojo
-#como hacia el overshoot tengo mas mediciones, me muevo hasta 2 a la derecha del inicio del overshoot a ojo
 #como Bd varia bastante, considero variaciones de 1 sigma
 
 fact_sigma_iover = 1
@@ -572,57 +582,61 @@ i_ramp = int(np.abs(i2_ramp - i1_ramp)/2) + i1_ramp
 ti_ramp = t_mag[i_ramp]
 
 
-#%% ploteo todos los limites determinados (a ojo y automatizados)
+#%%
 
-plt.figure(2, tight_layout = True)
-plt.title('Delimitacion de subestructuras', fontsize = 20)
-
-plt.plot(t_mag, B, linewidth = 2, marker = 'o', markersize = 5)
-#regiones up/down
-plt.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
-plt.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
-#asintotas de Bu y Bd
-plt.axhline(y = norm_Bu, linewidth = 2, color = 'r')
-plt.axhline(y = norm_Bd, linewidth = 2, color = 'r')
-plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.1)
-plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.1)
-#inicio foot
-plt.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-plt.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
-plt.axvline(x = ti1_foot, linewidth = 2, linestyle = '-', color = 'm')
-plt.axvline(x = ti2_foot, linewidth = 2, linestyle = '-', color = 'm')
-#inicio ramp
-plt.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-plt.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
-plt.axvline(x = ti1_ramp, linewidth = 2, linestyle = '-', color = 'c')
-plt.axvline(x = ti2_ramp, linewidth = 2, linestyle = '-', color = 'c')
-#ajustes ramp
-plt.plot(t_mag[i1_ramp:f1_rampfit+1], i1_params[0]*t_mag[i1_ramp:f1_rampfit+1] + i1_params[1], linewidth = 2, color = 'y', linestyle = '-.')
-plt.plot(t_mag[i2_ramp:f2_rampfit+1], i2_params[0]*t_mag[i2_ramp:f2_rampfit+1] + i2_params[1], linewidth = 2, color = 'r', linestyle = '-.')
-#inicio overshoot
-plt.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-plt.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-plt.axvline(x = ti1_over, linewidth = 2, linestyle = '-', color = 'g')
-plt.axvline(x = ti2_over, linewidth = 2, linestyle = '-', color = 'g')
-#final overshoot
-plt.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-plt.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
-plt.axvline(x = tf1_over, linewidth = 2, linestyle = '-', color = 'y')
-plt.axvline(x = tf2_over, linewidth = 2, linestyle = '-', color = 'y')
-
-plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
-plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = 20)
-plt.xlim(9.5,10.5)
-plt.ylim(0,50)
-plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
-plt.legend(loc = 0, fontsize = 15)
+if MODO_subestructuras == 1:
+    
+    #ploteo todos los limites determinados (a ojo y automatizados)
+    
+    plt.figure(2, tight_layout = True)
+    plt.title('Delimitacion de subestructuras', fontsize = 20)
+    
+    plt.plot(t_mag, B, linewidth = 2, marker = 'o', markersize = 5)
+    #regiones up/down
+    plt.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.15, label = 'Upstream')
+    plt.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.15, label = 'Downstream')
+    #asintotas de Bu y Bd
+    plt.axhline(y = norm_Bu, linewidth = 2, color = 'r')
+    plt.axhline(y = norm_Bd, linewidth = 2, color = 'r')
+    plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = 0.1)
+    plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = 0.1)
+    #inicio foot
+    plt.axvline(x = Ti1_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    plt.axvline(x = Ti2_foot_eye, linewidth = 2, linestyle = '--', color = 'k')
+    plt.axvline(x = ti1_foot, linewidth = 2, linestyle = '-', color = 'm')
+    plt.axvline(x = ti2_foot, linewidth = 2, linestyle = '-', color = 'm')
+    #inicio ramp
+    plt.axvline(x = Ti1_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    plt.axvline(x = Ti2_ramp_eye, linewidth = 2, linestyle = '--', color = 'k')
+    plt.axvline(x = ti1_ramp, linewidth = 2, linestyle = '-', color = 'c')
+    plt.axvline(x = ti2_ramp, linewidth = 2, linestyle = '-', color = 'c')
+    #ajustes ramp
+    plt.plot(t_mag[i1_ramp:f1_rampfit+1], i1_params[0]*t_mag[i1_ramp:f1_rampfit+1] + i1_params[1], linewidth = 2, color = 'y', linestyle = '-.')
+    plt.plot(t_mag[i2_ramp:f2_rampfit+1], i2_params[0]*t_mag[i2_ramp:f2_rampfit+1] + i2_params[1], linewidth = 2, color = 'r', linestyle = '-.')
+    #inicio overshoot
+    plt.axvline(x = Ti1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    plt.axvline(x = Ti2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    plt.axvline(x = ti1_over, linewidth = 2, linestyle = '-', color = 'g')
+    plt.axvline(x = ti2_over, linewidth = 2, linestyle = '-', color = 'g')
+    #final overshoot
+    plt.axvline(x = Tf1_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    plt.axvline(x = Tf2_over_eye, linewidth = 2, linestyle = '--', color = 'k')
+    plt.axvline(x = tf1_over, linewidth = 2, linestyle = '-', color = 'y')
+    plt.axvline(x = tf2_over, linewidth = 2, linestyle = '-', color = 'y')
+    
+    plt.xlabel('Tiempo [hora decimal]', fontsize = 20)
+    plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = 20)
+    plt.xlim(9.5,10.5)
+    plt.ylim(0,50)
+    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
+    plt.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyle = '--')
+    plt.legend(loc = 0, fontsize = 15)
 
 
 #%%
 
 #centro del shock (centro de la rampa)
-tc = abs(ti_over - ti_ramp)/2 + np.min(ti_ramp,ti_over)
+tc = abs(ti_over - ti_ramp)/2 + np.min([ti_ramp,ti_over])
 C = (np.abs(t_mag-tc)).argmin()
 #posicion de la nave en el centro del shock
 Rc = np.array([x[C], y[C], z[C]])
@@ -647,106 +661,107 @@ theta_NRc = fcop.alpha(Rc,N)
 
 #%%------------------------------- GUARDO RESULTADOS ------------------------------
 
-
-#limites elegidos a ojo
-
-#data0 = np.zeros([4,2])
-#
-##inicio foot
-#data0[0,0] = Ti1_foot_eye
-#data0[0,1] = Ti2_foot_eye
-##inicio ramp
-#data0[1,0] = Ti1_ramp_eye
-#data0[1,1] = Ti2_ramp_eye
-##inicio overshoot
-#data0[2,0] = Ti1_over_eye
-#data0[2,0] = Ti2_over_eye
-##fin overshoot
-#data0[3,0] = Tf1_over_eye
-#data0[3,0] = Tf2_over_eye
-#
-#np.savetxt(path_analisis+'subest_lim_ojo_{}'.format(shock_date), data0, delimiter = '\t',
-#           header = '\n'.join(['{}'.format(shock_date),'limites a izq y derecha inicio foot',
-#                               'limites a izq y derecha inicio ramp',
-#                               'limites a izq y derecha inicio overshoot',
-#                               'limites a izq y derecha fin overshoot']))
-
-
-#limites automatizados
-
-#data1 = np.zeros([6,7])
-#
-##incio foot
-#data1[0,0] = fact_sigma_foot
-#data1[0,1] = i1_foot
-#data1[0,2] = ti1_foot
-#data1[0,3] = i2_foot 
-#data1[0,4] = ti2_foot
-#data1[0,5] = i_foot
-#data1[0,6] = ti_foot
-#
-##inicio overshoot
-#data1[1,0] = fact_sigma_iover
-#data1[1,1] = i1_over
-#data1[1,2] = ti1_over
-#data1[1,3] = i2_over
-#data1[1,4] = ti2_over
-#data1[1,5] = i_over
-#data1[1,6] = ti_over
-#
-##fin overshoot
-#data1[2,0] = fact_sigma_fover
-#data1[2,1] = f1_over
-#data1[2,2] = tf1_over
-#data1[2,3] = f2_over 
-#data1[2,4] = tf2_over
-#data1[2,5] = f_over
-#data1[2,6] = tf_over
-#
-##inicio rampa
-#data1[3,0] = i1_ramp
-#data1[3,1] = f1_rampfit
-#data1[3,2] = ti1_ramp
-#data1[3,3] = i1_params[0]
-#data1[3,4] = i1_params[1]
-#data1[3,5] = i1_chired
-#data1[4,0] = i2_ramp
-#data1[4,1] = f2_rampfit
-#data1[4,2] = ti2_ramp
-#data1[4,3] = i2_params[0]
-#data1[4,4] = i2_params[1]
-#data1[4,5] = i2_chired
-#data1[5,0] = i_ramp
-#data1[5,1] = ti_ramp
-#
-#np.savetxt(path_analisis+'subest_lim_auto_{}'.format(shock_date), data1, delimiter = '\t',
-#           header = '\n'.join(['{}'.format(shock_date),'INICIO FOOT: factor de sigma de Bu considerado, indice lim a izq, t lim a izq, indice lim a der, t lim a der, indice centro, t centro',
-#                               'INICIO OVERSHOOT: factor de sigma de Bd considerado, indice lim a izq, t lim a izq, indice lim a der, t lim a der, indice centro, t centro',
-#                               'FIN OVERSHOOT: factor de sigma de Bd considerado, indice lim a izq, t lim a izq, indice lim a der, t lim a der, indice centro, t centro',
-#                               'INICIO RAMPA: indice lim a izq, indice del intervalo fin overshoot usado para el fit, t lim a izq, parametros fit lineal para calcular lim izq, chi red del fit',
-#                               'INICIO RAMPA: indice lim a der, indice del intervalo fin overshoot usado para el fit, t lim a der, parametros fit lineal para calcular lim der, chi red del fit',
-#                               'INICIO RAMPA: indice centro, t centro']))
-
-
-#parametros del shock
-
-#data2 = np.zeros([3,6])
-#
-#data2[0,0] = C
-#data2[0,1:3] = Rc
-#
-#data2[1,0] = ancho_shock_temp
-#data2[1,1:3] = ancho_shock
-#data2[1,4] = norm_ancho_shock
-#
-#data2[2,0] = L
-#data2[2,1:3] = N
-#data2[2,4] = theta_N
-#data2[2,5] = theta_NRc
-
-#np.savetxt(path_analisis+'centroshock_anchoshock_normalfit_{}'.format(shock_date), data2, delimiter = '\t',
-#           header = '\n'.join(['{}'.format(shock_date),'indice centro shock, posicion nave centro shock',
-#                               'ancho temp shock, ancho espacial (x,y,z), modulo ancho espacial',
-#                               'L del fit, normal fit, angulo Bu y normal fit, angulo Rc y normal fit']))
-
-
+if MODO_subestructuras == 1:
+    
+    #limites elegidos a ojo
+    
+    data0 = np.zeros([4,2])
+    
+    #inicio foot
+    data0[0,0] = Ti1_foot_eye
+    data0[0,1] = Ti2_foot_eye
+    #inicio ramp
+    data0[1,0] = Ti1_ramp_eye
+    data0[1,1] = Ti2_ramp_eye
+    #inicio overshoot
+    data0[2,0] = Ti1_over_eye
+    data0[2,0] = Ti2_over_eye
+    #fin overshoot
+    data0[3,0] = Tf1_over_eye
+    data0[3,0] = Tf2_over_eye
+    
+    np.savetxt(path_analisis+'subest_lim_ojo_{}'.format(shock_date), data0, delimiter = '\t',
+               header = '\n'.join(['{}'.format(shock_date),'limites a izq y derecha inicio foot',
+                                   'limites a izq y derecha inicio ramp',
+                                   'limites a izq y derecha inicio overshoot',
+                                   'limites a izq y derecha fin overshoot']))
+    
+    
+    #limites automatizados
+    
+    data1 = np.zeros([6,7])
+    
+    #incio foot
+    data1[0,0] = fact_sigma_foot
+    data1[0,1] = i1_foot
+    data1[0,2] = ti1_foot
+    data1[0,3] = i2_foot 
+    data1[0,4] = ti2_foot
+    data1[0,5] = i_foot
+    data1[0,6] = ti_foot
+    
+    #inicio overshoot
+    data1[1,0] = fact_sigma_iover
+    data1[1,1] = i1_over
+    data1[1,2] = ti1_over
+    data1[1,3] = i2_over
+    data1[1,4] = ti2_over
+    data1[1,5] = i_over
+    data1[1,6] = ti_over
+    
+    #fin overshoot
+    data1[2,0] = fact_sigma_fover
+    data1[2,1] = f1_over
+    data1[2,2] = tf1_over
+    data1[2,3] = f2_over 
+    data1[2,4] = tf2_over
+    data1[2,5] = f_over
+    data1[2,6] = tf_over
+    
+    #inicio rampa
+    data1[3,0] = i1_ramp
+    data1[3,1] = f1_rampfit
+    data1[3,2] = ti1_ramp
+    data1[3,3] = i1_params[0]
+    data1[3,4] = i1_params[1]
+    data1[3,5] = i1_chired
+    data1[4,0] = i2_ramp
+    data1[4,1] = f2_rampfit
+    data1[4,2] = ti2_ramp
+    data1[4,3] = i2_params[0]
+    data1[4,4] = i2_params[1]
+    data1[4,5] = i2_chired
+    data1[5,0] = i_ramp
+    data1[5,1] = ti_ramp
+    
+    np.savetxt(path_analisis+'subest_lim_auto_{}'.format(shock_date), data1, delimiter = '\t',
+               header = '\n'.join(['{}'.format(shock_date),'INICIO FOOT: factor de sigma de Bu considerado, indice lim a izq, t lim a izq, indice lim a der, t lim a der, indice centro, t centro',
+                                   'INICIO OVERSHOOT: factor de sigma de Bd considerado, indice lim a izq, t lim a izq, indice lim a der, t lim a der, indice centro, t centro',
+                                   'FIN OVERSHOOT: factor de sigma de Bd considerado, indice lim a izq, t lim a izq, indice lim a der, t lim a der, indice centro, t centro',
+                                   'INICIO RAMPA: indice lim a izq, indice del intervalo fin overshoot usado para el fit, t lim a izq, parametros fit lineal para calcular lim izq, chi red del fit',
+                                   'INICIO RAMPA: indice lim a der, indice del intervalo fin overshoot usado para el fit, t lim a der, parametros fit lineal para calcular lim der, chi red del fit',
+                                   'INICIO RAMPA: indice centro, t centro']))
+    
+    
+    #parametros del shock
+    
+    data2 = np.zeros([3,6])
+    
+    data2[0,0] = C
+    data2[0,1:4] = Rc
+    
+    data2[1,0] = ancho_shock_temp
+    data2[1,1:4] = ancho_shock
+    data2[1,4] = norm_ancho_shock
+    
+    data2[2,0] = L
+    data2[2,1:4] = N
+    data2[2,4] = theta_N
+    data2[2,5] = theta_NRc
+    
+    np.savetxt(path_analisis+'centroshock_anchoshock_normalfit_{}'.format(shock_date), data2, delimiter = '\t',
+               header = '\n'.join(['{}'.format(shock_date),'indice centro shock, posicion nave centro shock',
+                                   'ancho temp shock, ancho espacial (x,y,z), modulo ancho espacial',
+                                   'L del fit, normal fit, angulo Bu y normal fit, angulo Rc y normal fit']))
+    
+    
