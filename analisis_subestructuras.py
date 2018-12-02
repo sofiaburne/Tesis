@@ -330,7 +330,7 @@ i2_foot_eye = (np.abs(t_mag - Ti2_foot_eye)).argmin()
 
 #RAMP      Solo marco el incio de la ramp, el final lo marco al delimitar el incio del overshoot
 
-#tomar un intervalo con mas de dos puntos
+#tomar un intervalo con mas de 4 puntos (para elegir entre 2 a izq y 2 a der por lo menos)
 
 Ti1_ramp_eye = 9.819427 #*
 Ti2_ramp_eye = 9.819458 #*
@@ -536,7 +536,8 @@ p4.axes.grid(axis = 'both', which = 'both', alpha = 0.8, linewidth = 2, linestyl
 #como en la region del foot hay muchas mediciones considero moverme 30 mediciones afuer del range a ojo
 #como Bu varia poco, miro variaciones de 3 sigmas
 
-ti1_foot, ti2_foot, i1_foot, i2_foot = lim_int_ext(Bx, By, Bz, B, Bu, norm_Bu, std_Bu, std_norm_Bu, i1_foot_eye, i2_foot_eye, 3)
+fact_sigma_foot = 3
+ti1_foot, ti2_foot, i1_foot, i2_foot = lim_int_ext(Bx, By, Bz, B, Bu, norm_Bu, std_Bu, std_norm_Bu, i1_foot_eye, i2_foot_eye, fact_sigma_foot)
 i_foot = int(np.abs(i2_foot - i1_foot)/2) + i1_foot
 ti_foot = t_mag[i_foot]
 
@@ -549,13 +550,15 @@ ti_foot = t_mag[i_foot]
 #como hacia el overshoot tengo mas mediciones, me muevo hasta 2 a la derecha del inicio del overshoot a ojo
 #como Bd varia bastante, considero variaciones de 1 sigma
 
-ti1_over, ti2_over, i1_over, i2_over = lim_int_ext(Bx, By, Bz, B, Bd, norm_Bd, std_Bd, std_norm_Bd, i1_over_eye, i2_over_eye, 1)
+fact_sigma_iover = 1
+ti1_over, ti2_over, i1_over, i2_over = lim_int_ext(Bx, By, Bz, B, Bd, norm_Bd, std_Bd, std_norm_Bd, i1_over_eye, i2_over_eye, fact_sigma_iover)
 i_over = int(np.abs(i2_over - i1_over)/2) + i1_over
 ti_over = t_mag[i_over]
 
 #final
 
-tf1_over, tf2_over, f1_over, f2_over = lim_int_ext(Bx, By, Bz, B, Bd, norm_Bd, std_Bd, std_norm_Bd, f1_over_eye, f2_over_eye, 1)
+fact_sigma_fover = 1
+tf1_over, tf2_over, f1_over, f2_over = lim_int_ext(Bx, By, Bz, B, Bd, norm_Bd, std_Bd, std_norm_Bd, f1_over_eye, f2_over_eye, fact_sigma_fover)
 f_over = int(np.abs(f2_over - f1_over)/2) + f1_over
 tf_over = t_mag[f_over]
 
@@ -642,16 +645,108 @@ theta_NRc = fcop.alpha(Rc,N)
 
 
 
+#%%------------------------------- GUARDO RESULTADOS ------------------------------
 
 
+#limites elegidos a ojo
+
+#data0 = np.zeros([4,2])
+#
+##inicio foot
+#data0[0,0] = Ti1_foot_eye
+#data0[0,1] = Ti2_foot_eye
+##inicio ramp
+#data0[1,0] = Ti1_ramp_eye
+#data0[1,1] = Ti2_ramp_eye
+##inicio overshoot
+#data0[2,0] = Ti1_over_eye
+#data0[2,0] = Ti2_over_eye
+##fin overshoot
+#data0[3,0] = Tf1_over_eye
+#data0[3,0] = Tf2_over_eye
+#
+#np.savetxt(path_analisis+'subest_lim_ojo_{}'.format(shock_date), data0, delimiter = '\t',
+#           header = '\n'.join(['{}'.format(shock_date),'limites a izq y derecha inicio foot',
+#                               'limites a izq y derecha inicio ramp',
+#                               'limites a izq y derecha inicio overshoot',
+#                               'limites a izq y derecha fin overshoot']))
 
 
+#limites automatizados
+
+#data1 = np.zeros([6,7])
+#
+##incio foot
+#data1[0,0] = fact_sigma_foot
+#data1[0,1] = i1_foot
+#data1[0,2] = ti1_foot
+#data1[0,3] = i2_foot 
+#data1[0,4] = ti2_foot
+#data1[0,5] = i_foot
+#data1[0,6] = ti_foot
+#
+##inicio overshoot
+#data1[1,0] = fact_sigma_iover
+#data1[1,1] = i1_over
+#data1[1,2] = ti1_over
+#data1[1,3] = i2_over
+#data1[1,4] = ti2_over
+#data1[1,5] = i_over
+#data1[1,6] = ti_over
+#
+##fin overshoot
+#data1[2,0] = fact_sigma_fover
+#data1[2,1] = f1_over
+#data1[2,2] = tf1_over
+#data1[2,3] = f2_over 
+#data1[2,4] = tf2_over
+#data1[2,5] = f_over
+#data1[2,6] = tf_over
+#
+##inicio rampa
+#data1[3,0] = i1_ramp
+#data1[3,1] = f1_rampfit
+#data1[3,2] = ti1_ramp
+#data1[3,3] = i1_params[0]
+#data1[3,4] = i1_params[1]
+#data1[3,5] = i1_chired
+#data1[4,0] = i2_ramp
+#data1[4,1] = f2_rampfit
+#data1[4,2] = ti2_ramp
+#data1[4,3] = i2_params[0]
+#data1[4,4] = i2_params[1]
+#data1[4,5] = i2_chired
+#data1[5,0] = i_ramp
+#data1[5,1] = ti_ramp
+#
+#np.savetxt(path_analisis+'subest_lim_auto_{}'.format(shock_date), data1, delimiter = '\t',
+#           header = '\n'.join(['{}'.format(shock_date),'INICIO FOOT: factor de sigma de Bu considerado, indice lim a izq, t lim a izq, indice lim a der, t lim a der, indice centro, t centro',
+#                               'INICIO OVERSHOOT: factor de sigma de Bd considerado, indice lim a izq, t lim a izq, indice lim a der, t lim a der, indice centro, t centro',
+#                               'FIN OVERSHOOT: factor de sigma de Bd considerado, indice lim a izq, t lim a izq, indice lim a der, t lim a der, indice centro, t centro',
+#                               'INICIO RAMPA: indice lim a izq, indice del intervalo fin overshoot usado para el fit, t lim a izq, parametros fit lineal para calcular lim izq, chi red del fit',
+#                               'INICIO RAMPA: indice lim a der, indice del intervalo fin overshoot usado para el fit, t lim a der, parametros fit lineal para calcular lim der, chi red del fit',
+#                               'INICIO RAMPA: indice centro, t centro']))
 
 
+#parametros del shock
 
+#data2 = np.zeros([3,6])
+#
+#data2[0,0] = C
+#data2[0,1:3] = Rc
+#
+#data2[1,0] = ancho_shock_temp
+#data2[1,1:3] = ancho_shock
+#data2[1,4] = norm_ancho_shock
+#
+#data2[2,0] = L
+#data2[2,1:3] = N
+#data2[2,4] = theta_N
+#data2[2,5] = theta_NRc
 
-
-
-
+#np.savetxt(path_analisis+'centroshock_anchoshock_normalfit_{}'.format(shock_date), data2, delimiter = '\t',
+#           header = '\n'.join(['{}'.format(shock_date),'indice centro shock, posicion nave centro shock',
+#                               'ancho temp shock, ancho espacial (x,y,z), modulo ancho espacial',
+#                               'L del fit, normal fit, angulo Bu y normal fit, angulo Rc y normal fit']))
 
 
