@@ -2,7 +2,9 @@
 from mag import shock_date
 from delimitacion_shock import B, t_mag
 from delimitacion_shock import t_swia_mom, densidad_swia, temperatura_swia_norm
-from delimitacion_shock import N, Bu, Bd, Vu, Vd, iu_v, fu_v, id_v, fd_v
+from delimitacion_shock import Bu, Bd, Vu, Vd, iu_v, fu_v, id_v, fd_v
+from analisis_subestructuras import N
+
 
 from importlib import reload
 import numpy as np

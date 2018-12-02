@@ -1,6 +1,7 @@
 
 from mag import shock_date
-from delimitacion_shock import L, N, theta_N, theta_NRc, Rc, v_nave
+from delimitacion_shock import v_nave
+from analisis_subestructuras import L, N, theta_N, theta_NRc, Rc
 from calculos_coplanaridad import nB, nBuV, nBdV, nBduV, nV, thetaB, thetaBuV, thetaBdV, thetaBduV, thetaV, cono_err_nB, cono_err_nBuV, cono_err_nBdV, cono_err_nBduV, cono_err_nV
 import funciones_coplanaridad as fcop
 import funciones_fit_bowshock as fbow
