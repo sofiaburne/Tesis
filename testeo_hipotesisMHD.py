@@ -96,6 +96,9 @@ M_f = np.linalg.norm(Vu)/np.sqrt(v_alfv**2 + v_cs**2)
 
 M_c = 2.7 #M_A critico para theta_Bun = 90, para angulos menores decrese
 
+#beta del plasma upstream
+beta = Pu/(B_u**2/2*mu)
+
 '''
 chequeo si con la presion y densidad anterior
 se cumple la hipotesis de evolucion adiabatica
@@ -177,38 +180,41 @@ hipt_copl_B = np.dot(norm,np.cross(B_u,B_d))
 #%%------------------------------- GUARDO RESULTADOS ------------------------------
 
 
-datos6 = np.zeros([10,5])
-
-#normal de referencia
-datos6[0,0:3] = norm
-
-#Tu Td Pu Pd
-datos6[1,0] = Tu
-datos6[1,1] = Td
-datos6[1,2] = Pu
-datos6[1,3] = Pd
-
-#numeros de Mach
-datos6[2,0] = M_A
-datos6[2,1] = M_cs
-datos6[2,2] = M_f
-datos6[2,3] = M_c
-
-#conservaciones
-datos6[3,0] = cons_masa
-datos6[4,0:3] = cons_impul_n
-datos6[5,0:3] = cons_impul_t
-datos6[6,0:3] = cons_energ
-datos6[7,0] = cons_Bn
-datos6[8,0:3] = cons_Et
-
-#hipotesis teo coplanaridad
-datos6[9,0] = hipt_copl_B
-
+#datos6 = np.zeros([10,5])
+#
+##normal de referencia
+#datos6[0,0:3] = norm
+#
+##Tu Td Pu Pd
+#datos6[1,0] = Tu
+#datos6[1,1] = Td
+#datos6[1,2] = Pu
+#datos6[1,3] = Pd
+#
+##numeros de Mach
+#datos6[2,0] = M_A
+#datos6[2,1] = M_cs
+#datos6[2,2] = M_f
+#datos6[2,3] = M_c
+#
+##beta upstream
+#datos6[3,0] = beta
+#
+##conservaciones
+#datos6[4,0] = cons_masa
+#datos6[5,0:3] = cons_impul_n
+#datos6[6,0:3] = cons_impul_t
+#datos6[7,0:3] = cons_energ
+#datos6[8,0] = cons_Bn
+#datos6[9,0:3] = cons_Et
+#
+##hipotesis teo coplanaridad
+#datos6[10,0] = hipt_copl_B
+#
 #np.savetxt(path_analisis+'hipotesis_MHD_shock_{}'.format(shock_date), datos6, delimiter = '\t',
 #           header = '\n'.join(['{}'.format(shock_date),'normal de ref usada en calculos',
 #                                                 'Tu Td [K] Pu Pd [Pa]',
-#                                                 'M_Alfv M_sonico M_rapido M_critico',
+#                                                 'M_Alfv M_sonico M_rapido M_critico', 'beta',
 #                                                 'conservacion masa',
 #                                                 'conservacion impulso norm',
 #                                                 'conservacion impulso tang',
