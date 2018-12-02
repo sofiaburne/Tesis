@@ -182,7 +182,7 @@ p1.axes.grid(axis = 'both', which = 'major', alpha = 0.8, linewidth = 2, linesty
 #p2.legend(loc = 0, fontsize = 15, ncol = 2)
 
 #espectros continuos
-spec2 = p2.contourf(t_swea, nivelesenergia_swea, flujosenergia_swea.T, locator=ticker.LogLocator(), cmap='jet')
+spec2 = p2.contourf(t_swia_spec, nivelesenergia_swia, flujosenergia_swia.T, locator=ticker.LogLocator(), cmap='jet')
 divider = make_axes_locatable(p2)
 cax = divider.append_axes('top', size='5%', pad=0.3)
 f0.colorbar(spec2, cax=cax, orientation='horizontal')
@@ -495,7 +495,7 @@ g1.legend(loc = 0, fontsize = 15)
 #g2.legend(loc = 0, fontsize = 15, ncol = 2)
 
 #espectros continuos
-spec_2 = g2.contourf(t_swea, nivelesenergia_swea, flujosenergia_swea.T, locator=ticker.LogLocator(), cmap='jet')
+spec_2 = g2.contourf(t_swia_spec, nivelesenergia_swia, flujosenergia_swia.T, locator=ticker.LogLocator(), cmap='jet')
 g2.axvline(x = t_mag[C], linewidth = 2, color = 'k', label = 'Shock center')
 g2.axes.axvspan(xmin = t_mag[i_u], xmax = t_mag[f_u], facecolor = 'r', alpha = 0.5, label = 'Upstream')
 g2.axes.axvspan(xmin = t_mag[i_d], xmax = t_mag[f_d], facecolor = 'y', alpha = 0.5, label = 'Downstream')
