@@ -6,7 +6,7 @@ MODO_hipotesisMHD = 0
 from mag import shock_date
 from delimitacion_shock import B, t_mag
 from delimitacion_shock import t_swia_mom, densidad_swia, temperatura_swia_norm
-from delimitacion_shock import Bu, Bd, norm_Bu, norm_Bd, Vu, Vd, i_u, f_u, i_d, f_d, iu_v, fu_v, id_v, fd_v
+from delimitacion_shock import Bu, Bd, norm_Bu, norm_Bd, Vu, Vd, iu_v, fu_v, id_v, fd_v
 from analisis_subestructuras import N
 
 
@@ -24,10 +24,11 @@ if not os.path.exists(path_analisis):
 
 
 #%%
+#plot de densidad y B para ver que es un shock rapido
+
     
 if MODO_hipotesisMHD == 1:
     
-    #plot de densidad y B para ver que es un shock rapido
     
     figsize = (30,15)
     msize = 8
@@ -82,24 +83,26 @@ if MODO_hipotesisMHD == 1:
     #f2.savefig(path_analisis+'fast_shock_{}'.format(shock_date))
 
 #%%
+#chequeo relaciones RH
 
-#paso todo lo que use en esta seccion a SI
+
 
 #elijo respecto a que normal calculo las conservaciones
 norm = np.copy(N) #*     ahora elegi la del fit
 
 
-#chequeo conservaciones en valores medios
+#paso todo lo que use en esta seccion a SI
 
-#defino campos tang y normales
-# vel en m/s
+
+# vel en m/s (tang y normales)
 U_u = Vu*(1e3)
 U_d = Vd*(1e3)
 U_un = np.dot(norm,U_u)
 U_dn = np.dot(norm,U_d)
 U_ut = (U_u - U_un*norm)
 U_dt = (U_d - U_dn*norm)
-#B en T
+
+#B en T (tang y normales)
 B_u = Bu*(1e-9)
 B_d = Bd*(1e-9)
 B_un = np.dot(norm,B_u)
@@ -122,6 +125,7 @@ Tu = 2*np.mean(temperatura_swia_norm[iu_v:fu_v])*(11604.5) #en K
 Td = 2*np.mean(temperatura_swia_norm[id_v:fd_v])*(11604.5) #en K
 Pu = densnum_u*kB*Tu
 Pd = densnum_d*kB*Td
+
 
 
 #numeros de Mach
