@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_coplanaridad = 0
+MODO_coplanaridad = 1
 
 
 from mag import shock_date
@@ -11,6 +11,9 @@ from delimitacion_shock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, i_u, f_u, i_d, f_
 from analisis_subestructuras import N, theta_N, Rc
 from testeo_hipotesisMHD import M_A, M_c
 import funciones_coplanaridad as fcop
+
+from calculos_coplanaridad import CoplanaridadPLOTS as copplot
+cpl = copplot()
 
 
 from importlib import reload
@@ -76,52 +79,69 @@ thetaV_vnave = fcop.alpha(v_nave,nV)
 
 #%% analisis de Bn
 
-Bn_B = np.dot(np.array([Bx,By,Bz]), nB)
-Bn_BuV = np.dot(np.array([Bx,By,Bz]), nBuV)
-Bn_BdV = np.dot(np.array([Bx,By,Bz]), nBdV)
-Bn_BduV = np.dot(np.array([Bx,By,Bz]), nBduV)
-Bn_V = np.dot(np.array([Bx,By,Bz]), nV)
+Bn_B = np.dot(np.array([Bx,By,Bz]).T, nB)
+Bn_BuV = np.dot(np.array([Bx,By,Bz]).T, nBuV)
+Bn_BdV = np.dot(np.array([Bx,By,Bz]).T, nBdV)
+Bn_BduV = np.dot(np.array([Bx,By,Bz]).T, nBduV)
+Bn_V = np.dot(np.array([Bx,By,Bz]).T, nV)
 
 if MODO_coplanaridad == 1:
     
-    plt.figure(100, figsize = (30,20))
-    plt.suptitle(r'Componente normal del campo magnético', fontsize = 30)
+    fignum = 0
+    figsize = (30,15)
+    font_title = 30
+    font_label = 30
+    font_leg = 26
+    lw = 3
+    colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11']
+    ticks_l = 6
+    ticks_w = 3
+    grid_alpha = 0.8
+    
+    
+    plt.figure(fignum, figsize = figsize)
+    plt.suptitle(r'Componente normal del campo magnético', fontsize = font_title)
     
     plot0 = plt.subplot(511)
-    plt.title('n1', fontsize = 20)
-    plt.plot(t_mag, Bn_B, linewidth = 3, color = 'C0')
-    plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+    plt.setp(plot0.get_xticklabels(), visible = False)
+    plt.title('n1', fontsize = font_label)
+    plt.plot(t_mag, Bn_B, linewidth = lw, color = color[0])
+    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    plt.subplot(512, sharex = plot0)
-    plt.title('n2', fontsize = 20)
-    plt.plot(t_mag, Bn_BuV, linewidth = 3, color = 'C1')
-    plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+    p2 = plt.subplot(512, sharex = plot0)
+    plt.setp(p2.get_xticklabels(), visible = False)
+    plt.title('n2', fontsize = font_label)
+    plt.plot(t_mag, Bn_BuV, linewidth = lw, color = colors[1])
+    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    plt.subplot(513, sharex = plot0)
-    plt.title('n3', fontsize = 20)
-    plt.plot(t_mag, Bn_BdV, linewidth = 3, color = 'C1')
-    plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+    p3 = plt.subplot(513, sharex = plot0)
+    plt.setp(p3.get_xticklabels(), visible = False)
+    plt.title('n3', fontsize = font_label)
+    plt.plot(t_mag, Bn_BdV, linewidth = lw, color = colors[2])
+    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    plt.subplot(514, sharex = plot0)
-    plt.title('n4', fontsize = 20)
-    plt.plot(t_mag, Bn_BduV, linewidth = 3, color = 'C1')
-    plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+    p4 = plt.subplot(514, sharex = plot0)
+    plt.setp(p4.get_xticklabels(), visible = False)
+    plt.title('n4', fontsize = font_label)
+    plt.plot(t_mag, Bn_BduV, linewidth = lw, color = colors[3])
+    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    plt.subplot(515, sharex = plot0)
-    plt.title('n5', fontsize = 20)
-    plt.plot(t_mag, Bn_V, linewidth = 3, color = 'C1')
-    plt.ylabel(r'$B_n$ [nT]', fontsize = 20)
+    p5 = plt.subplot(515, sharex = plot0)
+    plt.setp(p5.get_xticklabels(), visible = False)
+    plt.title('n5', fontsize = font_label)
+    plt.plot(t_mag, Bn_V, linewidth = lw, color = colors[4])
     plt.xlabel(r'Tiempo [hora decimal]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
 
 #%%
@@ -285,261 +305,38 @@ std_thetaBduV_Rc_boot = st.stdev(thetaBduV_Rc_boot[:,0])
 av_thetaV_Rc_boot = np.mean(thetaV_Rc_boot)
 std_thetaV_Rc_boot = st.stdev(thetaV_Rc_boot[:,0])
 
-#%% 
-
-#histogramas para las componentes de las normales
-
-#hist_nB_x, bins_nB_x = np.histogram(nB_boot[:,0], 70)
-#hist_nB_y, bins_nB_y = np.histogram(nB_boot[:,1], 70)
-#hist_nB_z, bins_nB_z = np.histogram(nB_boot[:,2], 70)
-#
-#hist_nBuV_x, bins_nBuV_x = np.histogram(nBuV_boot[:,0], 70)
-#hist_nBuV_y, bins_nBuV_y = np.histogram(nBuV_boot[:,1], 70)
-#hist_nBuV_z, bins_nBuV_z = np.histogram(nBuV_boot[:,2], 70)
-#
-#hist_nBdV_x, bins_nBdV_x = np.histogram(nBdV_boot[:,0], 70)
-#hist_nBdV_y, bins_nBdV_y = np.histogram(nBdV_boot[:,1], 70)
-#hist_nBdV_z, bins_nBdV_z = np.histogram(nBdV_boot[:,2], 70)
-#
-#hist_nBduV_x, bins_nBduV_x = np.histogram(nBduV_boot[:,0], 70)
-#hist_nBduV_y, bins_nBduV_y = np.histogram(nBduV_boot[:,1], 70)
-#hist_nBduV_z, bins_nBduV_z = np.histogram(nBduV_boot[:,2], 70)
-#
-#hist_nV_x, bins_nV_x = np.histogram(nV_boot[:,0], 70)
-#hist_nV_y, bins_nV_y = np.histogram(nV_boot[:,1], 70)
-#hist_nV_z, bins_nV_z = np.histogram(nV_boot[:,2], 70)
-
+#%%
 
 if MODO_coplanaridad == 1:
     
-    plt.figure(4, figsize = (30,20))
-    plt.suptitle(r'Histogramas normal bootstrap - $n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', fontsize = 30)
+    #normales
     
-    pB = plt.subplot(131)
-    #plt.plot(bins_nB_x[:-1], hist_nB_x, linewidth = 3, color = 'C0')
-    plt.hist(nB_boot[:,0], bins = 70, color = 'C0')
-    plt.axvline(x = av_nB_boot[0], linewidth = 3, label = 'nx medio', color = 'C1')
-    plt.xlabel(r'$n_x$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = pB)
-    #plt.plot(bins_nB_y[:-1], hist_nB_y, linewidth = 3, color = 'C0')
-    plt.hist(nB_boot[:,1], bins = 70, color = 'C0')
-    plt.axvline(x = av_nB_boot[1], linewidth = 3, label = 'ny medio', color = 'C1')
-    plt.xlabel(r'$n_y$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = pB)
-    #plt.plot(bins_nB_z[:-1], hist_nB_z, linewidth = 3, color = 'C0')
-    plt.hist(nB_boot[:,2], bins = 70, color = 'C0')
-    plt.axvline(x = av_nB_boot[2], linewidth = 3, label = 'nz medio', color = 'C1')
-    plt.xlabel(r'$n_z$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.hist_norm_boot(nB_boot, av_nB_boot, 1,
+                       '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
     plt.savefig(path_analisis+'hist_normalB_copl_boot_{}'.format(shock_date))
     
-    
-    plt.figure(5, figsize = (30,20))
-    plt.suptitle(r'Histogramas normal bootstrap - $n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', fontsize = 30)
-    
-    pBuV = plt.subplot(131)
-    #plt.plot(bins_nBuV_x[:-1], hist_nBuV_x, linewidth = 3, color = 'C2')
-    plt.hist(nBuV_boot[:,0], bins = 70, color = 'C2')
-    plt.axvline(x = av_nBuV_boot[0], linewidth = 3, label = 'nx medio', color = 'C3')
-    plt.xlabel(r'$n_x$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = pBuV)
-    #plt.plot(bins_nBuV_y[:-1], hist_nBuV_y, linewidth = 3, color = 'C2')
-    plt.hist(nBuV_boot[:,1], bins = 70, color = 'C2')
-    plt.axvline(x = av_nBuV_boot[1], linewidth = 3, label = 'ny medio', color = 'C3')
-    plt.xlabel(r'$n_y$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = pBuV)
-    #plt.plot(bins_nBuV_z[:-1], hist_nBuV_z, linewidth = 3, color = 'C2')
-    plt.hist(nBuV_boot[:,2], bins = 70, color = 'C2')
-    plt.axvline(x = av_nBuV_boot[2], linewidth = 3, label = 'nz medio', color = 'C3')
-    plt.xlabel(r'$n_z$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.hist_norm_boot(nBuV_boot, av_nBuV_boot, 2,
+                       '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'hist_normalBuV_copl_boot_{}'.format(shock_date))
     
-    
-    plt.figure(6, figsize = (30,20))
-    plt.suptitle(r'Histogramas normal bootstrap - $n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', fontsize = 30)
-    
-    pBdV = plt.subplot(131)
-    #plt.plot(bins_nBdV_x[:-1], hist_nBdV_x, linewidth = 3, color = 'C4')
-    plt.hist(nBdV_boot[:,0], bins = 70, color = 'C4')
-    plt.axvline(x = av_nBdV_boot[0], linewidth = 3, label = 'nx medio', color = 'C5')
-    plt.xlabel(r'$n_x$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = pBdV)
-    #plt.plot(bins_nBdV_y[:-1], hist_nBdV_y, linewidth = 3, color = 'C4')
-    plt.hist(nBdV_boot[:,1], bins = 70, color = 'C4')
-    plt.axvline(x = av_nBdV_boot[1], linewidth = 3, label = 'ny medio', color = 'C5')
-    plt.xlabel(r'$n_y$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = pBdV)
-    #plt.plot(bins_nBdV_z[:-1], hist_nBdV_z, linewidth = 3, color = 'C4')
-    plt.hist(nBdV_boot[:,2], bins = 70, color = 'C4')
-    plt.axvline(x = av_nBdV_boot[2], linewidth = 3, label = 'nz medio', color = 'C5')
-    plt.xlabel(r'$n_z$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.hist_norm_boot(nBdV_boot, av_nBdV_boot, 3,
+                       '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'hist_normalBdV_copl_boot_{}'.format(shock_date))
-    
-    
-    plt.figure(7, figsize = (30,20))
-    plt.suptitle(r'Histogramas normal bootstrap - $n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', fontsize = 30)
-    
-    pBduV = plt.subplot(131)
-    #plt.plot(bins_nBduV_x[:-1], hist_nBduV_x, linewidth = 3, color = 'C6')
-    plt.hist(nBduV_boot[:,0], bins = 70, color = 'C6')
-    plt.axvline(x = av_nBduV_boot[0], linewidth = 3, label = 'nx medio', color = 'C7')
-    plt.xlabel(r'$n_x$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = pBduV)
-    #plt.plot(bins_nBduV_y[:-1], hist_nBduV_y, linewidth = 3, color = 'C6')
-    plt.hist(nBduV_boot[:,1], bins = 70, color = 'C6')
-    plt.axvline(x = av_nBduV_boot[1], linewidth = 3, label = 'ny medio', color = 'C7')
-    plt.xlabel(r'$n_y$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = pBduV)
-    #plt.plot(bins_nBduV_z[:-1], hist_nBduV_z, linewidth = 3, color = 'C6')
-    plt.hist(nBduV_boot[:,2], bins = 70, color = 'C6')
-    plt.axvline(x = av_nBduV_boot[2], linewidth = 3, label = 'nz medio', color = 'C7')
-    plt.xlabel(r'$n_z$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+  
+    cpl.hist_norm_boot(nBduV_boot, av_nBduV_boot, 4,
+                       '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'hist_normalBduV_copl_boot_{}'.format(shock_date))
     
-    
-    plt.figure(8, figsize = (30,20))
-    plt.suptitle(r'Histogramas normal bootstrap - $n_5 = \frac{V_d - V_u}{|V_d - V_u|}$', fontsize = 30)
-    
-    pV = plt.subplot(131)
-    #plt.plot(bins_nV_x[:-1], hist_nV_x, linewidth = 3, color = 'C8')
-    plt.hist(nV_boot[:,0], bins = 70, color = 'C8')
-    plt.axvline(x = av_nV_boot[0], linewidth = 3, label = 'nx medio', color = 'C9')
-    plt.xlabel(r'$n_x$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = pV)
-    #plt.plot(bins_nV_y[:-1], hist_nV_y, linewidth = 3, color = 'C8')
-    plt.hist(nV_boot[:,1], bins = 70, color = 'C8')
-    plt.axvline(x = av_nV_boot[1], linewidth = 3, label = 'ny medio', color = 'C9')
-    plt.xlabel(r'$n_y$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = pV)
-    #plt.plot(bins_nV_z[:-1], hist_nV_z, linewidth = 3, color = 'C8')
-    plt.hist(nV_boot[:,2], bins = 70, color = 'C8')
-    plt.axvline(x = av_nV_boot[2], linewidth = 3, label = 'nz medio', color = 'C9')
-    plt.xlabel(r'$n_z$', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.hist_norm_boot(nV_boot, av_nV_boot, 5,
+                       '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
     plt.savefig(path_analisis+'hist_normalV_copl_boot_{}'.format(shock_date))
     
     
+    #angulos
     
-    #histograma angulo normales y Bu
-        
-    #hist_thetaB, bins_thetaB = np.histogram(thetaB_boot, 100)
-    #hist_thetaBuV, bins_thetaBuV = np.histogram(thetaBuV_boot, 100)
-    #hist_thetaBdV, bins_thetaBdV = np.histogram(thetaBdV_boot, 100)
-    #hist_thetaBduV, bins_thetaBduV = np.histogram(thetaBduV_boot, 100)
-    #hist_thetaV, bins_thetaV = np.histogram(thetaV_boot, 100)
-    
-    
-    plt.figure(9, figsize = (30,30))
-    plt.suptitle(r'Histograma $\theta_{Bn}$ upstream', fontsize = 30)
-    
-    graph = plt.subplot(151)
-    plt.title(r'$n_1$', fontsize = 25)
-    #plt.plot(bins_thetaB[:-1], hist_thetaB, linewidth = 3, color = 'C0')
-    plt.hist(thetaB_boot[:,0], bins = 70, color = 'C0')
-    plt.axvline(x = av_thetaB_boot, linewidth = 3, label = r'$\theta_{Bn}$ medio', color = 'C1')
-    plt.xlabel(r'$\theta_{Bn}$ [grados]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(152, sharey = graph)
-    plt.title(r'$n_2$', fontsize = 25)
-    #plt.plot(bins_thetaBuV[:-1], hist_thetaBuV, linewidth = 3, color = 'C2')
-    plt.hist(thetaBuV_boot[:,0], bins = 70, color = 'C2')
-    plt.axvline(x = av_thetaBuV_boot, linewidth = 3, label = r'$\theta_{Bn}$ medio', color = 'C3')
-    plt.xlabel(r'$\theta_{Bn}$ [grados]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(153, sharey = graph)
-    plt.title(r'$n_3$', fontsize = 25)
-    #plt.plot(bins_thetaBdV[:-1], hist_thetaBdV, linewidth = 3, color = 'C4')
-    plt.hist(thetaBdV_boot[:,0], bins = 70, color = 'C4')
-    plt.axvline(x = av_thetaBdV_boot, linewidth = 3, label = r'$\theta_{Bn}$ medio', color = 'C5')
-    plt.xlabel(r'$\theta_{Bn}$ [grados]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(154, sharey = graph)
-    plt.title(r'$n_4$', fontsize = 25)
-    #plt.plot(bins_thetaBduV[:-1], hist_thetaBduV, linewidth = 3, color = 'C6')
-    plt.hist(thetaBuV_boot[:,0], bins = 70, color = 'C6')
-    plt.axvline(x = av_thetaBduV_boot, linewidth = 3, label = r'$\theta_{Bn}$ medio', color = 'C7')
-    plt.xlabel(r'$\theta_{Bn}$ [grados]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(155, sharey = graph)
-    plt.title(r'$n_5$', fontsize = 25)
-    #plt.plot(bins_thetaV[:-1], hist_thetaV, linewidth = 3, color = 'C8')
-    plt.hist(thetaV_boot[:,0], bins = 70, color = 'C8')
-    plt.axvline(x = av_thetaV_boot, linewidth = 3, label = r'$\theta_{Bn}$ medio', color = 'C9')
-    plt.xlabel(r'$\theta_{Bn}$ [grados]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.hist_theta_boot(thetaB_boot, av_thetaB_boot, thetaBuV_boot, av_thetaBuV_boot,
+                        thetaBdV_boot, av_thetaBdV_boot, thetaBduV_boot, av_thetaBduV_boot,
+                        thetaV_boot, av_thetaV_boot, 6)    
     plt.savefig(path_analisis+'hist_thetaBun_copl_boot_{}'.format(shock_date))
 
 #%%#####################################################################################################
@@ -586,17 +383,30 @@ for i in range(Ldv):
     Vd_s[i,:] = np.mean(Vb[:,:,i], axis = 0)
     #err_Vd_s[i,:] = np.array([st.stdev(Vb[:,0,i]), st.stdev(Vb[:,1,i]), st.stdev(Vb[:,2,i])])
 
+#modulos de los campos
+norm_Bu_s = np.linalg.norm(Bu_s, axis = 1)
+norm_Bd_s = np.linalg.norm(Bd_s, axis = 1)
+norm_Vu_s = np.linalg.norm(Vu_s, axis = 1)
+norm_Vd_s = np.linalg.norm(Vd_s, axis = 1)
 
 #promedios de Bu, Bd, Vu y Vd entre todos los samples y sus std
     
 av_Bu_s = np.mean(Bu_s, axis = 0)
 std_Bu_s = np.array([st.stdev(Bu_s[:,0]), st.stdev(Bu_s[:,1]), st.stdev(Bu_s[:,2])])
+av_norm_Bu_s = np.mean(norm_Bu_s)
+std_norm_Bu_s = st.stdev(norm_Bu_s)
 av_Bd_s = np.mean(Bd_s, axis = 0)
 std_Bd_s = np.array([st.stdev(Bd_s[:,0]), st.stdev(Bd_s[:,1]), st.stdev(Bd_s[:,2])])
+av_norm_Bd_s = np.mean(norm_Bd_s)
+std_norm_Bd_s = st.stdev(norm_Bd_s)
 av_Vu_s = np.mean(Vu_s, axis = 0)
 std_Vu_s = np.array([st.stdev(Vu_s[:,0]), st.stdev(Vu_s[:,1]), st.stdev(Vu_s[:,2])])
+av_norm_Vu_s = np.mean(norm_Vu_s)
+std_norm_Vu_s = st.stdev(norm_Vu_s)
 av_Vd_s = np.mean(Vd_s, axis = 0)
 std_Vd_s = np.array([st.stdev(Vd_s[:,0]), st.stdev(Vd_s[:,1]), st.stdev(Vd_s[:,2])])
+av_norm_Vd_s = np.mean(norm_Vd_s)
+std_norm_Vd_s = st.stdev(norm_Vd_s)
 
 
 
@@ -772,477 +582,144 @@ cono_err_nBduV = fcop.alpha(nBduV, nBduV + err_perp_nBduV)
 err_perp_nV = std_nV_s2 - (np.dot(std_nV_s2, nV))*nV
 cono_err_nV = fcop.alpha(nV, nV + err_perp_nV)
 
-#%% 
+#%%
+
+#en funcion del número de realización
 
 if MODO_coplanaridad == 1:
     
-    #plots de campos Bu y Bd al variar intervalos
+    #campo magnetco
     
-    plt.figure(10, figsize = (30,20))
-    plt.suptitle('B ante variación de intervalos upstream y downstream', fontsize = 25)
-    
-    plt.subplot(211)
-    plt.plot(Bu_s[:,0], 'o')
-    plt.plot(Bu_s[:,1], 'o')
-    plt.plot(Bu_s[:,2], 'o')
-    plt.axhline(y = av_Bu_s[0], linewidth = 3, label = 'Bux medio', color = 'b')
-    plt.axhline(y = av_Bu_s[1], linewidth = 3, label = 'Buy medio', color = 'r')
-    plt.axhline(y = av_Bu_s[2], linewidth = 3, label = 'Buz medio', color = 'g')
-    plt.ylabel(r'$B_u$ [nT]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(212)
-    plt.plot(Bd_s[:,0], 'o')
-    plt.plot(Bd_s[:,1], 'o')
-    plt.plot(Bd_s[:,2], 'o')
-    plt.axhline(y = av_Bd_s[0], linewidth = 3, label = 'Bdx medio', color = 'b')
-    plt.axhline(y = av_Bd_s[1], linewidth = 3, label = 'Bdy medio', color = 'r')
-    plt.axhline(y = av_Bd_s[2], linewidth = 3, label = 'Bdz medio', color = 'g')
-    plt.ylabel(r'$B_d$ [nT]', fontsize = 20)
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.campos_variacion_updown(Bu_s, av_Bu_s, norm_Bu_s, av_norm_Bu_s,
+                                Bd_s, av_Bd_s, norm_Bd_s, av_norm_Bd_s,
+                                10, 'B', 'B', 4)
     plt.savefig(path_analisis+'BuBd_coplanarity_variacion_up_down{}'.format(shock_date))
     
     
-    #plots de campos Vu y Vd al variar intervalos
+    #velocidad
     
-    plt.figure(11, figsize = (30,20))
-    plt.suptitle('V ante variación de intervalos upstream y downstream', fontsize = 25)
-    
-    plt.subplot(211)
-    plt.plot(Vu_s[:,0], 'o')
-    plt.plot(Vu_s[:,1], 'o')
-    plt.plot(Vu_s[:,2], 'o')
-    plt.axhline(y = av_Vu_s[0], linewidth = 3, label = 'Vux medio', color = 'b')
-    plt.axhline(y = av_Vu_s[1], linewidth = 3, label = 'Vuy medio', color = 'r')
-    plt.axhline(y = av_Vu_s[2], linewidth = 3, label = 'Vuz medio', color = 'g')
-    plt.ylabel(r'$V_u$ [km/s]', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(212)
-    plt.plot(Vd_s[:,0], 'o')
-    plt.plot(Vd_s[:,1], 'o')
-    plt.plot(Vd_s[:,2], 'o')
-    plt.axhline(y = av_Vd_s[0], linewidth = 3, label = 'Vdx medio', color = 'b')
-    plt.axhline(y = av_Vd_s[1], linewidth = 3, label = 'Vdy medio', color = 'r')
-    plt.axhline(y = av_Vd_s[2], linewidth = 3, label = 'Vdz medio', color = 'g')
-    plt.ylabel(r'$V_d$ [km/s]', fontsize = 20)
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.campos_variacion_updown(Vu_s, av_Vu_s, norm_Vu_s, av_norm_Vu_s,
+                                Vd_s, av_Vd_s, norm_Vd_s, av_norm_Vd_s,
+                                11, 'V', 'V', 80)
     plt.savefig(path_analisis+'VuVd_coplanarity_variacion_up_down{}'.format(shock_date))
     
     
+    #normales
     
-    #plots de las componentes de n al variar los intervalos up/downstream
-    
-    plt.figure(12, figsize = (30,20))
-    plt.suptitle(r'$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(nB_s2[:,0], 'o')
-    plt.plot(nB_s2[:,1], 'o')
-    plt.plot(nB_s2[:,2], 'o')
-    plt.axhline(y = av_nB_s2[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nB_s2[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nB_s2[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(nB_su[:,0], 'o')
-    plt.plot(nB_su[:,1], 'o')
-    plt.plot(nB_su[:,2], 'o')
-    plt.axhline(y = av_nB_su[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nB_su[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nB_su[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(nB_sd[:,0], 'o')
-    plt.plot(nB_sd[:,1], 'o')
-    plt.plot(nB_sd[:,2], 'o')
-    plt.axhline(y = av_nB_sd[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nB_sd[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nB_sd[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.norm_variacion_updown(nB_s2, av_nB_s2, nB_su, av_nB_su, nB_sd, av_nB_sd,
+                              12, '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
     plt.savefig(path_analisis+'nB_copl_variacion_up_down{}'.format(shock_date))
     
+    cpl.norm_variacion_updown(nBuV_s2, av_nBuV_s2, nBuV_su, av_nBuV_su, nBuV_sd, av_nBuV_sd,
+                              13, '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
+    plt.savefig(path_analisis+'nBuV_copl_variacion_up_down{}'.format(shock_date))
     
-    plt.figure(13, figsize = (30,20))
-    plt.suptitle(r'$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(nBuV_s2[:,0], 'o')
-    plt.plot(nBuV_s2[:,1], 'o')
-    plt.plot(nBuV_s2[:,2], 'o')
-    plt.axhline(y = av_nBuV_s2[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nBuV_s2[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nBuV_s2[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(nBuV_su[:,0], 'o')
-    plt.plot(nBuV_su[:,1], 'o')
-    plt.plot(nBuV_su[:,2], 'o')
-    plt.axhline(y = av_nBuV_su[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nBuV_su[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nBuV_su[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(nBuV_sd[:,0], 'o')
-    plt.plot(nBuV_sd[:,1], 'o')
-    plt.plot(nBuV_sd[:,2], 'o')
-    plt.axhline(y = av_nBuV_sd[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nBuV_sd[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nBuV_sd[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.savefig(path_analisis+'nBuv_copl_variacion_up_down{}'.format(shock_date))
-    
-    
-    plt.figure(14, figsize = (30,20))
-    plt.suptitle(r'$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(nBdV_s2[:,0], 'o')
-    plt.plot(nBdV_s2[:,1], 'o')
-    plt.plot(nBdV_s2[:,2], 'o')
-    plt.axhline(y = av_nBdV_s2[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nBdV_s2[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nBdV_s2[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(nBdV_su[:,0], 'o')
-    plt.plot(nBdV_su[:,1], 'o')
-    plt.plot(nBdV_su[:,2], 'o')
-    plt.axhline(y = av_nBdV_su[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nBdV_su[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nBdV_su[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(nBdV_sd[:,0], 'o')
-    plt.plot(nBdV_sd[:,1], 'o')
-    plt.plot(nBdV_sd[:,2], 'o')
-    plt.axhline(y = av_nBdV_sd[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nBdV_sd[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nBdV_sd[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.norm_variacion_updown(nBdV_s2, av_nBdV_s2, nBdV_su, av_nBdV_su, nBdV_sd, av_nBdV_sd,
+                              14, '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'nBdV_copl_variacion_up_down{}'.format(shock_date))
     
-    
-    plt.figure(15, figsize = (30,20))
-    plt.suptitle(r'$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(nBduV_s2[:,0], 'o')
-    plt.plot(nBduV_s2[:,1], 'o')
-    plt.plot(nBduV_s2[:,2], 'o')
-    plt.axhline(y = av_nBduV_s2[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nBduV_s2[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nBduV_s2[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(nBduV_su[:,0], 'o')
-    plt.plot(nBduV_su[:,1], 'o')
-    plt.plot(nBduV_su[:,2], 'o')
-    plt.axhline(y = av_nBduV_su[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nBduV_su[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nBduV_su[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(nBduV_sd[:,0], 'o')
-    plt.plot(nBduV_sd[:,1], 'o')
-    plt.plot(nBduV_sd[:,2], 'o')
-    plt.axhline(y = av_nBduV_sd[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nBduV_sd[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nBduV_sd[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.norm_variacion_updown(nBduV_s2, av_nBduV_s2, nBduV_su, av_nBduV_su, nBduV_sd, av_nBduV_sd,
+                              15, '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'nBduV_copl_variacion_up_down{}'.format(shock_date))
     
-    
-    plt.figure(16, figsize = (30,20))
-    plt.suptitle(r'$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(nV_s2[:,0], 'o')
-    plt.plot(nV_s2[:,1], 'o')
-    plt.plot(nV_s2[:,2], 'o')
-    plt.axhline(y = av_nV_s2[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nV_s2[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nV_s2[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(nV_su[:,0], 'o')
-    plt.plot(nV_su[:,1], 'o')
-    plt.plot(nV_su[:,2], 'o')
-    plt.axhline(y = av_nV_su[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nV_su[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nV_su[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(nV_sd[:,0], 'o')
-    plt.plot(nV_sd[:,1], 'o')
-    plt.plot(nV_sd[:,2], 'o')
-    plt.axhline(y = av_nV_sd[0], linewidth = 3, label = 'nx medio', color = 'b')
-    plt.axhline(y = av_nV_sd[1], linewidth = 3, label = 'ny medio', color = 'r')
-    plt.axhline(y = av_nV_sd[2], linewidth = 3, label = 'nz medio', color = 'g')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.norm_variacion_updown(nV_s2, av_nV_s2, nV_su, av_nV_su, nV_sd, av_nV_sd,
+                              16, '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
     plt.savefig(path_analisis+'nV_copl_variacion_up_down{}'.format(shock_date))
     
     
-    
-    #plots de theta_Bu_n al variar los intervalos up/downstream
-    
-    plt.figure(17, figsize = (30,20))
-    plt.suptitle(r'$n_1$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(thetaB_s2, 'o')
-    plt.axhline(y = av_thetaB_s2, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.ylabel(r'[grados]', fontsize = 20)
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(thetaB_su, 'o')
-    plt.axhline(y = av_thetaB_su, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(thetaB_sd, 'o')
-    plt.axhline(y = av_thetaB_sd, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    #angulos
+
+    cpl.norm_variacion_updown(thetaB_s2, av_thetaB_s2, thetaB_su, av_thetaB_su, thetaB_sd, av_thetaB_sd,
+                              17, '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
     plt.savefig(path_analisis+'thetaB_copl_variacion_up_down{}'.format(shock_date))
     
-    
-    plt.figure(18, figsize = (30,20))
-    plt.suptitle(r'$n_2$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(thetaBuV_s2, 'o')
-    plt.axhline(y = av_thetaBuV_s2, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.ylabel(r'[grados]', fontsize = 20)
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(thetaBuV_su, 'o')
-    plt.axhline(y = av_thetaBuV_su, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(thetaBuV_sd, 'o')
-    plt.axhline(y = av_thetaBuV_sd, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.norm_variacion_updown(thetaBuV_s2, av_thetaBuV_s2, thetaBuV_su, av_thetaBuV_su, thetaBuV_sd, av_thetaBuV_sd,
+                              18, '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'thetaBuV_copl_variacion_up_down{}'.format(shock_date))
     
-    
-    plt.figure(19, figsize = (30,20))
-    plt.suptitle(r'$n_3$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(thetaBdV_s2, 'o')
-    plt.axhline(y = av_thetaBdV_s2, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.ylabel(r'[grados]', fontsize = 20)
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(thetaBdV_su, 'o')
-    plt.axhline(y = av_thetaBdV_su, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(thetaBdV_sd, 'o')
-    plt.axhline(y = av_thetaBdV_sd, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.norm_variacion_updown(thetaBdV_s2, av_thetaBdV_s2, thetaBdV_su, av_thetaBdV_su, thetaBdV_sd, av_thetaBdV_sd,
+                              19, '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'thetaBdV_copl_variacion_up_down{}'.format(shock_date))
     
-    
-    plt.figure(20, figsize = (30,20))
-    plt.suptitle(r'$n_4$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(thetaBduV_s2, 'o')
-    plt.axhline(y = av_thetaBduV_s2, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.ylabel(r'[grados]', fontsize = 20)
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(thetaBduV_su, 'o')
-    plt.axhline(y = av_thetaBduV_su, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(thetaBduV_sd, 'o')
-    plt.axhline(y = av_thetaBduV_sd, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.norm_variacion_updown(thetaBduV_s2, av_thetaBduV_s2, thetaBduV_su, av_thetaBduV_su, thetaBduV_sd, av_thetaBduV_sd,
+                              20, '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'thetaBduV_copl_variacion_up_down{}'.format(shock_date))
     
-    
-    plt.figure(21, figsize = (30,20))
-    plt.suptitle(r'$n_5$', fontsize = 30)
-    
-    p = plt.subplot(131)
-    plt.title('Variación de intervalos upstream y downstream', fontsize = 20)
-    plt.plot(thetaV_s2, 'o')
-    plt.axhline(y = av_thetaV_s2, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.ylabel(r'[grados]', fontsize = 20)
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(132, sharey = p)
-    plt.title('Variación de intervalo upstream', fontsize = 20)
-    plt.plot(thetaV_su, 'o')
-    plt.axhline(y = av_thetaV_su, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
-    plt.subplot(133, sharey = p)
-    plt.title('Variación de intervalo downstream', fontsize = 20)
-    plt.plot(thetaV_sd, 'o')
-    plt.axhline(y = av_thetaV_sd, linewidth = 3, label = r'$\theta_{Bun}$ medio', color = 'b')
-    plt.xlabel(r'Realizaciones', fontsize = 20)
-    plt.tick_params(axis = 'both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
-    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
-    
+    cpl.norm_variacion_updown(thetaV_s2, av_thetaV_s2, thetaV_su, av_thetaV_su, thetaV_sd, av_thetaV_sd,
+                              21, '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
     plt.savefig(path_analisis+'thetaV_copl_variacion_up_down{}'.format(shock_date))
 
+    
+#%%
 
+#como histogramas
+
+if MODO_coplanaridad == 1:
+    
+    #campo magnetico
+    
+    cpl.hist_campos_variacion_updown(Bu_s, av_Bu_s, norm_Bu_s, av_norm_Bu_s, 22, 'Campo magnético upstream', 'B', 'u')
+    plt.savefig(path_analisis+'hist_Bu_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_campos_variacion_updown(Bd_s, av_Bd_s, norm_Bd_s, av_norm_Bd_s, 23, 'Campo magnético downstream', 'B', 'd')
+    plt.savefig(path_analisis+'hist_Bd_copl_variacion_up_down{}'.format(shock_date))
+    
+    #velocidad
+    
+    cpl.hist_campos_variacion_updown(Vu_s, av_Vu_s, norm_Vu_s, av_norm_Vu_s, 24, 'Velocidad flujo upstream', 'V', 'u'')
+    plt.savefig(path_analisis+'hist_Vu_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_campos_variacion_updown(Vd_s, av_Vd_s, norm_Vd_s, av_norm_Vd_s, 25, 'Velocidad flujo downstream', 'V', 'd')
+    plt.savefig(path_analisis+'hist_Vd_copl_variacion_up_down{}'.format(shock_date))
+    
+    
+    #normales
+    
+    cpl.hist_norm_variacion_updown(nB_s2, av_nB_s2, nB_su, av_nB_su, nB_sd, av_nB_sd,
+                                   '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', 26)
+    plt.savefig(path_analisis+'hist_nB_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_norm_variacion_updown(nBuV_s2, av_nBuV_s2, nBuV_su, av_nBuV_su, nBuV_sd, av_nBuV_sd,
+                                   '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', 27)
+    plt.savefig(path_analisis+'hist_nBuV_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_norm_variacion_updown(nBdV_s2, av_nBdV_s2, nBdV_su, av_nBdV_su, nBdV_sd, av_nBdV_sd,
+                                   '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', 28)
+    plt.savefig(path_analisis+'hist_nBdV_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_norm_variacion_updown(nBduV_s2, av_nBduV_s2, nBduV_su, av_nBduV_su, nBduV_sd, av_nBduV_sd,
+                                   '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', 29)
+    plt.savefig(path_analisis+'hist_nBduV_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_norm_variacion_updown(nV_s2, av_nV_s2, nV_su, av_nV_su, nV_sd, av_nV_sd,
+                                   '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$', 30)
+    plt.savefig(path_analisis+'hist_nV_copl_variacion_up_down{}'.format(shock_date))
+    
+    
+    #angulos
+    
+    cpl.hist_theta_variacion_updown(thetaB_s2, av_thetaB_s2, thetaB_su, av_thetaB_su, thetaB_sd, av_thetaB_sd,
+                                   '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', 31)
+    plt.savefig(path_analisis+'hist_thetaB_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_theta_variacion_updown(thetaBuV_s2, av_thetaBuV_s2, thetaBuV_su, av_thetaBuV_su, thetaBuV_sd, av_thetaBuV_sd,
+                                   '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', 32)
+    plt.savefig(path_analisis+'hist_thetaBuV_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_theta_variacion_updown(thetaBdV_s2, av_thetaBdV_s2, thetaBdV_su, av_thetaBdV_su, thetaBdV_sd, av_thetaBdV_sd,
+                                   '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', 33)
+    plt.savefig(path_analisis+'hist_thetaBdV_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_theta_variacion_updown(thetaBduV_s2, av_thetaBduV_s2, thetaBduV_su, av_thetaBduV_su, thetaBduV_sd, av_thetaBduV_sd,
+                                   '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', 34)
+    plt.savefig(path_analisis+'hist_thetaBduV_copl_variacion_up_down{}'.format(shock_date))
+    
+    cpl.hist_theta_variacion_updown(thetaV_s2, av_thetaV_s2, thetaV_su, av_thetaV_su, thetaV_sd, av_thetaV_sd,
+                                   '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$', 30)
+    plt.savefig(path_analisis+'hist_thetaV_copl_variacion_up_down{}'.format(shock_date))
+    
+    
+    
 #%%------------------------------- GUARDO RESULTADOS ------------------------------
 
 if MODO_coplanaridad == 1:
