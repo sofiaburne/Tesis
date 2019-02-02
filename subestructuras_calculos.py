@@ -4,10 +4,10 @@ MODO_subestructuras = 0
 
 
 from mag import shock_date
-import delimitacion_shock as ds
-from delimitacion_shock import v_nave, t_apo11, t_apo12, t_apo21, t_apo22, x, y, z, B, Bx, By, Bz, t_mag, t_swia_mom, densidad_swia, t_swea, nivelesenergia_swea, flujosenergia_swea, t_swia_spec, nivelesenergia_swia, flujosenergia_swia, i_u, f_u, i_d, f_d, Bu, Bd, norm_Bu, norm_Bd, std_Bu, std_Bd, std_norm_Bu, std_norm_Bd
-import funciones_fit_bowshock as fbow
-import funciones_coplanaridad as fcop
+import delimitacionshock as ds
+from delimitacionshock import v_nave, t_apo11, t_apo12, t_apo21, t_apo22, x, y, z, B, Bx, By, Bz, t_mag, t_swia_mom, densidad_swia, t_swea, nivelesenergia_swea, flujosenergia_swea, t_swia_spec, nivelesenergia_swia, flujosenergia_swia, i_u, f_u, i_d, f_d, Bu, Bd, norm_Bu, norm_Bd, std_Bu, std_Bd, std_norm_Bu, std_norm_Bd
+import bowshock_funciones as fbow
+import coplanaridad_funciones as fcop
 
 
 from importlib import reload

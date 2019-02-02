@@ -4,10 +4,10 @@ MODO_hipotesisMHD = 0
 
 
 from mag import shock_date
-from delimitacion_shock import B, t_mag
-from delimitacion_shock import t_swia_mom, densidad_swia, temperatura_swia_norm
-from delimitacion_shock import Bu, Bd, norm_Bu, norm_Bd, Vu, Vd, iu_v, fu_v, id_v, fd_v
-from analisis_subestructuras import N
+from delimitacionshock import B, t_mag
+from delimitacionshock import t_swia_mom, densidad_swia, temperatura_swia_norm
+from delimitacionshock import Bu, Bd, norm_Bu, norm_Bd, Vu, Vd, iu_v, fu_v, id_v, fd_v
+from subestructuras_calculos import N
 
 
 from importlib import reload

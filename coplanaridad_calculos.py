@@ -4,15 +4,15 @@ MODO_coplanaridad = 1
 
 
 from mag import shock_date
-from delimitacion_shock import B, Bx, By, Bz, t_mag
-from delimitacion_shock import t_swea, flujosenergia_swea, nivelesenergia_swea
-from delimitacion_shock import t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
-from delimitacion_shock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, i_u, f_u, i_d, f_d, lim_t1u, lim_t2u, lim_t1d, lim_t2d, i_u5, f_u5, i_d5, f_d5, iu_v5, fu_v5, id_v5, fd_v5, vel, v_nave
-from analisis_subestructuras import N, theta_N, Rc
-from testeo_hipotesisMHD import M_A, M_c
-import funciones_coplanaridad as fcop
+from delimitacionshock import B, Bx, By, Bz, t_mag
+from delimitacionshock import t_swea, flujosenergia_swea, nivelesenergia_swea
+from delimitacionshock import t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
+from delimitacionshock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, std_Bd, std_Bu, std_Vu, std_Vd, i_u, f_u, i_d, f_d, iu_v, fu_v, id_v, fd_v, lim_t1u, lim_t2u, lim_t1d, lim_t2d, i_u5, f_u5, i_d5, f_d5, iu_v5, fu_v5, id_v5, fd_v5, vel, v_nave
+from subestructuras_calculos import N, theta_N, Rc
+from conservaciones import M_A, M_c
+import coplanaridad_funciones as fcop
 
-from calculos_coplanaridad import CoplanaridadPLOTS as copplot
+from coplanaridad_plots import CoplanaridadPLOTS as copplot
 cpl = copplot()
 
 
@@ -47,8 +47,8 @@ elif (theta_N in range(0,5)) and (M_A > M_c):
 
 if nB[0] <= 0.007: #pongo este valor de ref porque con nB_x ~0.0058 pasaron cosas raras (shock 2016-03-19)
     print('nB_x muy chica')
-
-
+    
+    
 #angulos con campo upstream
 thetaB = fcop.alpha(Bu,nB)
 thetaBuV = fcop.alpha(Bu,nBuV)
@@ -77,6 +77,7 @@ thetaBdV_vnave = fcop.alpha(v_nave,nBdV)
 thetaBduV_vnave = fcop.alpha(v_nave,nBduV)
 thetaV_vnave = fcop.alpha(v_nave,nV)
 
+
 #%% analisis de Bn
 
 Bn_B = np.dot(np.array([Bx,By,Bz]).T, nB)
@@ -93,7 +94,7 @@ if MODO_coplanaridad == 1:
     font_label = 30
     font_leg = 26
     lw = 3
-    colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11']
+    colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
     ticks_l = 6
     ticks_w = 3
     grid_alpha = 0.8
@@ -104,120 +105,218 @@ if MODO_coplanaridad == 1:
     
     plot0 = plt.subplot(511)
     plt.setp(plot0.get_xticklabels(), visible = False)
-    plt.title('n1', fontsize = font_label)
-    plt.plot(t_mag, Bn_B, linewidth = lw, color = color[0])
-    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    #plt.title('n1', fontsize = font_label)
+    plt.plot(t_mag, Bn_B, linewidth = lw, color = colors[0])
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.ylabel(r'$B_n$ [nT]'+'\nn1', fontsize = font_label)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
     p2 = plt.subplot(512, sharex = plot0)
     plt.setp(p2.get_xticklabels(), visible = False)
-    plt.title('n2', fontsize = font_label)
+    #plt.title('n2', fontsize = font_label)
     plt.plot(t_mag, Bn_BuV, linewidth = lw, color = colors[1])
-    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.ylabel(r'$B_n$ [nT]'+'\nn2', fontsize = font_label)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
     p3 = plt.subplot(513, sharex = plot0)
     plt.setp(p3.get_xticklabels(), visible = False)
-    plt.title('n3', fontsize = font_label)
+    #plt.title('n3', fontsize = font_label)
     plt.plot(t_mag, Bn_BdV, linewidth = lw, color = colors[2])
-    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.ylabel(r'$B_n$ [nT]'+'\nn3', fontsize = font_label)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
     p4 = plt.subplot(514, sharex = plot0)
     plt.setp(p4.get_xticklabels(), visible = False)
-    plt.title('n4', fontsize = font_label)
+    #plt.title('n4', fontsize = font_label)
     plt.plot(t_mag, Bn_BduV, linewidth = lw, color = colors[3])
-    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.ylabel(r'$B_n$ [nT]'+'\nn4', fontsize = font_label)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
     p5 = plt.subplot(515, sharex = plot0)
-    plt.setp(p5.get_xticklabels(), visible = False)
-    plt.title('n5', fontsize = font_label)
+    #plt.title('n5', fontsize = font_label)
     plt.plot(t_mag, Bn_V, linewidth = lw, color = colors[4])
-    plt.xlabel(r'Tiempo [hora decimal]', fontsize = 20)
-    plt.ylabel(r'$B_n$ [nT]', fontsize = font_label)
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.xlabel(r'Tiempo [hora decimal]', fontsize = font_label)
+    plt.ylabel(r'$B_n$ [nT]'+'\nn5', fontsize = font_label)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
+    plt.savefig(path_analisis+'Bn_coplanar{}'.format(shock_date))
+    plt.savefig(path_analisis+'Bn_coplanar{}.pdf'.format(shock_date))
 
-#%%
+#%%#####################################################################################################
+########################################################################################################
+########################################################################################################
+########################################################################################################
+#%% ----------------------- ANALISIS ESTABILIDAD DE CALCULOS EN SEMI-INTERVALOS ----------------------
 
 #analizo que tan estables son las normales repitiendo los calculos con una y otra mitad de los intervalos
-#
-#half_u = int(np.abs(f_u - i_u)/2) + i_u
-#half_d = int(np.abs(f_d - i_d)/2) + i_d
-#
-#half1_Bu = np.mean(B1[i_u:half_u,:], axis = 0)
-#half1_Bd = np.mean(B2[i_d:half_d,:], axis = 0)
-#std_half1_Bu = np.array([st.stdev(B1[i_u:half_u,0]), st.stdev(B1[i_u:half_u,1]), st.stdev(B1[i_u:half_u,2])])
-#std_half1_Bd = np.array([st.stdev(B2[i_d:half_d,0]), st.stdev(B2[i_d:half_d,1]), st.stdev(B2[i_d:half_d,2])])
-#
-#half1_Vu = np.mean(V1[i_u:half_u,:], axis = 0)
-#half1_Vd = np.mean(V2[i_d:half_d,:], axis = 0)
-#std_half1_Vu = np.array([st.stdev(V1[i_u:half_u,0]), st.stdev(V1[i_u:half_u,1]), st.stdev(V1[i_u:half_u,2])])
-#std_half1_Vd = np.array([st.stdev(V2[i_d:half_d,0]), st.stdev(V2[i_d:half_d,1]), st.stdev(V2[i_d:half_d,2])])
-#
-#half2_Bu = np.mean(B1[half_u:f_u,:], axis = 0)
-#half2_Bd = np.mean(B2[half_d:f_d,:], axis = 0)
-#std_half2_Bu = np.array([st.stdev(B1[half_u:f_u,0]), st.stdev(B1[half_u:f_u,1]), st.stdev(B1[half_u:f_u,2])])
-#std_half2_Bd = np.array([st.stdev(B2[half_d:f_d,0]), st.stdev(B2[half_d:f_d,1]), st.stdev(B2[half_d:f_d,2])])
-#
-#half2_Vu = np.mean(V1[half_u:f_u,:], axis = 0)
-#half2_Vd = np.mean(V2[half_d:f_d,:], axis = 0)
-#std_half2_Vu = np.array([st.stdev(V1[half_u:f_u,0]), st.stdev(V1[half_u:f_u,1]), st.stdev(V1[half_u:f_u,2])])
-#std_half2_Vd = np.array([st.stdev(V2[half_d:f_d,0]), st.stdev(V2[half_d:f_d,1]), st.stdev(V2[half_d:f_d,2])])
-#
-#
-#half1_nB, half1_nBuV, half1_nBdV, half1_nBduV, half1_nV = fcop.norm_coplanar(half1_Bd,half1_Bu,half1_Vd,half1_Vu)
-#half2_nB, half2_nBuV, half2_nBdV, half2_nBduV, half2_nV = fcop.norm_coplanar(half2_Bd,half2_Bu,half2_Vd,half2_Vu)
-#
-#
-##compara las normales de cada mitad con la del fit
-#
-#ang_N_half1_nB = fcop.alpha(half1_nB,N)
-#ang_N_half1_nBuV = fcop.alpha(half1_nBuV,N)
-#ang_N_half1_nBdV = fcop.alpha(half1_nBdV,N)
-#ang_N_half1_nBduV = fcop.alpha(half1_nBduV,N)
-#ang_N_half1_nV = fcop.alpha(half1_nV,N)
-#
-#ang_N_half2_nB = fcop.alpha(half2_nB,N)
-#ang_N_half2_nBuV = fcop.alpha(half2_nBuV,N)
-#ang_N_half2_nBdV = fcop.alpha(half2_nBdV,N)
-#ang_N_half2_nBduV = fcop.alpha(half2_nBduV,N)
-#ang_N_half2_nV = fcop.alpha(half2_nV,N)
-#
-#
-#if ang_N_half1_nB > 2*ang_N_half2_nB:
-#    print('mejor nB en segunda mitad')
-#elif ang_N_half2_nB > 2*ang_N_half1_nB:
-#    print('mejor nB en primera mitad')
-#
-#if ang_N_half1_nBuV > 2*ang_N_half2_nBuV:
-#    print('mejor nBuV en segunda mitad')
-#elif ang_N_half2_nBuV > 2*ang_N_half1_nBuV:
-#    print('mejor nBuV en primera mitad')
-#
-#if ang_N_half1_nBdV > 2*ang_N_half2_nBdV:
-#    print('mejor nBdV en segunda mitad')
-#elif ang_N_half2_nBdV > 2*ang_N_half1_nBdV:
-#    print('mejor nBdV en primera mitad')
-#
-#if ang_N_half1_nBduV > 2*ang_N_half2_nBduV:
-#    print('mejor nBduV en segunda mitad')
-#elif ang_N_half2_nBduV > 2*ang_N_half1_nBduV:
-#    print('mejor nBduV en primera mitad')
-#
-#if ang_N_half1_nV > 2*ang_N_half2_nV:
-#    print('mejor nV en segunda mitad')
-#elif ang_N_half2_nV > 2*ang_N_half1_nV:
-#    print('mejor nV en primera mitad')
 
 
 
+#calculo campos B y V up/downstream para cada medio subintervalo del original
+
+#half_u, half_d, half_Bu, half_Bd, std_half_Bu, std_half_Bd = fcop.campos_half(i_u, f_u, i_d, f_d, B1, B2)
+#half_uv, half_dv, half_Vu, half_Vd, std_half_Vu, std_half_Vd = fcop.campos_half(iu_v, fu_v, id_v, fd_v, V1, V2)
+
+#tengo problemas con la std de Vu, Vd
+half_u, half_d, half_Bu, half_Bd = fcop.campos_half(i_u, f_u, i_d, f_d, B1, B2)
+half_uv, half_dv, half_Vu, half_Vd = fcop.campos_half(iu_v, fu_v, id_v, fd_v, V1, V2)    
+    
+
+#calculo normales combinando cada una de las mitades de los intervalos upstream y downstream
+#tengo 4 combinaciones en total
+    
+half11_nB, half11_nBuV, half11_nBdV, half11_nBduV, half11_nV = fcop.norm_coplanar(half_Bd[0,:],half_Bu[0,:],half_Vd[0,:],half_Vu[0,:])
+half12_nB, half12_nBuV, half12_nBdV, half12_nBduV, half12_nV = fcop.norm_coplanar(half_Bd[1,:],half_Bu[0,:],half_Vd[1,:],half_Vu[0,:])
+half21_nB, half21_nBuV, half21_nBdV, half21_nBduV, half21_nV = fcop.norm_coplanar(half_Bd[0,:],half_Bu[1,:],half_Vd[0,:],half_Vu[1,:])
+half22_nB, half22_nBuV, half22_nBdV, half22_nBduV, half22_nV = fcop.norm_coplanar(half_Bd[1,:],half_Bu[1,:],half_Vd[1,:],half_Vu[1,:])
+
+half_nB = np.array([half11_nB, half12_nB, half21_nB, half22_nB])
+half_nBuV = np.array([half11_nBuV, half12_nBuV, half21_nBuV, half22_nBuV])
+half_nBdV = np.array([half11_nBdV, half12_nBdV, half21_nBdV, half22_nBdV])
+half_nBduV = np.array([half11_nBduV, half12_nBduV, half21_nBduV, half22_nBduV])
+half_nV = np.array([half11_nV, half12_nV, half21_nV, half22_nV])
+
+
+
+#comparo las angulos de las nuevas normales con la del fit
+# para cada tipo de normal tengo 4 angulos por cada una de
+# las combinaciones de medios subintervalos
+
+ang_N_nB = fcop.half_angulo_N(half_nB, N)
+ang_N_nBuV = fcop.half_angulo_N(half_nBuV, N)
+ang_N_nBdV = fcop.half_angulo_N(half_nBdV, N)
+ang_N_nBduV = fcop.half_angulo_N(half_nBduV, N)
+ang_N_nV = fcop.half_angulo_N(half_nV, N)
+
+
+
+#si, para un dado tipo de normal, el angulo con la normal del fit de alguna sus 4 normales posibles
+# es zeda (=5 default) grados mayor que otro de esos 4, considero que los calculos con los intervalos
+# completos no son potencialmente inestables y elijo la combinacion de mitades que menor angulo
+# me de para esa normal coplanar
+
+half_nB_best, ang_N_nB_best, ind_nB =  fcop.half_best_n(ang_N_nB, half_nB)
+half_nBuV_best, ang_N_nBuV_best, ind_nBuV =  fcop.half_best_n(ang_N_nBuV, half_nBuV)
+half_nBdV_best, ang_N_nBdV_best, ind_nBdV =  fcop.half_best_n(ang_N_nBdV, half_nBuV)
+half_nBduV_best, ang_N_nBduV_best, ind_nBduV =  fcop.half_best_n(ang_N_nBduV, half_nBduV)
+half_nV_best, ang_N_nV_best, ind_nV =  fcop.half_best_n(ang_N_nV, half_nV)
+
+#si para 2 de 5 normales coplanares los calculos me dan inestables, considero que los calculos
+# efectivamente son inestables para todas las normales y paso a elegir la mejor combinacion de
+# medios subintervalos
+
+#chequeo si existen las variables
+try: ind_nB
+except NameError: ind_nB = None
+
+try: ind_nBuV
+except NameError: ind_nBuV = None
+
+try: ind_nBdV
+except NameError: ind_nBdV = None
+
+try: ind_nBduV
+except NameError: ind_nBduV = None
+
+try: ind_nV
+except NameError: ind_nV = None
+
+
+#vector de indices de mejor combinacion de medios subintervalos
+#si una dada normal coplanar era estable, entonces el indice de
+# mejor combinacion es None
+ind_comb = np.array([ind_nB, ind_nBuV, ind_nBdV, ind_nBduV, ind_nV])
+
+
+#chequeo si tengo por lo menos dos normales coplanares inestables, en ese caso
+# redefino los campos y normales con las de la mejor combinacion
+test1 = np.count_nonzero(ind_comb!=None)
+if test1 >= 2:
+
+    #tomo como mejor combinacion de subintervalos aquella que más se repita en la eleccion de mejor normal
+    
+    def most_common(lst):
+        return max(lst, key=lst.count)
+    
+    ind_best = most_common(list(ind_comb[ind_comb!=None])) #evaluo el elemento no nulo mas repetido
+    
+    #me quedo con las normales de la mejor combinacion de subintervalos
+    mitad_nB = half_nB[ind_best,:]
+    mitad_nBuV = half_nBuV[ind_best,:]
+    mitad_nBdV = half_nBdV[ind_best,:]
+    mitad_nBduV = half_nBduV[ind_best,:]
+    mitad_nV = half_nV[ind_best,:]
+    
+    #angulos con normal del fit, para normales de la mejor combinacion de subintervalos
+    mitad_angN_nB = ang_N_nB[ind_best]
+    mitad_angN_nBuV = ang_N_nBuV[ind_best]
+    mitad_angN_nBdV = ang_N_nBdV[ind_best]
+    mitad_angN_nBduV = ang_N_nBduV[ind_best]
+    mitad_angN_nV = ang_N_nV[ind_best]
+    
+    #me quedo con los campos correspondientes a los mejores subintervalos
+    if ind_best == 0 or 1:
+        mitad_Bu = half_Bu[0:,]
+        std_mitad_Bu = std_half_Bu[0:,]
+        mitad_Vu = half_Vu[0:,]
+        std_mitad_Vu = std_half_Vu[0:,]
+        
+    elif ind_best == 2 or 3:
+        mitad_Bu = half_Bu[1:,]
+        std_mitad_Bu = std_half_Bu[1:,]
+        mitad_Vu = half_Vu[1:,]
+        std_mitad_Vu = std_half_Vu[1:,]
+    
+    if ind_best == 0 or 2:
+        mitad_Bd = half_Bd[0:,]
+        std_mitad_Bd = std_half_Bd[0:,]
+        mitad_Vd = half_Vd[0:,]
+        std_mitad_Vd = std_half_Vd[0:,]
+    
+    elif ind_best == 1 or 3:  
+        std_mitad_Bd = std_half_Bd[1:,]
+        mitad_Bd = half_Bd[1:,]
+        mitad_Vd = half_Vd[1:,]
+        std_mitad_Vd = std_half_Vd[1:,]
+
+
+    #angulos con campo upstream para las mejores normales de los semi-intervalos
+    mitad_thetaB = fcop.alpha(mitad_Bu,mitad_nB)
+    mitad_thetaBuV = fcop.alpha(mitad_Bu,mitad_nBuV)
+    mitad_thetaBdV = fcop.alpha(mitad_Bu,mitad_nBdV)
+    mitad_thetaBduV = fcop.alpha(mitad_Bu,mitad_nBduV)
+    mitad_thetaV = fcop.alpha(mitad_Bu,mitad_nV)
+        
+    
+    
+    #comparo los angulos de normal del fit entre las normales de los mejores subintervalos
+    # y las normales de los intervalos completos. Si la diferencia entre 2 angulos con las
+    # nuevas normales y las normales con los intervalos completos es mayor a kappa grados,
+    # entonces me quedo con las normales y campos de los subintervalos
+    
+    kappa = 5
+    
+    mitad_angN = np.array([mitad_angN_nB, mitad_angN_nBuV, mitad_angN_nBdV, mitad_angN_nBduV, mitad_angN_nV])
+    angN = np.array([fcop.alpha(nB,N), fcop.alpha(nBuV,N), fcop.alpha(nBdV,N), fcop.alpha(nBduV,N), fcop.alpha(nV,N)])
+    resta_angN = abs(mitad_angN - angN)
+    
+    test2 = np.count_nonzero(resta_angN>=kappa)
+    
+    if test2 > 1: #si por lo menos dos normales me dan apreciablemente diferentes...
+        print('los calculos en semi-intervalos son más estables')
+    
+    else: raise ValueError('los calculos en los intervalos completos son estables')
+            
+    
 #%%#####################################################################################################
 ########################################################################################################
 ########################################################################################################
@@ -312,24 +411,29 @@ if MODO_coplanaridad == 1:
     #normales
     
     cpl.hist_norm_boot(nB_boot, av_nB_boot, 1,
-                       '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
+                       r'$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
     plt.savefig(path_analisis+'hist_normalB_copl_boot_{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_normalB_copl_boot_{}.pdf'.format(shock_date))
     
     cpl.hist_norm_boot(nBuV_boot, av_nBuV_boot, 2,
-                       '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
+                       r'$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'hist_normalBuV_copl_boot_{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_normalBuV_copl_boot_{}.pdf'.format(shock_date))
     
     cpl.hist_norm_boot(nBdV_boot, av_nBdV_boot, 3,
-                       '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
+                       r'$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'hist_normalBdV_copl_boot_{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_normalBdV_copl_boot_{}.pdf'.format(shock_date))
   
     cpl.hist_norm_boot(nBduV_boot, av_nBduV_boot, 4,
-                       '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
+                       r'$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'hist_normalBduV_copl_boot_{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_normalBduV_copl_boot_{}.pdf'.format(shock_date))
     
     cpl.hist_norm_boot(nV_boot, av_nV_boot, 5,
-                       '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
+                       r'$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
     plt.savefig(path_analisis+'hist_normalV_copl_boot_{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_normalV_copl_boot_{}.pdf'.format(shock_date))
     
     
     #angulos
@@ -338,6 +442,7 @@ if MODO_coplanaridad == 1:
                         thetaBdV_boot, av_thetaBdV_boot, thetaBduV_boot, av_thetaBduV_boot,
                         thetaV_boot, av_thetaV_boot, 6)    
     plt.savefig(path_analisis+'hist_thetaBun_copl_boot_{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_thetaBun_copl_boot_{}.pdf'.format(shock_date))
 
 #%%#####################################################################################################
 ########################################################################################################
@@ -348,10 +453,14 @@ if MODO_coplanaridad == 1:
 
 #stack de matrices de [Bx,By,Bz] y [vel x,vel y,vel z] up/downstream para cada intervalo seleccionado
 
-Ba = fcop.intervalo(Bx,By,Bz,lim_t1u,lim_t2u,t_mag,i_u5,f_u5)
-Bb = fcop.intervalo(Bx,By,Bz,lim_t1d,lim_t2d,t_mag,i_d5,f_d5)
-Va = fcop.intervalo(vel[:,0],vel[:,1],vel[:,2],lim_t1u,lim_t2u,t_swia_mom,iu_v5,fu_v5)
-Vb = fcop.intervalo(vel[:,0],vel[:,1],vel[:,2],lim_t1d,lim_t2d,t_swia_mom,id_v5,fd_v5)
+
+#ancho del intervalo en hora decimal (ancho de x minutos corresponde a x/60)
+q = 5/60
+
+Ba = fcop.intervalo(Bx,By,Bz,t_mag,lim_t1u,lim_t2u,q)
+Bb = fcop.intervalo(Bx,By,Bz,t_mag,lim_t1d,lim_t2d,q)
+Va = fcop.intervalo(vel[:,0],vel[:,1],vel[:,2],t_swia_mom,lim_t1u,lim_t2u,q)
+Vb = fcop.intervalo(vel[:,0],vel[:,1],vel[:,2],t_swia_mom,lim_t1d,lim_t2d,q)
 
 Lu = len(Ba[0,0,:])
 Ld = len(Bb[0,0,:])
@@ -594,6 +703,7 @@ if MODO_coplanaridad == 1:
                                 Bd_s, av_Bd_s, norm_Bd_s, av_norm_Bd_s,
                                 10, 'B', 'B', 4)
     plt.savefig(path_analisis+'BuBd_coplanarity_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'BuBd_coplanarity_variacion_up_down{}.pdf'.format(shock_date))
     
     
     #velocidad
@@ -602,52 +712,63 @@ if MODO_coplanaridad == 1:
                                 Vd_s, av_Vd_s, norm_Vd_s, av_norm_Vd_s,
                                 11, 'V', 'V', 80)
     plt.savefig(path_analisis+'VuVd_coplanarity_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'VuVd_coplanarity_variacion_up_down{}.pdf'.format(shock_date))
     
     
     #normales
     
     cpl.norm_variacion_updown(nB_s2, av_nB_s2, nB_su, av_nB_su, nB_sd, av_nB_sd,
-                              12, '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
+                              12, r'$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
     plt.savefig(path_analisis+'nB_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'nB_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.norm_variacion_updown(nBuV_s2, av_nBuV_s2, nBuV_su, av_nBuV_su, nBuV_sd, av_nBuV_sd,
-                              13, '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
+                              13, r'$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'nBuV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'nBuV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.norm_variacion_updown(nBdV_s2, av_nBdV_s2, nBdV_su, av_nBdV_su, nBdV_sd, av_nBdV_sd,
-                              14, '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
+                              14, r'$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'nBdV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'nBdV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.norm_variacion_updown(nBduV_s2, av_nBduV_s2, nBduV_su, av_nBduV_su, nBduV_sd, av_nBduV_sd,
-                              15, '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
+                              15, r'$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'nBduV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'nBduV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.norm_variacion_updown(nV_s2, av_nV_s2, nV_su, av_nV_su, nV_sd, av_nV_sd,
-                              16, '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
+                              16, r'$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
     plt.savefig(path_analisis+'nV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'nV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     
     #angulos
 
-    cpl.norm_variacion_updown(thetaB_s2, av_thetaB_s2, thetaB_su, av_thetaB_su, thetaB_sd, av_thetaB_sd,
-                              17, '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
+    cpl.theta_variacion_updown(thetaB_s2, av_thetaB_s2, thetaB_su, av_thetaB_su, thetaB_sd, av_thetaB_sd,
+                              17, r'$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
     plt.savefig(path_analisis+'thetaB_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'thetaB_copl_variacion_up_down{}.pdf'.format(shock_date))
     
-    cpl.norm_variacion_updown(thetaBuV_s2, av_thetaBuV_s2, thetaBuV_su, av_thetaBuV_su, thetaBuV_sd, av_thetaBuV_sd,
-                              18, '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
+    cpl.theta_variacion_updown(thetaBuV_s2, av_thetaBuV_s2, thetaBuV_su, av_thetaBuV_su, thetaBuV_sd, av_thetaBuV_sd,
+                              18, r'$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'thetaBuV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'thetaBuV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
-    cpl.norm_variacion_updown(thetaBdV_s2, av_thetaBdV_s2, thetaBdV_su, av_thetaBdV_su, thetaBdV_sd, av_thetaBdV_sd,
-                              19, '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
+    cpl.theta_variacion_updown(thetaBdV_s2, av_thetaBdV_s2, thetaBdV_su, av_thetaBdV_su, thetaBdV_sd, av_thetaBdV_sd,
+                              19, r'$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'thetaBdV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'thetaBdV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
-    cpl.norm_variacion_updown(thetaBduV_s2, av_thetaBduV_s2, thetaBduV_su, av_thetaBduV_su, thetaBduV_sd, av_thetaBduV_sd,
-                              20, '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
+    cpl.theta_variacion_updown(thetaBduV_s2, av_thetaBduV_s2, thetaBduV_su, av_thetaBduV_su, thetaBduV_sd, av_thetaBduV_sd,
+                              20, r'$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
     plt.savefig(path_analisis+'thetaBduV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'thetaBduV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
-    cpl.norm_variacion_updown(thetaV_s2, av_thetaV_s2, thetaV_su, av_thetaV_su, thetaV_sd, av_thetaV_sd,
-                              21, '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
+    cpl.theta_variacion_updown(thetaV_s2, av_thetaV_s2, thetaV_su, av_thetaV_su, thetaV_sd, av_thetaV_sd,
+                              21, r'$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
     plt.savefig(path_analisis+'thetaV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'thetaV_copl_variacion_up_down{}.pdf'.format(shock_date))
 
     
 #%%
@@ -658,65 +779,78 @@ if MODO_coplanaridad == 1:
     
     #campo magnetico
     
-    cpl.hist_campos_variacion_updown(Bu_s, av_Bu_s, norm_Bu_s, av_norm_Bu_s, 22, 'Campo magnético upstream', 'B', 'u')
+    cpl.hist_campos_variacion_updown(Bu_s, av_Bu_s, norm_Bu_s, av_norm_Bu_s, 22, 'Campo magnético upstream', 'B', 'u', 'ux', 'uy', 'uz')
     plt.savefig(path_analisis+'hist_Bu_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_Bu_copl_variacion_up_down{}.pdf'.format(shock_date))
     
-    cpl.hist_campos_variacion_updown(Bd_s, av_Bd_s, norm_Bd_s, av_norm_Bd_s, 23, 'Campo magnético downstream', 'B', 'd')
+    cpl.hist_campos_variacion_updown(Bd_s, av_Bd_s, norm_Bd_s, av_norm_Bd_s, 23, 'Campo magnético downstream', 'B', 'd', 'dx', 'dy', 'dz')
     plt.savefig(path_analisis+'hist_Bd_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_Bd_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     #velocidad
     
-    cpl.hist_campos_variacion_updown(Vu_s, av_Vu_s, norm_Vu_s, av_norm_Vu_s, 24, 'Velocidad flujo upstream', 'V', 'u'')
+    cpl.hist_campos_variacion_updown(Vu_s, av_Vu_s, norm_Vu_s, av_norm_Vu_s, 24, 'Velocidad flujo upstream', 'V', 'u', 'ux', 'uy', 'uz')
     plt.savefig(path_analisis+'hist_Vu_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_Vu_copl_variacion_up_down{}.pdf'.format(shock_date))
     
-    cpl.hist_campos_variacion_updown(Vd_s, av_Vd_s, norm_Vd_s, av_norm_Vd_s, 25, 'Velocidad flujo downstream', 'V', 'd')
+    cpl.hist_campos_variacion_updown(Vd_s, av_Vd_s, norm_Vd_s, av_norm_Vd_s, 25, 'Velocidad flujo downstream', 'V', 'd', 'dx', 'dy', 'dz')
     plt.savefig(path_analisis+'hist_Vd_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_Vd_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     
     #normales
     
     cpl.hist_norm_variacion_updown(nB_s2, av_nB_s2, nB_su, av_nB_su, nB_sd, av_nB_sd,
-                                   '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', 26)
+                                   r'$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', 26)
     plt.savefig(path_analisis+'hist_nB_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_nB_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.hist_norm_variacion_updown(nBuV_s2, av_nBuV_s2, nBuV_su, av_nBuV_su, nBuV_sd, av_nBuV_sd,
-                                   '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', 27)
+                                   r'$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', 27)
     plt.savefig(path_analisis+'hist_nBuV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_nBuV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.hist_norm_variacion_updown(nBdV_s2, av_nBdV_s2, nBdV_su, av_nBdV_su, nBdV_sd, av_nBdV_sd,
-                                   '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', 28)
+                                   r'$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', 28)
     plt.savefig(path_analisis+'hist_nBdV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_nBdV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.hist_norm_variacion_updown(nBduV_s2, av_nBduV_s2, nBduV_su, av_nBduV_su, nBduV_sd, av_nBduV_sd,
-                                   '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', 29)
+                                   r'$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', 29)
     plt.savefig(path_analisis+'hist_nBduV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_nBduV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.hist_norm_variacion_updown(nV_s2, av_nV_s2, nV_su, av_nV_su, nV_sd, av_nV_sd,
-                                   '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$', 30)
-    plt.savefig(path_analisis+'hist_nV_copl_variacion_up_down{}'.format(shock_date))
+                                   r'$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$', 30)
+    plt.savefig(path_analisis+'hist_nV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     
     #angulos
     
     cpl.hist_theta_variacion_updown(thetaB_s2, av_thetaB_s2, thetaB_su, av_thetaB_su, thetaB_sd, av_thetaB_sd,
-                                   '$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', 31)
+                                   r'$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', 31)
     plt.savefig(path_analisis+'hist_thetaB_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_thetaB_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.hist_theta_variacion_updown(thetaBuV_s2, av_thetaBuV_s2, thetaBuV_su, av_thetaBuV_su, thetaBuV_sd, av_thetaBuV_sd,
-                                   '$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', 32)
+                                   r'$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', 32)
     plt.savefig(path_analisis+'hist_thetaBuV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_thetaBuV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.hist_theta_variacion_updown(thetaBdV_s2, av_thetaBdV_s2, thetaBdV_su, av_thetaBdV_su, thetaBdV_sd, av_thetaBdV_sd,
-                                   '$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', 33)
+                                   r'$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', 33)
     plt.savefig(path_analisis+'hist_thetaBdV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_thetaBdV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.hist_theta_variacion_updown(thetaBduV_s2, av_thetaBduV_s2, thetaBduV_su, av_thetaBduV_su, thetaBduV_sd, av_thetaBduV_sd,
-                                   '$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', 34)
+                                   r'$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', 34)
     plt.savefig(path_analisis+'hist_thetaBduV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_thetaBduV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.hist_theta_variacion_updown(thetaV_s2, av_thetaV_s2, thetaV_su, av_thetaV_su, thetaV_sd, av_thetaV_sd,
-                                   '$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$', 30)
+                                   r'$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$', 30)
     plt.savefig(path_analisis+'hist_thetaV_copl_variacion_up_down{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_thetaV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     
     

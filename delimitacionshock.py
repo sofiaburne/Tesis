@@ -4,10 +4,10 @@ MODO_delimitacion = 0
 
 
 from mag import B, Bx, By, Bz, x, y, z, t_mag, shock_date
-import swea_swia as ss
-from swea_swia import t_swea, flujosenergia_swea, nivelesenergia_swea, t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
-import funciones_fit_bowshock as fbow
-import funciones_coplanaridad as fcop
+import sweaswia as ss
+from sweaswia import t_swea, flujosenergia_swea, nivelesenergia_swea, t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
+import bowshock_funciones as fbow
+import coplanaridad_funciones as fcop
 
 
 from importlib import reload
@@ -416,18 +416,24 @@ Vd = np.mean(V2, axis = 0)
 #std_Vu = np.array([st.stdev(V1[:,0]), st.stdev(V1[:,1]), st.stdev(V1[:,2])])
 #std_Vd = np.array([st.stdev(V2[:,0]), st.stdev(V2[:,1]), st.stdev(V2[:,2])])
 
+#pongo falsos por ahora
+std_Vu = np.array([0.01, 0.01, 0.01])
+std_Vd = np.array([0.01, 0.01, 0.01])
+
 #modulos de Vu y Vd
 norm_V1 = np.empty_like(V1[:,0])
 for i in range(len(V1)):
     norm_V1[i] = np.linalg.norm([V1[i,0], V1[i,1], V1[i,2]])
 norm_Vu = np.mean(norm_V1)
 #std_norm_Vu = st.stdev(norm_V1)
+std_norm_Vu = 0.001 #falso
 
 norm_V2 = np.empty_like(V2[:,0])
 for i in range(len(V2)):
     norm_V2[i] = np.linalg.norm([V2[i,0], V2[i,1], V2[i,2]])
 norm_Vd = np.mean(norm_V2)
 #std_norm_Vd = st.stdev(norm_V2)
+std_norm_Vd = 0.001 #falso
 
 
 #pitch angle
