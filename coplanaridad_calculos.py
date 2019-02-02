@@ -7,7 +7,7 @@ from mag import shock_date
 from delimitacionshock import B, Bx, By, Bz, t_mag
 from delimitacionshock import t_swea, flujosenergia_swea, nivelesenergia_swea
 from delimitacionshock import t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
-from delimitacionshock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, std_Bd, std_Bu, std_Vu, std_Vd, i_u, f_u, i_d, f_d, iu_v, fu_v, id_v, fd_v, lim_t1u, lim_t2u, lim_t1d, lim_t2d, i_u5, f_u5, i_d5, f_d5, iu_v5, fu_v5, id_v5, fd_v5, vel, v_nave
+from delimitacionshock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, std_Bd, std_Bu, std_Vu, std_Vd, i_u, f_u, i_d, f_d, iu_v, fu_v, id_v, fd_v, lim_t1u, lim_t2u, lim_t1d, lim_t2d, vel, v_nave
 from subestructuras_calculos import N, theta_N, Rc
 from conservaciones import M_A, M_c
 import coplanaridad_funciones as fcop
@@ -163,12 +163,8 @@ if MODO_coplanaridad == 1:
 
 #calculo campos B y V up/downstream para cada medio subintervalo del original
 
-#half_u, half_d, half_Bu, half_Bd, std_half_Bu, std_half_Bd = fcop.campos_half(i_u, f_u, i_d, f_d, B1, B2)
-#half_uv, half_dv, half_Vu, half_Vd, std_half_Vu, std_half_Vd = fcop.campos_half(iu_v, fu_v, id_v, fd_v, V1, V2)
-
-#tengo problemas con la std de Vu, Vd
-half_u, half_d, half_Bu, half_Bd = fcop.campos_half(i_u, f_u, i_d, f_d, B1, B2)
-half_uv, half_dv, half_Vu, half_Vd = fcop.campos_half(iu_v, fu_v, id_v, fd_v, V1, V2)    
+half_u, half_d, half_Bu, half_Bd, std_half_Bu, std_half_Bd = fcop.campos_half(i_u, f_u, i_d, f_d, B1, B2)
+half_uv, half_dv, half_Vu, half_Vd, std_half_Vu, std_half_Vd = fcop.campos_half(iu_v, fu_v, id_v, fd_v, np.float64(V1), np.float64(V2))   
     
 
 #calculo normales combinando cada una de las mitades de los intervalos upstream y downstream
@@ -487,10 +483,10 @@ for i in range(Ld):
     err_Bu_s[i,:] = np.array([st.stdev(Bb[:,0,i]), st.stdev(Bb[:,1,i]), st.stdev(Bb[:,2,i])])
 for i in range(Luv):
     Vu_s[i,:] = np.mean(Va[:,:,i], axis = 0)
-    #err_Vu_s[i,:] = np.array([st.stdev(Va[:,0,i]), st.stdev(Va[:,1,i]), st.stdev(Va[:,2,i])])
+    err_Vu_s[i,:] = np.array([st.stdev(np.float64(Va[:,0,i])), st.stdev(np.float64(Va[:,1,i])), st.stdev(np.float64(Va[:,2,i]))])
 for i in range(Ldv):
     Vd_s[i,:] = np.mean(Vb[:,:,i], axis = 0)
-    #err_Vd_s[i,:] = np.array([st.stdev(Vb[:,0,i]), st.stdev(Vb[:,1,i]), st.stdev(Vb[:,2,i])])
+    err_Vd_s[i,:] = np.array([st.stdev(np.float64(Vb[:,0,i])), st.stdev(np.float64(Vb[:,1,i])), st.stdev(np.float64(Vb[:,2,i]))])
 
 #modulos de los campos
 norm_Bu_s = np.linalg.norm(Bu_s, axis = 1)

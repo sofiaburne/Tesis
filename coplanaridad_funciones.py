@@ -61,22 +61,22 @@ def campos_half(i_u, f_u, i_d, f_d, B1, B2):
     
     half1_Bu = np.mean(B1[:half_u,:], axis = 0)
     half1_Bd = np.mean(B2[:half_d,:], axis = 0)
-    #std_half1_Bu = np.array([st.stdev(B1[:half_u,0]), st.stdev(B1[:half_u,1]), st.stdev(B1[:half_u,2])])
-    #std_half1_Bd = np.array([st.stdev(B2[:half_d,0]), st.stdev(B2[:half_d,1]), st.stdev(B2[:half_d,2])])
+    std_half1_Bu = np.array([st.stdev(B1[:half_u,0]), st.stdev(B1[:half_u,1]), st.stdev(B1[:half_u,2])])
+    std_half1_Bd = np.array([st.stdev(B2[:half_d,0]), st.stdev(B2[:half_d,1]), st.stdev(B2[:half_d,2])])
     
     half2_Bu = np.mean(B1[half_u:,:], axis = 0)
     half2_Bd = np.mean(B2[half_d:,:], axis = 0)
-    #std_half2_Bu = np.array([st.stdev(B1[half_u:,0]), st.stdev(B1[half_u:,1]), st.stdev(B1[half_u:,2])])
-    #std_half2_Bd = np.array([st.stdev(B2[half_d:,0]), st.stdev(B2[half_d:,1]), st.stdev(B2[half_d:,2])])
+    std_half2_Bu = np.array([st.stdev(B1[half_u:,0]), st.stdev(B1[half_u:,1]), st.stdev(B1[half_u:,2])])
+    std_half2_Bd = np.array([st.stdev(B2[half_d:,0]), st.stdev(B2[half_d:,1]), st.stdev(B2[half_d:,2])])
     
     half_Bu = np.array([half1_Bu, half2_Bu])
     half_Bd = np.array([half1_Bd, half2_Bd])
-    #std_half_Bu = np.array([std_half1_Bu, std_half2_Bu])
-    #std_half_Bd = np.array([std_half1_Bd, std_half2_Bd])
+    std_half_Bu = np.array([std_half1_Bu, std_half2_Bu])
+    std_half_Bd = np.array([std_half1_Bd, std_half2_Bd])
     
-    #return half_u, half_d, half_Bu, half_Bd, std_half_Bu, std_half_Bd
-    return half_u, half_d, half_Bu, half_Bd
-
+    return half_u, half_d, half_Bu, half_Bd, std_half_Bu, std_half_Bd
+    
+    
 
 
 def half_angulo_N(half_n, N):
