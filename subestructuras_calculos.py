@@ -641,6 +641,9 @@ C = (np.abs(t_mag-tc)).argmin()
 #posicion de la nave en el centro del shock
 Rc = np.array([x[C], y[C], z[C]])
 
+#zenith angle
+cenit = fcop.alpha(Rc,np.array([1,0,0])) #el segundo vector es el versor x_MSO
+
 
 #ancho temporal del shock en seg (inicio foot : final ramp)
 ancho_shock_temp = 3600*abs(ti_foot - ti_over)

@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_coplanaridad = 1
+MODO_coplanaridad = 0
 
 
 from mag import shock_date
