@@ -101,7 +101,7 @@ if MODO_coplanaridad == 1:
     
     
     plt.figure(fignum, figsize = figsize)
-    plt.suptitle(r'Componente normal del campo magnético', fontsize = font_title)
+    plt.suptitle(r'Componente normal del campo magnético - coplanaridad', fontsize = font_title)
     
     plot0 = plt.subplot(511)
     plt.setp(plot0.get_xticklabels(), visible = False)
