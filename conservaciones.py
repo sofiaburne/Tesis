@@ -123,6 +123,7 @@ if MODO_hipotesisMHD == 1:
     plot1.legend(handles = [gr1,gr2], loc = 0, fontsize = font_leg)
     
     #f2.savefig(path_analisis+'fast_shock_{}'.format(shock_date))
+    #f2.savefig(path_analisis+'fast_shock_{}.pdf'.format(shock_date))
 
 #%%
     
@@ -265,19 +266,19 @@ B_dt = (B_d - B_dn*norm)
 #densidad en kg/m^3
 mp = 1.67e-27 #masa del proton en kg
 #mp = 1.5e-10 #masa del proton en joules/c^2
-densnum_u = np.mean(densidad_swia[iu_v:fu_v])*(1e6) #1/m^3
-densnum_d = np.mean(densidad_swia[id_v:fd_v])*(1e6) #1/m^3
+densnum_u = np.mean(densidad_swia[min(iu_v,fu_v):max(iu_v,fu_v)])*(1e6) #1/m^3
+densnum_d = np.mean(densidad_swia[min(id_v,fd_v):max(id_v,fd_v)])*(1e6) #1/m^3
 rho_u = mp*densnum_u
 rho_d = mp*densnum_d
 
 #presion suponiendo gas ideal (en Pa=J/m^3)
 kB = 1.38e-23 #cte de Boltzmann en J/K
 #por ahora supongo T = 2*Ti, tendria que ser T=Ti+Te
-Tu = 2*np.mean(temperatura_swia_norm[iu_v:fu_v])*(11604.5) #en K
-Td = 2*np.mean(temperatura_swia_norm[id_v:fd_v])*(11604.5) #en K
+Tu = 2*np.mean(temperatura_swia_norm[min(iu_v,fu_v):max(iu_v,fu_v)])*(11604.5) #en K
+Td = 2*np.mean(temperatura_swia_norm[min(id_v,fd_v):max(id_v,fd_v)])*(11604.5) #en K
 ##con Te estimadas de las distribuciones
-#Tu = (np.mean(temperatura_swia_norm[iu_v:fu_v])+Te_u)*(11604.5) #en K
-#Td = (np.mean(temperatura_swia_norm[id_v:fd_v])+Te_d)*(11604.5) #en K
+#Tu = (np.mean(temperatura_swia_norm[min(iu_v,fu_v):max(iu_v,fu_v)])+Te_u)*(11604.5) #en K
+#Td = (np.mean(temperatura_swia_norm[min(id_v,fd_v):max(id_v,fd_v)])+Te_d)*(11604.5) #en K
 Pu = densnum_u*kB*Tu
 Pd = densnum_d*kB*Td
 
