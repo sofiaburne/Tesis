@@ -7,6 +7,8 @@ from mag import shock_date
 from delimitacionshock import v_nave
 from subestructuras_calculos import L, N, theta_N, theta_NRc, Rc
 from coplanaridad_calculos import nB, nBuV, nBdV, nBduV, nV, thetaB, thetaBuV, thetaBdV, thetaBduV, thetaV, cono_err_nB, cono_err_nBuV, cono_err_nBdV, cono_err_nBduV, cono_err_nV
+from mva import cono_err_x3, x, thetaMVA
+n_mva = x[2,:]
 import coplanaridad_funciones as fcop
 import bowshock_funciones as fbow
 
@@ -22,35 +24,29 @@ if not os.path.exists(path_analisis):
 
 #%%
 
-#comparacion entre normales y angulos con campo upstream
+#angulo entre normales coplanares/mva y normal del fit
 
-#angulo entre normal del fit y nB
 angulo_normsB = fcop.alpha(nB,N)
-#diferencia del angulo con campo upstream de nB y normal fit
-dif_thetasB = abs(thetaB - theta_N)
-
-#angulo entre normal del fit y nBuV
 angulo_normsBuV = fcop.alpha(nBuV,N)
-#diferencia del angulo con campo upstream de nBuV y normal fit
-dif_thetasBuV = abs(thetaBuV - theta_N)
-
-#angulo entre normal del fit y nBdV
 angulo_normsBdV = fcop.alpha(nBdV,N)
-#diferencia del angulo con campo upstream de nBdV y normal fit
-dif_thetasBdV = abs(thetaBdV - theta_N) 
-
-#angulo entre normal del fit y nBduV
 angulo_normsBduV = fcop.alpha(nBduV,N)
-#diferencia del angulo con campo upstream de nBduV y normal fit
-dif_thetasBduV = abs(thetaBduV - theta_N) 
-
-#angulo entre normal del fit y nV
 angulo_normsV = fcop.alpha(nV,N)
-#diferencia del angulo con campo upstream de nV y normal fit
-dif_thetasV = abs(thetaV - theta_N)  
+
+angulo_normsMVA = fcop.alpha(n_mva,N)
 
 
-#veo si la normal del fit esta dentro del cono de error de las normales coplanares
+#comparacion de angulos con Bu de normal del fit y normales coplanres/mva
+
+dif_thetasB = abs(thetaB - theta_N)
+dif_thetasBuV = abs(thetaBuV - theta_N)
+dif_thetasBdV = abs(thetaBdV - theta_N) 
+dif_thetasBduV = abs(thetaBduV - theta_N) 
+dif_thetasV = abs(thetaV - theta_N)
+
+dif_thetasMVA = abs(thetaMVA - theta_N) 
+
+
+#veo si la normal del fit esta dentro del cono de error de las normales coplanares/mva
 
 if cono_err_nB < angulo_normsB:
     print('normal del fit fuera del cono de error de nB')
@@ -77,6 +73,11 @@ if cono_err_nV < angulo_normsV:
 else:
     print('normal del fit dentro del cono de error de nV')
 
+if cono_err_x3 < angulo_normsV:
+    print('normal del fit fuera del cono de error de n_mva')
+else:
+    print('normal del fit dentro del cono de error de n_mva')
+
 #%%
     
 if MODO_fit == 1:
@@ -93,6 +94,9 @@ if MODO_fit == 1:
     ax.quiver(Rc[0], Rc[1], Rc[2], nBdV[0], nBdV[1], nBdV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C2', normalize = True, label = '$n_3$')
     ax.quiver(Rc[0], Rc[1], Rc[2], nBduV[0], nBduV[1], nBduV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C3', normalize = True, label = '$n_4$')
     ax.quiver(Rc[0], Rc[1], Rc[2], nV[0], nV[1], nV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C4', normalize = True, label = '$n_5$')
+    
+    #ploteo normal MVA
+    ax.quiver(Rc[0], Rc[1], Rc[2], n_mva[0], n_mva[1], n_mva[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C7', normalize = True, label = '$n_{MVA}$')
     
     #ploteo normal del fit
     n_fit = fbow.norm_fit_MGS(Rc[0],Rc[1],Rc[2],L)

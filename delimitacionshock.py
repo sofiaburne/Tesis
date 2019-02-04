@@ -5,7 +5,7 @@ MODO_delimitacion = 0
 
 from mag import B, Bx, By, Bz, x, y, z, t_mag, shock_date
 import sweaswia as ss
-from sweaswia import t_swea, flujosenergia_swea, nivelesenergia_swea, t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
+from sweaswia import t_swea, flujosenergia_swea, counts_swea, nivelesenergia_swea, t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
 import bowshock_funciones as fbow
 import coplanaridad_funciones as fcop
 
@@ -130,6 +130,7 @@ z = z[iapo1:iapo2]
 t_mag = t_mag[iapo1:iapo2]
 t_swea = t_swea[iapo1_swea:iapo2_swea]
 flujosenergia_swea = flujosenergia_swea[iapo1_swea:iapo2_swea,:]
+counts_swea = counts_swea[iapo1_swea:iapo2_swea,:]
 t_swia_mom = t_swia_mom[iapo1_swia_mom:iapo2_swia_mom]
 densidad_swia = densidad_swia[iapo1_swia_mom:iapo2_swia_mom]
 velocidad_swia = velocidad_swia[iapo1_swia_mom:iapo2_swia_mom,:]

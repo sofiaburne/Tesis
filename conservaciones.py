@@ -22,7 +22,49 @@ path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(s
 if not os.path.exists(path_analisis):
     os.makedirs(path_analisis)
 
+#%%----------------------------------- FUNCIONES GENERALES -------------------------------------------
+    
+#para calcular Te    
+def Te(ind_t_Te, Emin_fit, Emax_fit, amp0, mu0, sigma0,
+       dist_e = flujosenergia_swea, energ = nivelesenergia_swea, t = t_swea):
+    
+    '''
+    ind_t_Te es indice del tiempo (up/down) en el que fijo la distribucion de electrones
+    Emin_fit y Emax_fit son los limites de energias en donde hago el ajuste
+    gaussiano
+    amp0, mu0, sigma0 son los parametros iniciales del fit
+    '''
+    
+    
+    #selecciono rango de energias donde hacer el ajuste (energias van de mayor a menor)
+    ind_Emin_fit = (abs(energ - Emin_fit)).argmin()
+    ind_Emax_fit = (abs(energ - Emax_fit)).argmin()
+    
+    
+    #defino funcion gaussiana
+    def gaussiana(x,a,x0,sigma):
+        return a*np.exp(-(x-x0)**2/(2*sigma**2))
+    
+    
+    #fit gaussiano de los datos
+    params, cov = scipy.optimize.curve_fit(gaussiana,
+                                                    energ[ind_Emax_fit:ind_Emin_fit], dist_e[ind_t_Te,ind_Emax_fit:ind_Emin_fit], [amp0,mu0,sigma0])
+    
+    f_gauss = gaussiana(energ, params[0], params[1], params[2])
+    
+    #calculo ancho altura mitad
+    aam = max(f_gauss)/2
+    
+    #estimo Te como energia donde se da el aam
+    ind_aam = (abs(f_gauss - aam)).argmin()
+    Te = energ[ind_aam]
+    
+    return Te, ind_aam, aam, f_gauss, params, ind_Emin_fit, ind_Emax_fit
 
+#%%#####################################################################################################
+########################################################################################################
+########################################################################################################
+########################################################################################################
 #%%
 #plot de densidad y B para ver que es un shock rapido
 
@@ -83,6 +125,116 @@ if MODO_hipotesisMHD == 1:
     #f2.savefig(path_analisis+'fast_shock_{}'.format(shock_date))
 
 #%%
+    
+#calculo Te
+    
+#ploteo distribucion de e vs energias a t fijo para elegir parametros y region para hacer fit
+
+tu_Te = 9.75 #*
+td_Te = 9.92 #*
+
+ind_tu_Te = (abs(t_swea - tu_Te)).argmin()
+ind_td_Te = (abs(t_swea - td_Te)).argmin()
+
+
+
+if MODO_hipotesisMHD == 1:
+    
+    figsize = (30,15)
+    font_title = 30
+    font_label = 30
+    font_leg = 26
+    lw = 3
+    msize = 8
+    colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
+    ticks_l = 6
+    ticks_w = 3
+    grid_alpha = 0.8
+    
+    ylim_min_u = 1e6
+    ylim_min_d = 1e6
+    
+    
+    plt.figure(11, figsize = figsize)
+       
+    plt.subplot(121)
+    plt.title(r' Upstream - t = {} hora decimal'.format(round(t_swea[ind_tu_Te],3)), fontsize = font_title)
+    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_tu_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.ylabel(r'Distribución de electrones', fontsize = font_label)
+    plt.xlabel('Energía [eV]', fontsize = font_label)
+    plt.ylim(ymin = ylim_min_u)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    plt.subplot(122)
+    plt.title(r' Downstream - t = {} hora decimal'.format(round(t_swea[ind_td_Te],3)), fontsize = font_title)
+    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_td_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.xlabel('Energía [eV]', fontsize = font_label)
+    plt.ylim(ymin = ylim_min_d)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    
+
+
+Te_u, ind_aam_u, aam_u, f_gauss_u, params_u, ind_Emin_fit_u, ind_Emax_fit_u = Te(ind_tu_Te, 4, 43, 2e8, 10, 1)  #* 
+Te_d, ind_aam_d, aam_d, f_gauss_d, params_d, ind_Emin_fit_d, ind_Emax_fit_d = Te(ind_td_Te, 16, 88, 6e8, 30, 1)  #*
+
+if  MODO_hipotesisMHD == 1:
+    
+    
+    plt.figure(12, figsize = figsize)
+    
+    plt.subplot(121)
+    plt.title(r' Upstream - t = {} hora decimal'.format(round(t_swea[ind_tu_Te],3)), fontsize = font_title)
+    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_tu_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
+    plt.plot(nivelesenergia_swea, f_gauss_u, linewidth = lw, marker = 'o', markersize = msize, color = colors[1])
+    
+    plt.axvspan(xmin = nivelesenergia_swea[ind_Emin_fit_u], xmax = nivelesenergia_swea[ind_Emax_fit_u], facecolor = colors[2], alpha = 0.3)
+    plt.axhline(y = aam_u, linewidth = lw, color = colors[3], label = 'FWHM')
+    plt.axvline(x = Te_u, linewidth = lw, color = colors[4], label = r'$T_e$ = {} eV'.format(round(np.float64(Te_u),2)))
+    plt.axvline(x = params_u[1], linewidth = lw, color = colors[5], label = r'$\mu$')
+    
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.ylabel(r'Distribución de electrones', fontsize = font_label)
+    plt.xlabel('Energía [eV]', fontsize = font_label)
+    plt.ylim(ymin = ylim_min_u)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.legend(loc = 0, fontsize = font_leg)
+    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    
+    plt.subplot(122)
+    plt.title(r' Downstream - t = {} hora decimal'.format(round(t_swea[ind_td_Te],3)), fontsize = font_title)
+    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_td_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
+    plt.plot(nivelesenergia_swea, f_gauss_d, linewidth = lw, marker = 'o', markersize = msize, color = colors[1])
+    
+    plt.axvspan(xmin = nivelesenergia_swea[ind_Emin_fit_d], xmax = nivelesenergia_swea[ind_Emax_fit_d], facecolor = colors[2], alpha = 0.3)
+    plt.axhline(y = aam_d, linewidth = lw, color = colors[3], label = 'FWHM')
+    plt.axvline(x = Te_d, linewidth = lw, color = colors[4], label = r'$T_e$ = {} eV'.format(round(np.float64(Te_d),2)))
+    plt.axvline(x = params_d[1], linewidth = lw, color = colors[5], label = r'$\mu$')
+    
+    plt.yscale('log')
+    plt.xscale('log')
+    plt.xlabel('Energía [eV]', fontsize = font_label)
+    plt.ylim(ymin = ylim_min_d)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.legend(loc = 0, fontsize = font_leg)
+    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    plt.savefig(path_analisis+'Te{}'.format(shock_date))
+    plt.savefig(path_analisis+'Te{}.pdf'.format(shock_date)) 
+        
+    
+    
+    
+
+#%%
 #chequeo relaciones RH
 
 
@@ -123,6 +275,9 @@ kB = 1.38e-23 #cte de Boltzmann en J/K
 #por ahora supongo T = 2*Ti, tendria que ser T=Ti+Te
 Tu = 2*np.mean(temperatura_swia_norm[iu_v:fu_v])*(11604.5) #en K
 Td = 2*np.mean(temperatura_swia_norm[id_v:fd_v])*(11604.5) #en K
+##con Te estimadas de las distribuciones
+#Tu = (np.mean(temperatura_swia_norm[iu_v:fu_v])+Te_u)*(11604.5) #en K
+#Td = (np.mean(temperatura_swia_norm[id_v:fd_v])+Te_d)*(11604.5) #en K
 Pu = densnum_u*kB*Tu
 Pd = densnum_d*kB*Td
 

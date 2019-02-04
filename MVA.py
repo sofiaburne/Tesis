@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_mva = 1
+MODO_mva = 0
 
 
 import numpy as np
@@ -11,8 +11,9 @@ import statistics as st
 import os
 
 from mag import shock_date
-from delimitacionshock import Bx, By, Bz, t_mag
+from delimitacionshock import Bx, By, Bz, t_mag, Bu
 from subestructuras_calculos import N
+import coplanaridad_funciones as fcop
 
 B_vec = np.array([Bx, By, Bz]).T
 
@@ -155,7 +156,6 @@ x = np.array([y[:,0], np.cross(y[:,2],y[:,0]), y[:,2]]) #cada fila es un autovec
 
 
 # componentes del campo magnetico a lo largo de cada autovector
-
 B1 = np.empty(len(B_vec[:,0]))
 B2 = np.empty(len(B_vec[:,0]))
 B3 = np.empty(len(B_vec[:,0]))
@@ -165,7 +165,10 @@ for m in range(len(B_vec[:,0])):
     B2[m] = np.dot(B_vec[m,:], x[1,:])
     B3[m] = np.dot(B_vec[m,:], x[2,:])
     
-    
+
+#angulo con Bu
+thetaMVA = fcop.alpha(Bu,x[2,:])
+   
 
 # errores 
 

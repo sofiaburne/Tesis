@@ -129,6 +129,7 @@ data_swea.cdf_info()
 timeunix_swea = data_swea.varget('time_unix')
 energyflux_swea = data_swea.varget('diff_en_fluxes')
 energylevel_swea = data_swea.varget('energy')
+counts_swea = data_swea.varget('counts')
 
 #los guardo en otros array que se mantengan cuando cierre el archivo
 tu_swea = np.asarray(timeunix_swea)
