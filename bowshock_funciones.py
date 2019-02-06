@@ -34,7 +34,7 @@ para que el hiperboloide contenga el punto Rc (centro de mi shock)
 def L_fit(Rc):
     eps, X_0 = 1.03, 0.64 #excentricidad y foco de Vignes
     L = Symbol('L', positive=True) #me quedo sólo con L positivo
-    a,b,c = L/(eps**2 - 1),L/(eps**1 - 1)**(1/2), X_0 + L*eps/(eps**2 - 1)
+    a,b,c = L/(eps**2 - 1),L/(eps**2 - 1)**(1/2), X_0 + L*eps/(eps**2 - 1)
     eq = ((Rc[0]-c)**2)/a**2 - (Rc[1]**2)/b**2 - (Rc[2]**2)/b**2 - 1    
     l = np.asarray(solve(eq, L))
     Ls = l[(np.abs(l-2.04)).argmin()] #por mas que me quede con L>0 a veces tira dos L posibles, me quedo con el mas parecido al L de Vignes
