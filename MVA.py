@@ -11,11 +11,11 @@ import statistics as st
 import os
 
 from mag import shock_date
-from delimitacionshock import Bx, By, Bz, t_mag, Bu
-from subestructuras_calculos import N
+#from delimitacionshock import Bx, By, Bz, t_mag, Bu
+#from subestructuras_calculos import N
 import coplanaridad_funciones as fcop
 
-B_vec = np.array([Bx, By, Bz]).T
+#B_vec = np.array([Bx, By, Bz]).T
 
 path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(shock_date)
 if not os.path.exists(path_analisis):
@@ -110,6 +110,8 @@ def boot(B, N):
         
         #armo terna con los autovectores respetando x3 normal exterior
         w = np.array([z[:,0], np.cross(z[:,2],z[:,0]), z[:,2]]) #cada fila es un autovector distinto
+        
+#        w = np.array([z[:,0], z[:,1], z[:,2]]) # vectores asi como salen (para test)
                 
         #renombro todo para no tener mil variables.
         norm[i,:] = w[2,:]
@@ -148,11 +150,11 @@ if y[0,2] < 0: y[:,2] = - y[:,2]
 #lo fuerzo respetando que x3 sea normal externa
 x = np.array([y[:,0], np.cross(y[:,2],y[:,0]), y[:,2]]) #cada fila es un autovector distinto
 
+#x = np.array([y[:,0], y[:,1], y[:,2]]) #como salen de la matriz
 
 ##corrijo signos para el ejemplo
 #sgn = np.array([-1,-1])
 #x = np.array([sgn[0]*y[:,0], sgn[1]*np.cross(y[:,2],y[:,0]), y[:,2]])
-
 
 
 # componentes del campo magnetico a lo largo de cada autovector

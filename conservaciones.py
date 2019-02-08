@@ -1,11 +1,11 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_hipotesisMHD = 0
+MODO_hipotesisMHD = 1
 
 
 from mag import shock_date
 from delimitacionshock import B, t_mag
-from delimitacionshock import t_swia_mom, densidad_swia, temperatura_swia_norm
+from delimitacionshock import t_swia_mom, densidad_swia, temperatura_swia_norm, t_swea, flujosenergia_swea, nivelesenergia_swea
 from delimitacionshock import Bu, Bd, norm_Bu, norm_Bd, Vu, Vd, iu_v, fu_v, id_v, fd_v
 from subestructuras_calculos import N
 
@@ -16,6 +16,9 @@ import matplotlib.pyplot as plt
 import os
 from sympy.solvers import solve
 from sympy import Symbol
+import scipy 
+from scipy import optimize
+
 
 
 path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(shock_date)
@@ -25,8 +28,7 @@ if not os.path.exists(path_analisis):
 #%%----------------------------------- FUNCIONES GENERALES -------------------------------------------
     
 #para calcular Te    
-def Te(ind_t_Te, Emin_fit, Emax_fit, amp0, mu0, sigma0,
-       dist_e = flujosenergia_swea, energ = nivelesenergia_swea, t = t_swea):
+def Te(ind_t_Te, Emin_fit, Emax_fit, amp0, mu0, sigma0, dist_e, energ, t):
     
     '''
     ind_t_Te es indice del tiempo (up/down) en el que fijo la distribucion de electrones
@@ -182,8 +184,8 @@ if MODO_hipotesisMHD == 1:
     
 
 
-Te_u, ind_aam_u, aam_u, f_gauss_u, params_u, ind_Emin_fit_u, ind_Emax_fit_u = Te(ind_tu_Te, 4, 43, 2e8, 10, 1)  #* 
-Te_d, ind_aam_d, aam_d, f_gauss_d, params_d, ind_Emin_fit_d, ind_Emax_fit_d = Te(ind_td_Te, 16, 88, 6e8, 30, 1)  #*
+Te_u, ind_aam_u, aam_u, f_gauss_u, params_u, ind_Emin_fit_u, ind_Emax_fit_u = Te(ind_tu_Te, 4, 43, 2e8, 10, 1, dist_e = flujosenergia_swea, energ = nivelesenergia_swea, t = t_swea)  #* 
+Te_d, ind_aam_d, aam_d, f_gauss_d, params_d, ind_Emin_fit_d, ind_Emax_fit_d = Te(ind_td_Te, 16, 88, 6e8, 30, 1, dist_e = flujosenergia_swea, energ = nivelesenergia_swea, t = t_swea)  #*
 
 if  MODO_hipotesisMHD == 1:
     

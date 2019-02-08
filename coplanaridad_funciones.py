@@ -35,6 +35,120 @@ def norm_coplanar(Bd,Bu,Vd,Vu):
 
 
 
+
+def err_norm_coplanar(Bd, Bu, Vd, Vu, err_Bu, err_Bd, err_Vu, err_Vd):
+    
+    def err_n(x, y, z, err_x, err_y, err_z):
+        
+        '''
+        Pienso a n como n = (X x Y) x Z / | X x Y) x Z |
+        nx = ((x2*y0 - x0*y2)*z2 - (x0*y1 - x1*y0)*z1) / ( ((x2*y0 - x0*y2)*z2 - (x0*y1 - x1*y0)*z1)^2 + ((x0*y1 - x1*y0)*z0 - (x1*y2 - x2*y1)*z2)^2 + ((x1*y2 - x2*y1)*z1 - (x2*y0 - x0*y2)*z0)^2 )^(1/2)
+        '''
+        
+        den = ( (y[2]*(x[0]*z[0] + x[1]*z[1]) - x[2]*(y[0]*z[0] + y[1]*z[1]))**2 + (y[1]*(x[0]*z[0] + x[2]*z[2]) - x[1]*(y[0]*z[0] + y[2]*z[2]))**2 + (x[1]*y[0]*z[1] + x[2]*y[0]*z[2] - x[0]*(y[1]*z[1] + y[2]*z[2]))**2)**(3/2)        
+            
+        dx0_nx = (x[2]*y[1] - x[1]*y[2]) * (y[0]*z[0] + y[1]*z[1] + y[2]*z[2]) * (x[0]*z[0]*(-y[2]*z[1] + y[1]*z[2]) + x[2]*(y[0]*z[0]*z[1] + y[1]*(z[1]**2 + z[2]**2)) - x[1]*(y[0]*z[0]*z[2] + y[2]*(z[1]**2 + z[2]**2)) ) / (-1)*den
+        dx1_nx = (x[2]*y[0] - x[0]*z[2]) * (y[0]*z[0] + y[1]*z[1] + y[2]*z[2]) * (x[0]*z[0]*(-y[2]*z[1] + y[1]*z[2]) + x[2]*(y[0]*z[0]*z[1] + y[1]*(z[1]**2 + z[2]**2)) - x[1]*(y[0]*z[0]*z[2] + y[2]*(z[1]**2 + z[2]**2)) ) / den
+        dx2_nx = (x[1]*y[0] - x[0]*y[1]) * (y[0]*z[0] + y[1]*z[1] + y[2]*z[2]) * ( x[1]*y[0]*z[0]*z[2] + x[0]*z[0]*(y[2]*z[1] - y[1]*z[2]) + x[1]*y[2]*(z[1]**2 + z[2]**2) - x[2]*(y[0]*z[0]*z[1] + y[1]*(z[1]**2 + z[2]**2)) ) / den
+    
+        dy0_nx = (x[2]*y[1] - x[1]*y[2]) * (x[0]*z[0] + x[1]*z[1] + x[2]*z[2]) * ( x[0]*z[0]*(-y[2]*z[1] + y[1]*z[2]) + x[2]*(y[0]*z[0]*z[1] + y[1]*(z[1]**2 + z[2]**2)) - x[1]*(y[0]*z[0]*z[2] + y[2]*(z[1]**2 + z[2]**2)) ) / den
+        dy1_nx = (x[2]*y[0] - x[0]*y[2]) * (x[0]*z[0] + x[1]*z[1] + x[2]*z[2]) * ( x[0]*z[0]*(-y[2]*z[1] + y[1]*z[2]) + x[2]*(y[0]*z[0]*z[1] + y[1]*(z[1]**2 + z[2]**2)) - x[1]*(y[0]*z[0]*z[2] + y[2]*(z[1]**2 + z[2]**2)) ) / (-1)*den
+        dy2_nx = (-x[1]*y[0] + x[0]*y[1]) * (x[0]*z[0] + x[1]*z[1] + x[2]*z[2]) * ( x[1]*y[0]*z[0]*z[2] + x[0]*z[0]*(y[2]*z[1] - y[1]*z[2]) + x[1]*y[2]*(z[1]**2 + z[2]**2) - x[2]*(y[0]*z[0]*z[1] + y[1]*(z[1]**2 + z[2]**2)) ) / den
+        
+        dz0_nx = - (x[1]*y[0]*z[1] + x[2]*y[0]*z[2] - x[0]*(y[1]*z[1] + y[2]*z[2])) * (x[0]**2 * (y[1]**2 + y[2]**2)*z[0] + x[2]**2 * y[0]*(y[0]*z[0] + y[1]*z[1]) + x[1]**2 * y[0]*(y[0]*z[0] + y[2]*z[2]) + x[0]*x[2]*(- 2*y[0]*y[2]*z[0] + y[1]*(- y[2]*z[1] + y[1]*z[2])) - x[1]*(2*x[0]*y[0]*y[1]*z[0] + x[0]*y[2]*(- y[2]*z[1] + y[1]*z[2]) + x[2]*y[0]*(y[2]*z[1] + y[1]*z[2]))) / den
+        dz1_nx = (- y[1]*(x[0]*z[0] + x[2]*z[2]) + x[1]*(y[0]*z[0] + y[2]*z[2])) * ( x[0]**2 * (y[1]**2 + y[2]**2)*z[0] + x[2]**2 * y[0] * (y[0]*z[0] + y[1]*z[1]) + x[1]**2 * y[0] * (y[0]*z[0] + y[2]*z[2]) + x[0]*x[2]*(- 2*y[0]*y[2]*z[0] + y[1]*(- y[2]*z[1] + y[1]*z[2])) - x[1]*(2*x[0]*y[0]*y[1]*z[0] + x[0]*y[2]*(- y[2]*z[1] + y[1]*z[2]) + x[2]*y[0]*(y[2]*z[1] + y[1]*z[2])) ) / den
+        dz2_nx = (- y[2] * (x[0]*z[0] + x[1]*z[1]) + x[2]*(y[0]*z[0] + y[1]*z[1])) * ( x[0]**2 * (y[1]**2 + y[2]**2)*z[0] + x[2]**2 * y[0] * (y[0]*z[0] + y[1]*z[1]) + x[1]**2 * y[0] * (y[0]*z[0] + y[2]*z[2]) + x[0]*x[2]*(- 2*y[0]*y[2]*z[0] + y[1]*(- y[2]*z[1] + y[1]*z[2])) - x[1]*(2*x[0]*y[0]*y[1]*z[0] + x[0]*y[2]*(- y[2]*z[1] + y[1]*z[2]) + x[2]*y[0]*(y[2]*z[1] + y[1]*z[2])) ) / den
+        
+        dx0_ny = (x[2]*y[1] - x[1]*y[2]) * (y[0]*z[0] + y[1]*z[1] + y[2]*z[2]) * ( x[1]*z[1] * (- y[2]*z[0] + y[0]*z[2]) + x[2]*(y[1]*z[0]*z[1] + y[0]*(z[0]**2 + z[2]**2)) - x[0]*(y[1]*z[1]*z[2] + y[2]*(z[0]**2 + z[2]**2)) ) / den
+        dx1_ny = (x[2]*y[0] - x[0]*y[2]) * (y[0]*z[0] + y[1]*z[1] + y[2]*z[2]) * ( x[1]*z[1] * (- y[2]*z[0] + y[0]*z[2]) + x[2]*(y[1]*z[0]*z[1] + y[0]*(z[0]**2 + z[2]**2)) - x[0]*(y[1]*z[1]*z[2] + y[2]*(z[0]**2 + z[2]**2)) ) / (-1)*den
+        dx2_ny = (x[1]*y[0] - x[0]*y[1]) * (y[0]*z[0] + y[1]*z[1] + y[2]*z[2]) * ( x[1]*z[1] * (- y[2]*z[0] + y[0]*z[2]) + x[2]*(y[1]*z[0]*z[1] + y[0]*(z[0]**2 + z[2]**2)) - x[0]*(y[1]*z[1]*z[2] + y[2]*(z[0]**2 + z[2]**2)) ) / den
+        
+        dy0_ny = (x[2]*y[1] - x[1]*y[2]) * (x[0]*z[0] + x[1]*z[1] + x[2]*z[2]) * ( x[0]*y[1]*z[1]*z[2] + x[1]*z[1]*(y[2]*z[0] - y[0]*z[2]) + x[0]*y[2]*(z[0]**2 + z[2]**2) - x[2]*(y[1]*z[0]*z[1] + y[0]*(z[0]**2 + z[2]**2)) ) / den
+        dy1_ny = (x[2]*y[0] - x[0]*y[2]) * (x[0]*z[0] + x[1]*z[1] + x[2]*z[2]) * ( x[1]*z[1] * (- y[2]*z[0] + y[0]*z[2]) + x[2] * (y[1]*z[0]*z[1] + y[0]*(z[0]**2 + z[2]**2)) - x[0]*(y[1]*z[1]*z[2] + y[2]*(z[0]**2 + z[2]**2)) ) / den
+        dy2_ny = (x[1]*y[0] - x[0]*y[1]) * (x[0]*z[0] + x[1]*z[1] + x[2]*z[2]) * ( x[1]*z[1] * (- y[2]*z[0] + y[0]*z[2]) + x[2] * (y[1]*z[0]*z[1] + y[0]*(z[0]**2 + z[2]**2)) - x[0]*(y[1]*z[1]*z[2] + y[2]*(z[0]**2 + z[2]**2)) ) / (-1)*den
+        
+        dz0_ny = - (x[1]*y[0]*z[1] + x[2]*y[0]*z[2] - x[0]*(y[1]*z[1] + y[2]*z[2])) * ( x[1]**2 * (y[0]**2 + y[2]**2)*z[1] + x[2]**2 * y[1]*(y[0]*z[0] + y[1]*z[1]) - x[2]*y[2]*(x[1]*y[0]*z[0] + x[0]*y[1]*z[0] + 2*x[1]*y[1]*z[1]) + x[2]*y[0]*(x[1]*y[0] - x[0]*y[1])*z[2] + x[0]**2 * y[1]*(y[1]*z[1] + y[2]*z[2]) + x[0]*x[1]*(y[2]**2 * z[0] - 2*y[0]*y[1]*z[1] - y[0]*y[2]*z[2]) ) / den
+        dz1_ny = (- y[1]*(x[0]*z[0] + x[2]*z[2]) + x[1]*(y[0]*z[0] + y[2]*z[2])) * ( x[1]**2 * (y[0]**2 + y[2]**2)*z[1] + x[2]**2 * y[1]*(y[0]*z[0] + y[1]*z[1]) - x[2]*y[2]*(x[1]*y[0]*z[0] + x[0]*y[1]*z[0] + 2*x[1]*y[1]*z[1]) + x[2]*y[0]*(x[1]*y[0] - x[0]*y[1])*z[2] + x[0]**2 * y[1]*(y[1]*z[1] + y[2]*z[2]) + x[0]*x[1]*(y[2]**2 * z[0] - 2*y[0]*y[1]*z[1] - y[0]*y[2]*z[2]) ) / den
+        dz2_ny = (- y[2] * (x[0]*z[0] + x[1]*z[1]) + x[2]*(y[0]*z[0] + y[1]*z[1])) * ( x[1]**2 * (y[0]**2 + y[2]**2)*z[1] + x[2]**2 * y[1]*(y[0]*z[0] + y[1]*z[1]) - x[2]*y[2]*(x[1]*y[0]*z[0] + x[0]*y[1]*z[0] + 2*x[1]*y[1]*z[1]) + x[2]*y[0]*(x[1]*y[0] - x[0]*y[1])*z[2] + x[0]**2 * y[1]*(y[1]*z[1] + y[2]*z[2]) + x[0]*x[1]*(y[2]**2 * z[0] - 2*y[0]*y[1]*z[1] - y[0]*y[2]*z[2]) ) / den
+        
+        dx0_nz = (x[2]*y[1] - x[1]*y[2]) * (y[0]*z[0] + y[1]*z[1] + y[2]*z[2]) * ( - (x[1]*y[0] - x[0]*y[1])*(z[0]**2 + z[1]**2) + (x[2]*y[1]*z[0] - x[1]*y[2]*z[0] - x[2]*y[0]*z[1] + x[0]*y[2]*z[1])*z[2] ) / den
+        dx1_nz = (x[2]*y[0] - x[0]*y[2]) * (y[0]*z[0] + y[1]*z[1] + y[2]*z[2]) * ( (x[1]*y[0] - x[0]*y[1])*(z[0]**2 + z[1]**2) + (-x[2]*y[1]*z[0] + x[1]*y[2]*z[0] + x[2]*y[0]*z[1] - x[0]*y[2]*z[1])*z[2] ) / den
+        dx2_nz = - (x[1]*y[0] - x[0]*y[1]) * (y[0]*z[0] + y[1]*z[1] + y[2]*z[2]) * ( (x[1]*y[0] - x[0]*y[1])*(z[0]**2 + z[1]**2) + (-x[2]*y[1]*z[0] + x[1]*y[2]*z[0] + x[2]*y[0]*z[1] - x[0]*y[2]*z[1])*z[2] ) / den
+        
+        dy0_nz = (- x[2]*y[1] + x[1]*y[2]) * (x[0]*z[0] + x[1]*z[1] + x[2]*z[2]) * ( - (x[1]*y[0] - x[0]*y[1])*(z[0]**2 + z[1]**2) + (x[2]*y[1]*z[0] - x[1]*y[2]*z[0] - x[2]*y[0]*z[1] + x[0]*y[2]*z[1])*z[2] ) / den
+        dy1_nz = - (x[2]*y[0] - x[0]*y[2]) * (x[0]*z[0] + x[1]*z[1] + x[2]*z[2]) * ( (x[1]*y[0] - x[0]*y[1])*(z[0]**2 + z[1]**2) + (-x[2]*y[1]*z[0] + x[1]*y[2]*z[0] + x[2]*y[0]*z[1] - x[0]*y[2]*z[1])*z[2] ) / den
+        dy2_nz = (x[1]*y[0] - x[0]*y[1]) * (x[0]*z[0] + x[1]*z[1] + x[2]*z[2]) * ( (x[1]*y[0] - x[0]*y[1])*(z[0]**2 + z[1]**2) + (-x[2]*y[1]*z[0] + x[1]*y[2]*z[0] + x[2]*y[0]*z[1] - x[0]*y[2]*z[1])*z[2] ) / den
+        
+        dz0_nz = - ( (x[1]*y[0] - x[0]*y[1]) * (-x[2]*y[1]*z[0] + x[1]*y[2]*z[0] + x[2]*y[0]*z[1] - x[0]*y[2]*z[1]) + ( x[2]**2 * (y[0]**2 + y[1]**2) - 2*x[2]*(x[0]*y[0] + x[1]*y[1])*y[2] + (x[0]**2 + x[1]**2)*y[2]**2 )*z[2] ) * (x[1]*y[0]*z[1] + x[2]*y[0]*z[2] - x[0]*(y[1]*z[1] + y[2]*z[2])) / den
+        dz1_nz = ( (x[1]*y[0] - x[0]*y[1]) * (-x[2]*y[1]*z[0] + x[1]*y[2]*z[0] + x[2]*y[0]*z[1] - x[0]*y[2]*z[1]) + ( x[2]**2 * (y[0]**2 + y[1]**2) - 2*x[2]*(x[0]*y[0] + x[1]*y[1])*y[2] + (x[0]**2 + x[1]**2)*y[2]**2 )*z[2] ) * (- y[1]* (x[0]*z[0] + x[2]*z[2]) + x[1]*(y[0]*z[0] + y[2]*z[2])) / den
+        dz2_nz = (-y[2]*(x[0]*z[0] + x[1]*z[1]) + x[2]*(y[0]*z[0] + y[1]*z[1])) * ( (x[1]*y[0] - x[0]*y[1]) * (-x[2]*y[1]*z[0] + x[1]*y[2]*z[0] + x[2]*y[0]*z[1] - x[0]*y[2]*z[1]) + ( x[2]**2 * (y[0]**2 + y[1]**2) - 2*x[2]*(x[0]*y[0] + x[1]*y[1])*y[2] + (x[0]**2 + x[1]**2)*y[2]**2 )*z[2] ) / den
+        
+        
+        err_nx = np.sqrt( dx0_nx**2 * err_x[0]**2 + dx1_nx**2 * err_x[1]**2 + dx2_nx**2 * err_x[2]**2 + 
+                         dy0_nx**2 * err_y[0]**2 + dy1_nx**2 * err_y[1]**2 + dy2_nx**2 * err_y[2]**2 + 
+                         dz0_nx**2 * err_z[0]**2 + dz1_nx**2 * err_z[1]**2 + dz2_nx**2 * err_z[2]**2)
+        
+        err_ny = np.sqrt( dx0_ny**2 * err_x[0]**2 + dx1_ny**2 * err_x[1]**2 + dx2_ny**2 * err_x[2]**2 + 
+                         dy0_ny**2 * err_y[0]**2 + dy1_ny**2 * err_y[1]**2 + dy2_ny**2 * err_y[2]**2 + 
+                         dz0_ny**2 * err_z[0]**2 + dz1_ny**2 * err_z[1]**2 + dz2_ny**2 * err_z[2]**2)
+        
+        err_nz = np.sqrt( dx0_nz**2 * err_x[0]**2 + dx1_nz**2 * err_x[1]**2 + dx2_nz**2 * err_x[2]**2 + 
+                         dy0_nz**2 * err_y[0]**2 + dy1_nz**2 * err_y[1]**2 + dy2_nz**2 * err_y[2]**2 + 
+                         dz0_nz**2 * err_z[0]**2 + dz1_nz**2 * err_z[1]**2 + dz2_nz**2 * err_z[2]**2)
+        
+        err_norm = np.array([err_nx, err_ny, err_nz])
+        
+        return err_norm
+    
+    
+    
+    def err_nv(x,err_x):
+        
+        '''
+        nV = x/|x| donde x = Delta_V
+        '''
+        
+        den = (x[0]**2 + x[1]**2 + x[2]**2)**(3/2)
+        
+        dx0_nx = (x[1]**2 + x[2]**2) / den
+        dx1_nx = - x[0]*x[1] / den
+        dx2_nx = - x[0]*x[2] / den
+        
+        dx0_ny = - x[0]*x[1] / den
+        dx1_ny = (x[0]**2 + x[2]**2) / den
+        dx2_ny = - x[2]*x[1] / den
+        
+        dx0_nz = - x[0]*x[2] / den
+        dx1_nz = - x[1]*x[2] / den
+        dx2_nz = (x[0]**2 + x[1]**2) / den
+        
+        err_nx = np.sqrt(dx0_nx**2 * err_x[0]**2 + dx1_nx**2 * err_x[1]**2 + dx2_nx**2 * err_x[2]**2 )
+        err_ny = np.sqrt(dx0_ny**2 * err_x[0]**2 + dx1_ny**2 * err_x[1]**2 + dx2_ny**2 * err_x[2]**2 )
+        err_nz = np.sqrt(dx0_nz**2 * err_x[0]**2 + dx1_nz**2 * err_x[1]**2 + dx2_nz**2 * err_x[2]**2 )
+        
+        err_norm = np.array([err_nx, err_ny, err_nz])
+        
+        return err_norm
+        
+
+    
+    delta_B = Bd - Bu
+    err_delta_B = np.sqrt(err_Bd**2 + err_Bu**2)
+    delta_V = Vd - Vu
+    err_delta_V = np.sqrt(err_Vd**2 + err_Vu**2)
+    
+    
+    err_nB = err_n(Bd, Bu, delta_B, err_Bd, err_Bu, err_delta_B)
+    err_nBuV = err_n(Bu, delta_V, delta_B, err_Bu, err_delta_V, err_delta_B)
+    err_nBdV = err_n(Bd, delta_V, delta_B, err_Bd, err_delta_V, err_delta_B)
+    err_nBduV = err_n(delta_B, delta_V, delta_B, err_delta_B, err_delta_V, err_delta_B)
+    err_nV = err_nv(delta_v, err_delta_V)
+    
+    return err_nB, err_nBuV, err_nBdV, err_nBduV, err_nV
+
+    
+    
+
 #para calcular angulos a partir de un producto interno (en grados)
 def alpha(x,y):
     
@@ -43,6 +157,39 @@ def alpha(x,y):
        a = abs(360 - a)
        
    return a
+
+
+
+
+def err_alpha(x, y, err_x, err_y):
+    
+    '''
+    alpha es funcion de x[0], x[1], x[2], y[0], y[1], y[2]
+    '''
+    
+    def derxi_alpha(x, y, ai, bi, var = 'X'):
+        
+        if var == 'X':
+            dai = - ( bi/(np.linalg.norm(x)*np.linalg.norm(y)) - ai*(np.dot(x,y))/((x[0]**2 + x[1]**2 + x[2]**2)**(3/2) * np.linalg.norm(y)) ) / np.sqrt(1 - (np.dot(x,y))**2 / (np.linalg.norm(x)**2 * np.linalg.norm(y)**2))
+        
+        if var == 'Y':
+            dai = - ( bi/(np.linalg.norm(x)*np.linalg.norm(y)) - ai*(np.dot(x,y))/((y[0]**2 + y[1]**2 + y[2]**2)**(3/2) * np.linalg.norm(x)) ) / np.sqrt(1 - (np.dot(x,y))**2 / (np.linalg.norm(x)**2 * np.linalg.norm(y)**2))
+    
+        return dai
+    
+    
+    dx0 = derxi_alpha(x, y, x[0], y[0])
+    dx1 = derxi_alpha(x, y, x[1], y[1])
+    dx2 = derxi_alpha(x, y, x[2], y[2])
+    
+    dy0 = derxi_alpha(x, y, y[0], x[0], 'Y')
+    dy1 = derxi_alpha(x, y, y[1], x[1], 'Y')
+    dy2 = derxi_alpha(x, y, y[2], x[2], 'Y')
+    
+    err_alpha = np.sqrt( dx0**2 * err_x[0]**2 + dx1**2 * err_x[1]**2 + dx2**2 * err_x[2]**2 + dy0**2 * err_y[0]**2 + dy1**2 * err_y[1]**2 + dy2**2 * err_y[2]**2 )
+
+    return err_alpha
+
 
 
 
@@ -79,7 +226,7 @@ def campos_half(i_u, f_u, i_d, f_d, B1, B2):
     
 
 
-def half_angulo_N(half_n, N):
+def half_angulo_N(half_n, N, err_half_n, err_N):
     
     '''
     Para calcular los angulos entre cada normal de la combinacion de 
@@ -91,9 +238,15 @@ def half_angulo_N(half_n, N):
     ang_N_half21_n = alpha(half_n[2,:],N)
     ang_N_half22_n = alpha(half_n[3,:],N)
     
-    ang_N_n = np.array([ang_N_half11_n, ang_N_half12_n, ang_N_half21_n, ang_N_half22_n])
+    err_ang_N_half11_n = err_alpha(half_n[0,:],N, err_half_n[0,:], err_N)
+    err_ang_N_half12_n = alpha(half_n[1,:],N, err_half_n[1,:], err_N)
+    err_ang_N_half21_n = alpha(half_n[2,:],N, err_half_n[2,:], err_N)
+    err_ang_N_half22_n = alpha(half_n[3,:],N, err_half_n[3,:], err_N)
     
-    return ang_N_n
+    ang_N_n = np.array([ang_N_half11_n, ang_N_half12_n, ang_N_half21_n, ang_N_half22_n])
+    err_ang_N_n = np.array([err_ang_N_half11_n, err_ang_N_half12_n, err_ang_N_half21_n, err_ang_N_half22_n])
+    
+    return ang_N_n, err_ang_N_n
 
 
 

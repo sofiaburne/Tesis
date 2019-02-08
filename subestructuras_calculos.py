@@ -661,6 +661,7 @@ tc = abs(ti_over - ti_ramp)/2 + np.min([ti_ramp,ti_over])
 C = (np.abs(t_mag-tc)).argmin()
 #posicion de la nave en el centro del shock
 Rc = np.array([x[C], y[C], z[C]])
+err_Rc = np.array([1e-8, 1e-8, 1e-8])
 
 #%%
 
@@ -744,12 +745,22 @@ ancho_shock_temp = 3600*abs(ti_foot - ti_over)
 
 
 #normal del shock reescalando el fit macro del bowshock
+
 L = fbow.L_fit(Rc) #redefino L para que el fit contenga el centro de mi shock y calculo normal del fit
+err_L = fbow.error_L_vignes(Rc, err_Rc)
+
 N = fbow.norm_fit_MGS(Rc[0], Rc[1], Rc[2], L)
+err_N = fbow.err_N_fit(Rc, err_Rc, L, err_L)
+err_perp_N = err_N - np.dot(np.dot(err_N,N),N)
+cono_err_N = fcop.alpha(N, (N + err_perp_N))
+
 #angulo entre campo upstream y normal del fit
 theta_N = fcop.alpha(Bu,N)
+err_theta_N = fcop.err_alpha(Bu, N, std_Bu, err_N)
+
 #angulo entre posicion de la nave en el centro del shock y normal del fit
 theta_NRc = fcop.alpha(Rc,N)
+err_theta_NRc = fcop.err_alpha(Rc, N, err_Rc, err_N)
 
 
 

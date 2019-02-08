@@ -8,7 +8,7 @@ from delimitacionshock import B, Bx, By, Bz, t_mag
 from delimitacionshock import t_swea, flujosenergia_swea, nivelesenergia_swea
 from delimitacionshock import t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
 from delimitacionshock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, std_Bd, std_Bu, std_Vu, std_Vd, i_u, f_u, i_d, f_d, iu_v, fu_v, id_v, fd_v, lim_t1u, lim_t2u, lim_t1d, lim_t2d, vel, v_nave
-from subestructuras_calculos import N, theta_N, Rc
+from subestructuras_calculos import N, err_N, theta_N, Rc, err_Rc
 from conservaciones import M_A, M_c
 import coplanaridad_funciones as fcop
 
@@ -36,6 +36,20 @@ if not os.path.exists(path_analisis):
 
 #hay 5 normales que se pueden calcular a partir de coplanaridad
 nB, nBuV, nBdV, nBduV, nV = fcop.norm_coplanar(Bd,Bu,Vd,Vu)
+err_nB, err_nBuV, err_nBdV, err_nBduV, err_nV = fcop.err_norm_coplanar(Bd, Bu, Vd, Vu, std_Bu, std_Bd, std_Vu, std_Vd)
+
+#conos de error
+err_perp_nB = err_nB - np.dot(np.dot(err_nB,nB),nB)
+err_perp_nBuV = err_nBuV - np.dot(np.dot(err_nBuV,nBuV),nBuV)
+err_perp_nBdV = err_nBdV - np.dot(np.dot(err_nBdV,nBdV),nBdV)
+err_perp_nBduV = err_nBduV - np.dot(np.dot(err_nBduV,nBduV),nBduV)
+err_perp_nV = err_nV - np.dot(np.dot(err_nV,nB),nV)
+
+cono_err_nB = fcop.alpha(nB, nB + err_perp_nB)
+cono_err_nBuV = fcop.alpha(nBuV, nBuV + err_perp_nBuV)
+cono_err_nBdV = fcop.alpha(nBdV, nBdV + err_perp_nBdV)
+cono_err_nBduV = fcop.alpha(nBduV, nBduV + err_perp_nBduV)
+cono_err_nV = fcop.alpha(nV, nV + err_perp_nV)
 
 
 #flags: los angulos con Bu cercanos a 0 y 90 son problematicos (uso normal del fit como ref)
@@ -51,31 +65,70 @@ if nB[0] <= 0.007: #pongo este valor de ref porque con nB_x ~0.0058 pasaron cosa
     
 #angulos con campo upstream
 thetaB = fcop.alpha(Bu,nB)
+err_thetaB = fcop.err_alpha(Bu, nB, std_Bu, err_nB)
+
 thetaBuV = fcop.alpha(Bu,nBuV)
+err_thetaBuV = fcop.err_alpha(Bu, nBuV, std_Bu, err_nBuV)
+
 thetaBdV = fcop.alpha(Bu,nBdV)
+err_thetaBdV = fcop.err_alpha(Bu, nBdV, std_Bu, err_nBdV)
+
 thetaBduV = fcop.alpha(Bu,nBduV)
+err_thetaBduV = fcop.err_alpha(Bu, nBduV, std_Bu, err_nBduV)
+
 thetaV = fcop.alpha(Bu,nV)
+err_thetaV = fcop.err_alpha(Bu, nV, std_Bu, err_nV)
+
 
 #angulos con vector posicion de la nave en centro del shock    
 thetaB_Rc = fcop.alpha(nB,Rc)
+err_thetaB_Rc = fcop.err_alpha(nB, Rc, err_nB, err_Rc)
+
 thetaBuV_Rc = fcop.alpha(nBuV,Rc)
+err_thetaBuV_Rc = fcop.err_alpha(nBuV, Rc, err_nBuV, err_Rc)
+
 thetaBdV_Rc = fcop.alpha(nBdV,Rc)
+err_thetaBdV_Rc = fcop.err_alpha(nBdV, Rc, err_nBdV, err_Rc)
+
 thetaBduV_Rc = fcop.alpha(nBduV,Rc)
+err_thetaBduV_Rc = fcop.err_alpha(nBduV, Rc, err_nBduV, err_Rc)
+
 thetaV_Rc = fcop.alpha(nV,Rc)
+err_thetaV_Rc = fcop.err_alpha(nV, Rc, err_nV, err_Rc)
+
 
 #angulos entre Vu y normales
 thetaB_Vu = fcop.alpha(Vu,nB)
+err_thetaB_Vu = fcop.err_alpha(Vu, nB, std_Vu, err_nB)
+
 thetaBuV_Vu = fcop.alpha(Vu,nBuV)
+err_thetaBuV_Vu = fcop.err_alpha(Vu, nBuV, std_Vu, err_nBuV)
+
 thetaBdV_Vu = fcop.alpha(Vu,nBdV)
+err_thetaBdV_Vu = fcop.err_alpha(Vu, nBdV, std_Vu, err_nBdV)
+
 thetaBduV_Vu = fcop.alpha(Vu,nBduV)
+err_thetaBduV_Vu = fcop.err_alpha(Vu, nBduV, std_Vu, err_nBduV)
+
 thetaV_Vu = fcop.alpha(Vu,nV)
+err_thetaV_Vu = fcop.err_alpha(Vu, nV, std_Vu, err_nV)
+
 
 #angulos entre vel nave y normales
 thetaB_vnave = fcop.alpha(v_nave,nB)
+err_thetaB_vnave = fcop.err_alpha(v_nave, nB, err_v_nave, err_nB)
+
 thetaBuV_vnave = fcop.alpha(v_nave,nBuV)
+err_thetaBuV_vnave = fcop.err_alpha(v_nave, nBuV, err_v_nave, err_nBuV)
+
 thetaBdV_vnave = fcop.alpha(v_nave,nBdV)
+err_thetaBdV_vnave = fcop.err_alpha(v_nave, nBdV, err_v_nave, err_nBdV)
+
 thetaBduV_vnave = fcop.alpha(v_nave,nBduV)
+err_thetaBduV_vnave = fcop.err_alpha(v_nave, nBduV, err_v_nave, err_nBduV)
+
 thetaV_vnave = fcop.alpha(v_nave,nV)
+err_thetaV_vnave = fcop.err_alpha(v_nave, nV, err_v_nave, err_nV)
 
 
 #%% analisis de Bn
@@ -175,11 +228,23 @@ half12_nB, half12_nBuV, half12_nBdV, half12_nBduV, half12_nV = fcop.norm_coplana
 half21_nB, half21_nBuV, half21_nBdV, half21_nBduV, half21_nV = fcop.norm_coplanar(half_Bd[0,:],half_Bu[1,:],half_Vd[0,:],half_Vu[1,:])
 half22_nB, half22_nBuV, half22_nBdV, half22_nBduV, half22_nV = fcop.norm_coplanar(half_Bd[1,:],half_Bu[1,:],half_Vd[1,:],half_Vu[1,:])
 
+err_half11_nB, err_half11_nBuV, err_half11_nBdV, err_half11_nBduV, err_half11_nV = fcop.err_norm_coplanar(half_Bd[0,:],half_Bu[0,:],half_Vd[0,:],half_Vu[0,:], std_half_Bd[0,:], std_half_Bu[0,:], std_half_Vd[0,:], std_half_Vu[0,:])
+err_half12_nB, err_half12_nBuV, err_half12_nBdV, err_half12_nBduV, err_half12_nV = fcop.err_norm_coplanar(half_Bd[1,:],half_Bu[0,:],half_Vd[1,:],half_Vu[0,:], std_half_Bd[1,:], std_half_Bu[0,:], std_half_Vd[1,:], std_half_Vu[0,:])
+err_half21_nB, err_half21_nBuV, err_half21_nBdV, err_half21_nBduV, err_half21_nV = fcop.err_norm_coplanar(half_Bd[0,:],half_Bu[1,:],half_Vd[0,:],half_Vu[1,:], std_half_Bd[0,:], std_half_Bu[1,:], std_half_Vd[0,:], std_half_Vu[1,:])
+err_half22_nB, err_half22_nBuV, err_half22_nBdV, err_half22_nBduV, err_half22_nV = fcop.err_norm_coplanar(half_Bd[1,:],half_Bu[1,:],half_Vd[1,:],half_Vu[1,:], std_half_Bd[1,:], std_half_Bu[1,:], std_half_Vd[1,:], std_half_Vu[1,:])
+
+#ordeno en vectores
 half_nB = np.array([half11_nB, half12_nB, half21_nB, half22_nB])
 half_nBuV = np.array([half11_nBuV, half12_nBuV, half21_nBuV, half22_nBuV])
 half_nBdV = np.array([half11_nBdV, half12_nBdV, half21_nBdV, half22_nBdV])
 half_nBduV = np.array([half11_nBduV, half12_nBduV, half21_nBduV, half22_nBduV])
 half_nV = np.array([half11_nV, half12_nV, half21_nV, half22_nV])
+
+err_half_nB = np.array([err_half11_nB, err_half12_nB, err_half21_nB, err_half22_nB])
+err_half_nBuV = np.array([err_half11_nBuV, err_half12_nBuV, err_half21_nBuV, err_half22_nBuV])
+err_half_nBdV = np.array([err_half11_nBdV, err_half12_nBdV, err_half21_nBdV, err_half22_nBdV])
+err_half_nBduV = np.array([err_half11_nBduV, err_half12_nBduV, err_half21_nBduV, err_half22_nBduV])
+err_half_nV = np.array([err_half11_nV, err_half12_nV, err_half21_nV, err_half22_nV])
 
 
 
@@ -187,18 +252,19 @@ half_nV = np.array([half11_nV, half12_nV, half21_nV, half22_nV])
 # para cada tipo de normal tengo 4 angulos por cada una de
 # las combinaciones de medios subintervalos
 
-ang_N_nB = fcop.half_angulo_N(half_nB, N)
-ang_N_nBuV = fcop.half_angulo_N(half_nBuV, N)
-ang_N_nBdV = fcop.half_angulo_N(half_nBdV, N)
-ang_N_nBduV = fcop.half_angulo_N(half_nBduV, N)
-ang_N_nV = fcop.half_angulo_N(half_nV, N)
+ang_N_nB, err_ang_N_nB = fcop.half_angulo_N(half_nB, N, err_half_nB, err_N)
+ang_N_nBuV, err_ang_N_nBuV = fcop.half_angulo_N(half_nBuV, N, err_half_nBuV, err_N)
+ang_N_nBdV, err_ang_N_nBdV = fcop.half_angulo_N(half_nBdV, N, err_half_nBdV, err_N)
+ang_N_nBduV, err_ang_N_nBduV = fcop.half_angulo_N(half_nBduV, N, err_half_nBduV, err_N)
+ang_N_nV, err_ang_N_nV = fcop.half_angulo_N(half_nV, N, err_half_nV, err_N)
 
 
 
 #si, para un dado tipo de normal, el angulo con la normal del fit de alguna sus 4 normales posibles
 # es zeda (=5 default) grados mayor que otro de esos 4, considero que los calculos con los intervalos
-# completos no son potencialmente inestables y elijo la combinacion de mitades que menor angulo
+# completos son potencialmente inestables y elijo la combinacion de mitades que menor angulo
 # me de para esa normal coplanar
+# si no se cumple esa condicion, salta el mensaje "los calculos son estables" 
 
 half_nB_best, ang_N_nB_best, ind_nB =  fcop.half_best_n(ang_N_nB, half_nB)
 half_nBuV_best, ang_N_nBuV_best, ind_nBuV =  fcop.half_best_n(ang_N_nBuV, half_nBuV)
@@ -210,7 +276,7 @@ half_nV_best, ang_N_nV_best, ind_nV =  fcop.half_best_n(ang_N_nV, half_nV)
 # efectivamente son inestables para todas las normales y paso a elegir la mejor combinacion de
 # medios subintervalos
 
-#chequeo si existen las variables
+#chequeo si existen las variables (si existen es porque se cumplio la condicion de half_best_n)
 try: ind_nB
 except NameError: ind_nB = None
 
@@ -252,12 +318,38 @@ if test1 >= 2:
     mitad_nBduV = half_nBduV[ind_best,:]
     mitad_nV = half_nV[ind_best,:]
     
+    err_mitad_nB = err_half_nB[ind_best,:]
+    err_mitad_nBuV = err_half_nBuV[ind_best,:]
+    err_mitad_nBdV = err_half_nBdV[ind_best,:]
+    err_mitad_nBduV = err_half_nBduV[ind_best,:]
+    err_mitad_nV = err_half_nV[ind_best,:]
+    
+    err_perp_mitad_nB = err_mitad_nB - np.dot(np.dot(err_mitad_nB,mitad_nB),mitad_nB)
+    err_perp_mitad_nBuV = err_mitad_nBuV - np.dot(np.dot(err_mitad_nBuV,mitad_nBuV),mitad_nBuV)
+    err_perp_mitad_nBdV = err_mitad_nBdV - np.dot(np.dot(err_mitad_nBdV,mitad_nBdV),mitad_nBdV)
+    err_perp_mitad_nBduV = err_mitad_nBduV - np.dot(np.dot(err_mitad_nBduV,mitad_nBduV),mitad_nBduV)
+    err_perp_mitad_nV = err_mitad_nV - np.dot(np.dot(err_mitad_nV,mitad_nV),mitad_nV)
+    
+    cono_err_mitad_nB = fcop.alpha(mitad_nB, err_perp_mitad_nB)
+    cono_err_mitad_nBuV = fcop.alpha(mitad_nBuV, err_perp_mitad_nBuV)
+    cono_err_mitad_nBdV = fcop.alpha(mitad_nBdV, err_perp_mitad_nBdV)
+    cono_err_mitad_nBduV = fcop.alpha(mitad_nBduV, err_perp_mitad_nBduV)
+    cono_err_mitad_nV = fcop.alpha(mitad_nV, err_perp_mitad_nV)
+    
+    
     #angulos con normal del fit, para normales de la mejor combinacion de subintervalos
     mitad_angN_nB = ang_N_nB[ind_best]
     mitad_angN_nBuV = ang_N_nBuV[ind_best]
     mitad_angN_nBdV = ang_N_nBdV[ind_best]
     mitad_angN_nBduV = ang_N_nBduV[ind_best]
     mitad_angN_nV = ang_N_nV[ind_best]
+    
+    err_mitad_angN_nB = err_ang_N_nB[ind_best]
+    err_mitad_angN_nBuV = err_ang_N_nBuV[ind_best]
+    err_mitad_angN_nBdV = err_ang_N_nBdV[ind_best]
+    err_mitad_angN_nBduV = err_ang_N_nBduV[ind_best]
+    err_mitad_angN_nV = err_ang_N_nV[ind_best]
+    
     
     #me quedo con los campos correspondientes a los mejores subintervalos
     if ind_best == 0 or 1:
@@ -291,6 +383,12 @@ if test1 >= 2:
     mitad_thetaBdV = fcop.alpha(mitad_Bu,mitad_nBdV)
     mitad_thetaBduV = fcop.alpha(mitad_Bu,mitad_nBduV)
     mitad_thetaV = fcop.alpha(mitad_Bu,mitad_nV)
+    
+    err_mitad_thetaB = fcop.err_alpha(mitad_Bu, mitad_nB, std_mitad_Bu, err_mitad_nB)
+    err_mitad_thetaBuV = fcop.err_alpha(mitad_Bu, mitad_nBuV, std_mitad_Bu, err_mitad_nBuV)
+    err_mitad_thetaBdV = fcop.err_alpha(mitad_Bu, mitad_nBdV, std_mitad_Bu, err_mitad_nBdV)
+    err_mitad_thetaBduV = fcop.err_alpha(mitad_Bu, mitad_nBduV, std_mitad_Bu, err_mitad_nBduV)
+    err_mitad_thetaV = fcop.err_alpha(mitad_Bu, mitad_nV, std_mitad_Bu, err_mitad_nV)
         
     
     
@@ -475,24 +573,57 @@ err_Vu_s = np.empty([Luv,3])
 Vd_s = np.empty([Ldv,3])
 err_Vd_s = np.empty([Ldv,3])
 
+norm_Bu_s = np.empty(Lu)
+err_norm_Bu_s = np.empty(Lu)
+norm_Bd_s = np.empty(Ld)
+err_norm_Bd_s = np.empty(Ld)
+norm_Vu_s = np.empty(Luv)
+err_norm_Vu_s = np.empty(Luv)
+norm_Vd_s = np.empty(Ldv)
+err_norm_Vd_s = np.empty(Ldv)
+
 for i in range(Lu):
     Bu_s[i,:] = np.mean(Ba[:,:,i], axis = 0)
     err_Bu_s[i,:] = np.array([st.stdev(Ba[:,0,i]), st.stdev(Ba[:,1,i]), st.stdev(Ba[:,2,i])])
+    norm_Ba = np.empty_like(Ba[:,0,i])
+    for j in range(len(Ba[:,0,0])):
+        norm_Ba[j] = np.linalg.norm([Ba[j,0,i], Ba[j,1,i], Ba[j,2,i]])
+    norm_Bu_s[i] = np.mean(norm_Ba)
+    err_norm_Bu_s[i] = st.stdev(norm_Ba)
+        
 for i in range(Ld):
     Bd_s[i,:] = np.mean(Bb[:,:,i], axis = 0)
     err_Bu_s[i,:] = np.array([st.stdev(Bb[:,0,i]), st.stdev(Bb[:,1,i]), st.stdev(Bb[:,2,i])])
+    norm_Bb = np.empty_like(Bb[:,0,i])
+    for j in range(len(Bb[:,0,0])):
+        norm_Bb[j] = np.linalg.norm([Bb[j,0,i], Bb[j,1,i], Bb[j,2,i]])
+    norm_Bd_s[i] = np.mean(norm_Bb)
+    err_norm_Bd_s[i] = st.stdev(norm_Bb)
+    
 for i in range(Luv):
     Vu_s[i,:] = np.mean(Va[:,:,i], axis = 0)
     err_Vu_s[i,:] = np.array([st.stdev(np.float64(Va[:,0,i])), st.stdev(np.float64(Va[:,1,i])), st.stdev(np.float64(Va[:,2,i]))])
+    norm_Va = np.empty_like(Va[:,0,i])
+    for j in range(len(Va[:,0,0])):
+        norm_Va[j] = np.linalg.norm([Va[j,0,i], Va[j,1,i], Va[j,2,i]])
+    norm_Vu_s[i] = np.mean(norm_Va)
+    err_norm_Vu_s[i] = st.stdev(norm_Va)
+
 for i in range(Ldv):
     Vd_s[i,:] = np.mean(Vb[:,:,i], axis = 0)
     err_Vd_s[i,:] = np.array([st.stdev(np.float64(Vb[:,0,i])), st.stdev(np.float64(Vb[:,1,i])), st.stdev(np.float64(Vb[:,2,i]))])
+    norm_Vb = np.empty_like(Vb[:,0,i])
+    for j in range(len(Vb[:,0,0])):
+        norm_Vb[j] = np.linalg.norm([Vb[j,0,i], Vb[j,1,i], Vb[j,2,i]])
+    norm_Vd_s[i] = np.mean(norm_Vb)
+    err_norm_Vd_s[i] = st.stdev(norm_Vb)
+
 
 #modulos de los campos
-norm_Bu_s = np.linalg.norm(Bu_s, axis = 1)
-norm_Bd_s = np.linalg.norm(Bd_s, axis = 1)
-norm_Vu_s = np.linalg.norm(Vu_s, axis = 1)
-norm_Vd_s = np.linalg.norm(Vd_s, axis = 1)
+#norm_Bu_s = np.linalg.norm(Bu_s, axis = 1)
+#norm_Bd_s = np.linalg.norm(Bd_s, axis = 1)
+#norm_Vu_s = np.linalg.norm(Vu_s, axis = 1)
+#norm_Vd_s = np.linalg.norm(Vd_s, axis = 1)
 
 #promedios de Bu, Bd, Vu y Vd entre todos los samples y sus std
     
@@ -522,25 +653,46 @@ L_B = np.min([Lu, Ld])
 L_BV = np.min([Lu, Ld, Luv, Ldv])
 
 nB_s2 = np.empty([L_B,3])
+err_nB_s2 = np.empty([L_B,3])
 thetaB_s2 = np.empty(L_B)
+err_thetaB_s2 = np.empty(L_B)
+
 nBuV_s2 = np.empty([L_BV,3])
+err_nBuV_s2 = np.empty([L_BV,3])
 thetaBuV_s2 = np.empty(L_BV)
+err_thetaBuV_s2 = np.empty(L_BV)
+
 nBdV_s2 = np.empty([L_BV,3])
+err_nBdV_s2 = np.empty([L_BV,3])
 thetaBdV_s2 = np.empty(L_BV)
+err_thetaBdV_s2 = np.empty(L_BV)
+
 nBduV_s2 = np.empty([L_BV,3])
+err_nBduV_s2 = np.empty([L_BV,3])
 thetaBduV_s2 = np.empty(L_BV)
+err_thetaBduV_s2 = np.empty(L_BV)
+
 nV_s2 = np.empty([L_BV,3])
+err_nV_s2 = np.empty([L_BV,3])
 thetaV_s2 = np.empty(L_BV)
+err_thetaV_s2 = np.empty(L_BV)
 
 for i in range(L_B):    
     nB_s2[i,:], _, _, _, _ = fcop.norm_coplanar(Bd_s[i,:],Bu_s[i,:],Vd_s[i,:],Vu_s[i,:])
+    err_nB_s2[i,:], _, _, _, _ = fcop.err_norm_coplanar(Bd_s[i,:],Bu_s[i,:],Vd_s[i,:],Vu_s[i,:],err_Bd_s[i,:],err_Bu_s[i,:],err_Vd_s[i,:],err_Vu_s[i,:])
     thetaB_s2[i] = fcop.alpha(Bu_s[i,:],nB_s2[i,:])
+    err_thetaB_s2[i] = fcop.err_alpha(Bu_s[i,:],nB_s2[i,:],err_Bu_s[i,:],err_nB_s2[i,:])
 for i in range(L_BV):    
     _, nBuV_s2[i,:], nBdV_s2[i,:], nBduV_s2[i,:], nV_s2[i,:] = fcop.norm_coplanar(Bd_s[i,:],Bu_s[i,:],Vd_s[i,:],Vu_s[i,:])
+    _, err_nBuV_s2[i,:], err_nBdV_s2[i,:], err_nBduV_s2[i,:], err_nV_s2[i,:] = fcop.err_norm_coplanar(Bd_s[i,:],Bu_s[i,:],Vd_s[i,:],Vu_s[i,:],err_Bd_s[i,:],err_Bu_s[i,:],err_Vd_s[i,:],err_Vu_s[i,:])
     thetaBuV_s2[i] = fcop.alpha(Bu_s[i,:],nBuV_s2[i,:])
+    err_thetaBuV_s2[i] = fcop.err_alpha(Bu_s[i,:],nBuV_s2[i,:],err_Bu_s[i,:],err_nBuV_s2[i,:])
     thetaBdV_s2[i] = fcop.alpha(Bu_s[i,:],nBdV_s2[i,:])
+    err_thetaBdV_s2[i] = fcop.err_alpha(Bu_s[i,:],nBdV_s2[i,:],err_Bu_s[i,:],err_nBdV_s2[i,:])
     thetaBduV_s2[i] = fcop.alpha(Bu_s[i,:],nBduV_s2[i,:])
+    err_thetaBduV_s2[i] = fcop.err_alpha(Bu_s[i,:],nBduV_s2[i,:],err_Bu_s[i,:],err_nBduV_s2[i,:])
     thetaV_s2[i] = fcop.alpha(Bu_s[i,:],nV_s2[i,:])
+    err_thetaV_s2[i] = fcop.err_alpha(Bu_s[i,:],nV_s2[i,:],err_Bu_s[i,:],err_nV_s2[i,:])
     
 
 #promedio  de normales y angulos entre todos los que obtuve para cada par de intervalos upstream y downstream
@@ -571,25 +723,46 @@ std_thetaV_s2 = st.stdev(thetaV_s2)
 #calculo normales y angulos variando solo intervalo upstream
 
 nB_su = np.empty([Lu,3])
+err_nB_su = np.empty([Lu,3])
 thetaB_su = np.empty(Lu)
+err_thetaB_su = np.empty(Lu)
+
 nBuV_su = np.empty([Luv,3])
+err_nBuV_su = np.empty([Luv,3])
 thetaBuV_su = np.empty(Luv)
+err_thetaBuV_su = np.empty(Luv)
+
 nBdV_su = np.empty([Luv,3])
+err_nBdV_su = np.empty([Luv,3])
 thetaBdV_su = np.empty(Luv)
+err_thetaBdV_su = np.empty(Luv)
+
 nBduV_su = np.empty([Luv,3])
+err_nBduV_su = np.empty([Luv,3])
 thetaBduV_su = np.empty(Luv)
+err_thetaBduV_su = np.empty(Luv)
+
 nV_su = np.empty([Luv,3])
+err_nV_su = np.empty([Luv,3])
 thetaV_su = np.empty(Luv)
+err_thetaV_su = np.empty(Luv)
 
 for i in range(Lu):    
     nB_su[i,:], _, _, _, _ = fcop.norm_coplanar(Bd,Bu_s[i,:],Vd,Vu_s[i,:])
+    err_nB_su[i,:], _, _, _, _ = fcop.err_norm_coplanar(Bd,Bu_s[i,:],Vd,Vu_s[i,:])
     thetaB_su[i] = fcop.alpha(Bu_s[i,:],nB_su[i,:])
+    err_thetaB_su[i] = fcop.err_alpha(Bu_s[i,:],nB_su[i,:],err_Bu_s[i,:],err_nB_su[i,:])
 for i in range(Luv):    
     _, nBuV_su[i,:], nBdV_su[i,:], nBduV_su[i,:], nV_su[i,:] = fcop.norm_coplanar(Bd,Bu_s[i,:],Vd,Vu_s[i,:])
+    _, err_nBuV_su[i,:], err_nBdV_su[i,:], err_nBduV_su[i,:], err_nV_su[i,:] = fcop.err_norm_coplanar(Bd,Bu_s[i,:],Vd,Vu_s[i,:],std_Bd,err_Bu_s[i,:],std_Vd,err_Vu_s[i,:])
     thetaBuV_su[i] = fcop.alpha(Bu_s[i,:],nBuV_su[i,:])
+    err_thetaBuV_su[i] = fcop.err_alpha(Bu_s[i,:],nBuV_su[i,:],err_Bu_s[i,:],err_nBuV_su[i,:])
     thetaBdV_su[i] = fcop.alpha(Bu_s[i,:],nBdV_su[i,:])
+    err_thetaBdV_su[i] = fcop.err_alpha(Bu_s[i,:],nBdV_su[i,:],err_Bu_s[i,:],err_nBdV_su[i,:])
     thetaBduV_su[i] = fcop.alpha(Bu_s[i,:],nBduV_su[i,:])
+    err_thetaBduV_su[i] = fcop.err_alpha(Bu_s[i,:],nBduV_su[i,:],err_Bu_s[i,:],err_nBduV_su[i,:])
     thetaV_su[i] = fcop.alpha(Bu_s[i,:],nV_su[i,:])
+    err_thetaV_su[i] = fcop.err_alpha(Bu_s[i,:],nV_su[i,:],err_Bu_s[i,:],err_nV_su[i,:])
     
 
 #promedio  de normales y angulos entre todos los que obtuve para cada intervalo upstream
@@ -620,25 +793,47 @@ std_thetaV_su = st.stdev(thetaV_su)
 #calculo normales y angulos variando solo intervalo downstream
 
 nB_sd = np.empty([Ld,3])
+err_nB_sd = np.empty([Ld,3])
 thetaB_sd = np.empty(Ld)
+err_thetaB_sd = np.empty(Ld)
+
 nBuV_sd = np.empty([Ldv,3])
+err_nBuV_sd = np.empty([Ldv,3])
 thetaBuV_sd = np.empty(Ldv)
+err_thetaBuV_sd = np.empty(Ldv)
+
 nBdV_sd = np.empty([Ldv,3])
+err_nBdV_sd = np.empty([Ldv,3])
 thetaBdV_sd = np.empty(Ldv)
+err_thetaBdV_sd = np.empty(Ldv)
+
 nBduV_sd = np.empty([Ldv,3])
+err_nBduV_sd = np.empty([Ldv,3])
 thetaBduV_sd = np.empty(Ldv)
+err_thetaBduV_sd = np.empty(Ldv)
+
 nV_sd = np.empty([Ldv,3])
+err_nV_sd = np.empty([Ldv,3])
 thetaV_sd = np.empty(Ldv)
+err_thetaV_sd = np.empty(Ldv)
 
 for i in range(Ld):    
     nB_sd[i,:], _, _, _, _ = fcop.norm_coplanar(Bd_s[i,:],Bu,Vd_s[i,:],Vu)
+    err_nB_sd[i,:], _, _, _, _ = fcop.err_norm_coplanar(Bd_s[i,:],Bu,Vd_s[i,:],Vu,err_Bd_s[i,:],std_Bu,err_Vd_s[i,:],std_Vu)
     thetaB_sd[i] = fcop.alpha(Bu,nB_sd[i,:])
+    err_thetaB_sd[i] = fcop.err_alpha(Bu,nB_sd[i,:],std_Bu,err_nB_sd[i,:])
+        
 for i in range(Ldv):    
     _, nBuV_sd[i,:], nBdV_sd[i,:], nBduV_sd[i,:], nV_sd[i,:] = fcop.norm_coplanar(Bd_s[i,:],Bu,Vd_s[i,:],Vu)
+    _, err_nBuV_sd[i,:], err_nBdV_sd[i,:], err_nBduV_sd[i,:], err_nV_sd[i,:] = fcop.err_norm_coplanar(Bd_s[i,:],Bu,Vd_s[i,:],Vu,err_Bd_s[i,:],std_Bu,err_Vd_s[i,:],std_Vu)
     thetaBuV_sd[i] = fcop.alpha(Bu,nBuV_sd[i,:])
+    err_thetaBuV_sd[i] = fcop.err_alpha(Bu,nBuV_sd[i,:],std_Bu,err_nBuV_sd[i,:])
     thetaBdV_sd[i] = fcop.alpha(Bu,nBdV_sd[i,:])
+    err_thetaBdV_sd[i] = fcop.err_alpha(Bu,nBdV_sd[i,:],std_Bu,err_nBdV_sd[i,:])
     thetaBduV_sd[i] = fcop.alpha(Bu,nBduV_sd[i,:])
+    err_thetaBduV_sd[i] = fcop.err_alpha(Bu,nBduV_sd[i,:],std_Bu,err_nBduV_sd[i,:])
     thetaV_sd[i] = fcop.alpha(Bu,nV_sd[i,:])
+    err_thetaV_sd[i] = fcop.err_alpha(Bu,nV_sd[i,:],std_Bu,err_nV_sd[i,:])
     
 
 #promedio  de normales y angulos entre todos los que obtuve para cada intervalo downstream
@@ -672,20 +867,20 @@ la primer eleccion de intervalos up/downstream, a partir de desv
 std por variacion de ambos intervalos a la vez
 '''
 
-err_perp_nB = std_nB_s2 - (np.dot(std_nB_s2, nB))*nB
-cono_err_nB = fcop.alpha(nB, nB + err_perp_nB)
-
-err_perp_nBuV = std_nBuV_s2 - (np.dot(std_nBuV_s2, nBuV))*nBuV
-cono_err_nBuV = fcop.alpha(nBuV, nBuV + err_perp_nBuV)
-
-err_perp_nBdV = std_nBdV_s2 - (np.dot(std_nBdV_s2, nBdV))*nBdV
-cono_err_nBdV = fcop.alpha(nBdV, nBdV + err_perp_nBdV)
-
-err_perp_nBduV = std_nBduV_s2 - (np.dot(std_nBduV_s2, nBduV))*nBduV
-cono_err_nBduV = fcop.alpha(nBduV, nBduV + err_perp_nBduV)
-
-err_perp_nV = std_nV_s2 - (np.dot(std_nV_s2, nV))*nV
-cono_err_nV = fcop.alpha(nV, nV + err_perp_nV)
+#err_perp_nB = std_nB_s2 - (np.dot(std_nB_s2, nB))*nB
+#cono_err_nB = fcop.alpha(nB, nB + err_perp_nB)
+#
+#err_perp_nBuV = std_nBuV_s2 - (np.dot(std_nBuV_s2, nBuV))*nBuV
+#cono_err_nBuV = fcop.alpha(nBuV, nBuV + err_perp_nBuV)
+#
+#err_perp_nBdV = std_nBdV_s2 - (np.dot(std_nBdV_s2, nBdV))*nBdV
+#cono_err_nBdV = fcop.alpha(nBdV, nBdV + err_perp_nBdV)
+#
+#err_perp_nBduV = std_nBduV_s2 - (np.dot(std_nBduV_s2, nBduV))*nBduV
+#cono_err_nBduV = fcop.alpha(nBduV, nBduV + err_perp_nBduV)
+#
+#err_perp_nV = std_nV_s2 - (np.dot(std_nV_s2, nV))*nV
+#cono_err_nV = fcop.alpha(nV, nV + err_perp_nV)
 
 #%%
 

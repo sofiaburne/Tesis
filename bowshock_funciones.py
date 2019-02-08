@@ -43,6 +43,26 @@ def L_fit(Rc):
 
 
 
+def error_L_vignes(Rc, err_Rc):
+    
+    '''
+    L es función de Rc
+    '''
+    
+    eps, X_0 = 1.03, 0.64 #excentricidad y foco de Vignes
+    
+    dRcx_L = (2*Rc[0] - 2*X_0)/(2*np.sqrt(X_0**2 - 2*X_0*Rc[0] + Rc[0]**2 + Rc[1]**2 + Rc[2]**2)) + eps
+    dRcy_L = Rc[1]/np.sqrt(X_0**2 - 2*X_0*Rc[0] + Rc[0]**2 + Rc[1]**2 + Rc[2]**2)
+    dRcz_L = Rc[2]/np.sqrt(X_0**2 - 2*X_0*Rc[0] + Rc[0]**2 + Rc[1]**2 + Rc[2]**2)
+    
+    err_cuad_L = (dRcx_L**2)*(err_Rc[0]**2) + (dRcy_L**2)*(err_Rc[1]**2) + (dRcz_L**2)*(err_Rc[2]**2)
+    err_L = np.sqrt(err_cuad_L)
+    
+    return err_L
+
+
+
+
 '''
 fit bow shock como hiperboloide
 (uso eps y X_0 de Vignes y el L a determinar)
@@ -69,6 +89,33 @@ def norm_fit_MGS(x,y,z,L):
     if n_fit[0] < 0:
         n_fit = - n_fit
     return n_fit
+
+
+
+def err_N_fit(Rc, err_Rc, L, err_L):
+    
+#    Nx = (2*(x - (q + L*eps/(eps**2 - 1)))/(L/(eps**2 - 1))**2)/sqrt( (2*(x - q + L*eps/(eps**2 - 1))/(L/(eps**2 - 1))**2)**2 + (-2*y/(L/(eps**1 - 1)**(1/2))**2)**2 +  (-2*z/(L/(eps**1 - 1)**(1/2))**2)**2)
+#    Ny = (-2*y/(L/(eps**1 - 1)**(1/2))**2)/sqrt( (2*(x - q + L*eps/(eps**2 - 1))/(L/(eps**2 - 1))**2)**2 + (-2*y/(L/(eps**1 - 1)**(1/2))**2)**2 +  (-2*z/(L/(eps**1 - 1)**(1/2))**2)**2)
+#    Nz = (-2*z/(L/(eps**1 - 1)**(1/2))**2)/sqrt( (2*(x - q + L*eps/(eps**2 - 1))/(L/(eps**2 - 1))**2)**2 + (-2*y/(L/(eps**1 - 1)**(1/2))**2)**2 +  (-2*z/(L/(eps**1 - 1)**(1/2))**2)**2)
+
+    eps, X_0 = 1.03, 0.64 #excentricidad y foco de Vignes    
+    
+    dRcx_Nx = 2*(eps**2 - 1)**2/np.sqrt( 4 * (eps**2 -1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2  + 4 * Rc[1] * (eps - 1)**2  + 4 * Rc[2] * (eps - 1)**2 ) - (8*(eps**2 - 1)**6 * (Rc[0] - X_0 - L*eps/(eps**2 - 1)) * (Rc[0] - X_0 + L*eps/(eps**2 - 1)) )/ (4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2)**(3/2)
+    dL_Nx = - ( 4 * (eps**2 - 1)**2 * (-L*eps/(eps**2 - 1) - X_0 + Rc[0]) ) / L*np.sqrt( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 ) - 2*eps*(eps**2 - 1) / np.sqrt( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 ) - ( (eps**2 - 1)**2 * (- L*eps/(eps**2 -1 ) - X_0 + Rc[0]) * (- 16*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) -X_0 +Rc[0])**2 / L**5 - 16*Rc[1]**2 * (eps - 1)**2 / L**5 - 16*Rc[2]**2 * (eps - 1)**2 / L**5 + 8*eps*(eps**2 - 1)**3 * (L*eps/(eps**2 -1) - X_0 + Rc[0]) / L**4 ) ) / (1/L**4 * ( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) + X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps**2 - 1)**2 )**(3/2) )
+    
+    dRcy_Ny = 8*Rc[1]**2 * (eps**2 - 1)**3 / ( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 )**(3/2) - 2*(eps - 1) / np.sqrt( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 )
+    dL_Ny = 4*Rc[1]*(eps - 1) / L*np.sqrt( 8*Rc[1]**2 * (eps**2 - 1)**3 / ( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 )**(3/2) - 2*(eps - 1) / np.sqrt( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 ) ) + ( Rc[1]*(eps - 1)/L**5 *( 16*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 - 16*Rc[1]**2 * (eps - 1)**2 - 16*Rc[2]**2 * (eps - 1)**2 + L*8*eps*(eps**2 - 1)**3 * (L*eps/(eps**2 - 1) - X_0 + Rc[0]) ) ) / (1/L**4) * ( 8*Rc[1]**2 * (eps**2 - 1)**3 / ( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 )**(3/2) - 2*(eps - 1) / np.sqrt( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 ) )**(3/2)
+    
+    dRcz_Nz = 8*Rc[2]**2 * (eps**2 - 1)**3 / ( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 )**(3/2) - 2*(eps - 1) / np.sqrt( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 )
+    dL_Nz = 4*Rc[2]*(eps - 1) / L*np.sqrt( 8*Rc[1]**2 * (eps**2 - 1)**3 / ( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 )**(3/2) - 2*(eps - 1) / np.sqrt( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 ) ) + ( Rc[2]*(eps - 1)/L**5 *( 16*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 - 16*Rc[1]**2 * (eps - 1)**2 - 16*Rc[2]**2 * (eps - 1)**2 + L*8*eps*(eps**2 - 1)**3 * (L*eps/(eps**2 - 1) - X_0 + Rc[0]) ) ) / (1/L**4) * ( 8*Rc[1]**2 * (eps**2 - 1)**3 / ( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 )**(3/2) - 2*(eps - 1) / np.sqrt( 4*(eps**2 - 1)**4 * (L*eps/(eps**2 - 1) - X_0 + Rc[0])**2 + 4*Rc[1]**2 * (eps - 1)**2 + 4*Rc[2]**2 * (eps - 1)**2 ) )**(3/2)
+    
+    err_Nx = np.sqrt( (dRcx_Nx**2)*(err_Rc[0]**2) + (dL_Nx**2)*(err_L**2) )
+    err_Ny = np.sqrt( (dRcy_Ny**2)*(err_Rc[1]**2) + (dL_Ny**2)*(err_L**2) )
+    err_Nz = np.sqrt( (dRcz_Nz**2)*(err_Rc[2]**2) + (dL_Nz**2)*(err_L**2) )
+    
+    err_N = np.array([err_Nx, err_Ny, err_Nz])
+    
+    return err_N
 
 
 
