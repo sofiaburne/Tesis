@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_subestructuras = 1
+MODO_subestructuras = 0
 
 
 from mag import shock_date
@@ -837,7 +837,6 @@ if MODO_subestructuras == 1:
     plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
     #asintotas de Bu y Bd
     plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
-    plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
     plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
     #inicio ramp
     plt.axvline(x = Ti1_ramp_eye, linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
@@ -897,6 +896,7 @@ if MODO_subestructuras == 1:
     
 #zenith angle
 cenit = fcop.alpha(Rc,np.array([1,0,0])) #el segundo vector es el versor x_MSO
+err_cenit = fcop.err_alpha(Rc,np.array([1,0,0]), err_Rc, err_Rc) # el error del versor x es igual al de Rc
 
 
 #normal del shock reescalando el fit macro del bowshock
@@ -905,21 +905,21 @@ L = fbow.L_fit(Rc) #redefino L para que el fit contenga el centro de mi shock y 
 err_L = fbow.error_L_vignes(Rc, err_Rc)
 
 N = fbow.norm_fit_MGS(Rc[0], Rc[1], Rc[2], L)
-#err_N = fbow.err_N_fit(Rc, err_Rc, L, err_L)
-#err_perp_N = err_N - np.dot(np.dot(err_N,N),N)
+err_N = fbow.err_N_fit(Rc, err_Rc, L, err_L)
+err_perp_N = err_N - np.dot(np.dot(err_N,N),N)
 #cono_err_N = fcop.alpha(N, (N + err_perp_N))
 
 #angulo entre campo upstream y normal del fit
 theta_N = fcop.alpha(Bu,N)
-#err_theta_N = fcop.err_alpha(Bu, N, std_Bu, err_N)
+err_theta_N = fcop.err_alpha(Bu, N, std_Bu, err_N)
 
 #angulo entre vel_SW upstream y normal del fit
 theta_NVu = fcop.alpha(Vu,N)
-#err_theta_N = fcop.err_alpha(Vu, N, std_Vu, err_N)
+err_theta_NVu = fcop.err_alpha(Vu, N, std_Vu, err_N)
 
 #angulo entre posicion de la nave en el centro del shock y normal del fit
 theta_NRc = fcop.alpha(Rc,N)
-#err_theta_NRc = fcop.err_alpha(Rc, N, err_Rc, err_N)
+err_theta_NRc = fcop.err_alpha(Rc, N, err_Rc, err_N)
 
 
 #%%

@@ -24,7 +24,7 @@ class CoplanaridadPLOTS:
 
     
     
-    def hist_norm_boot(self, n, av_n, fignum, title, bins = 70, xtick_spacing = 0.5):
+    def hist_norm_boot(self, n, av_n, fignum, title, bins = 70, xtick_spacing = 0.02):
     
         self.nB_boot = n
         self.av_nB_boot = av_n
@@ -38,7 +38,8 @@ class CoplanaridadPLOTS:
         plt.axvline(x = self.av_nB_boot[0], linewidth = self.lw, label = r'$n_x$ medio', color = self.colors[1])
         plt.xlabel(r'$n_x$', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        #p.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        p.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        #plt.xticks(np.arange(min(self.nB_boot[:,0]), max(self.nB_boot[:,0]), xtick_spacing))
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
@@ -48,7 +49,8 @@ class CoplanaridadPLOTS:
         plt.axvline(x = self.av_nB_boot[1], linewidth = self.lw, label = r'$n_y$ medio', color = self.colors[3])
         plt.xlabel(r'$n_y$', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        #p2.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        p2.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        #plt.xticks(np.arange(min(self.nB_boot[:,1]), max(self.nB_boot[:,1]), xtick_spacing))
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
@@ -58,7 +60,8 @@ class CoplanaridadPLOTS:
         plt.axvline(x = self.av_nB_boot[2], linewidth = self.lw, label = r'$n_z$ medio', color = self.colors[5])
         plt.xlabel(r'$n_z$', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        #p3.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        p3.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        #plt.xticks(np.arange(min(self.nB_boot[:,2]), max(self.nB_boot[:,2]), xtick_spacing))
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
@@ -66,7 +69,7 @@ class CoplanaridadPLOTS:
     
     def hist_theta_boot(self, thetaB, av_thetaB, thetaBuV, av_thetaBuV,
                         thetaBdV, av_thetaBdV, thetaBduV, av_thetaBduV,
-                        thetaV, av_thetaV, fignum, bins = 70, xtick_spacing = 0.5):
+                        thetaV, av_thetaV, fignum, bins = 70, xtick_spacing = 1):
     
         self.thetaB_boot = thetaB
         self.av_thetaB_boot = av_thetaB
@@ -89,7 +92,7 @@ class CoplanaridadPLOTS:
         plt.axvline(x = self.av_thetaB_boot, linewidth = self.lw, label = r'$\theta_{Bn}$ medio', color = self.colors[7] )
         plt.xlabel(r'$\theta_{Bun}$ [grados]', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        #p.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        p.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
@@ -100,7 +103,7 @@ class CoplanaridadPLOTS:
         plt.axvline(x = self.av_thetaBuV_boot, linewidth = self.lw, label = r'$\theta_{Bn}$ medio', color = self.colors[7] )
         plt.xlabel(r'$\theta_{Bun}$ [grados]', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        #p2.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        p2.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
@@ -111,7 +114,7 @@ class CoplanaridadPLOTS:
         plt.axvline(x = self.av_thetaBdV_boot, linewidth = self.lw, label = r'$\theta_{Bn}$ medio', color = self.colors[7])
         plt.xlabel(r'$\theta_{Bun}$ [grados]', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        #p3.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        p3.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
@@ -122,7 +125,7 @@ class CoplanaridadPLOTS:
         plt.axvline(x = self.av_thetaBduV_boot, linewidth = self.lw, label = r'$\theta_{Bn}$ medio', color = self.colors[7])
         plt.xlabel(r'$\theta_{Bun}$ [grados]', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        #p4.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        p4.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
@@ -133,7 +136,7 @@ class CoplanaridadPLOTS:
         plt.axvline(x = self.av_thetaV_boot, linewidth = self.lw, label = r'$\theta_{Bn}$ medio', color = self.colors[7])
         plt.xlabel(r'$\theta_{Bun}$ [grados]', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        #p5.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        p5.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
     
@@ -298,12 +301,13 @@ class CoplanaridadPLOTS:
         
         
     
-    def hist_campos_variacion_updown(self, B, av_B, norm_B, av_norm_B, fignum, title, label_B, label_u, label_ux, label_uy, label_uz, bins = 15, xtick_spacing = 0.2):
+    def hist_campos_variacion_updown(self, B, av_B, norm_B, av_norm_B, fignum, title, label_Bu, label_Bux, label_Buy, label_Buz, bins = 15, xtick_spacing = 0.2):
         
         self.Bu_s = B
         self.av_Bu_s = av_B
         self.norm_Bu_s = norm_B
         self.av_norm_Bu_s = av_norm_B
+        self.font_leg = 15
         
         
         plt.figure(fignum, figsize = self.figsize)
@@ -311,39 +315,39 @@ class CoplanaridadPLOTS:
                 
         p = plt.subplot(221)
         plt.hist(self.norm_Bu_s, bins = bins, color = self.colors[6])
-        plt.axvline(x = self.av_norm_Bu_s, linewidth = self.lw, label = r'$|{}_{}|$ medio'.format(label_B, label_u), color = self.colors[7])
+        plt.axvline(x = self.av_norm_Bu_s, linewidth = self.lw, label = r'|{}| medio'.format(label_Bu), color = self.colors[7])
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
         #p.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
-        plt.xlabel(r'$|{}_{}|$ [nT]'.format(label_B, label_u), fontsize = self.font_label)
+        plt.xlabel(r'|{}| [nT]'.format(label_Bu), fontsize = self.font_label)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
         p2 = plt.subplot(222, sharey = p)
         plt.setp(p2.get_yticklabels(), visible = False)
         plt.hist(self.Bu_s[:,0], bins = bins, color = self.colors[0])
-        plt.axvline(x = self.av_Bu_s[0], linewidth = self.lw, label = r'${}_{{}}$ medio'.format(label_B, label_ux), color = self.colors[1])
+        plt.axvline(x = self.av_Bu_s[0], linewidth = self.lw, label = r'{} medio'.format(label_Bux), color = self.colors[1])
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
         #p2.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
-        plt.xlabel(r'${}_{{}}$ [nT]'.format(label_B, label_ux), fontsize = self.font_label)
+        plt.xlabel(r'{} [nT]'.format(label_Bux), fontsize = self.font_label)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
         p3 = plt.subplot(223, sharey = p)
         plt.hist(self.Bu_s[:,1], bins = bins, color = self.colors[2])
-        plt.axvline(x = self.av_Bu_s[1], linewidth = self.lw, label = r'${}_{{}}$ medio'.format(label_B, label_uy), color = self.colors[3])
+        plt.axvline(x = self.av_Bu_s[1], linewidth = self.lw, label = r'{} medio'.format(label_Buy), color = self.colors[3])
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
         #p3.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
-        plt.xlabel(r'${}_{{}}$ [nT]'.format(label_B, label_uy), fontsize = self.font_label)
+        plt.xlabel(r'{} [nT]'.format(label_Buy), fontsize = self.font_label)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
         p4 = plt.subplot(224, sharey = p)
         plt.setp(p4.get_yticklabels(), visible = False)
         plt.hist(self.Bu_s[:,2], bins = bins, color = self.colors[4])
-        plt.axvline(x = self.av_Bu_s[2], linewidth = self.lw, label = r'${}_{{}}$ medio'.format(label_B, label_uz), color = self.colors[5])
+        plt.axvline(x = self.av_Bu_s[2], linewidth = self.lw, label = r'{} medio'.format(label_Buz), color = self.colors[5])
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
         #p4.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
-        plt.xlabel(r'${}_{{}}$ [nT]'.format(label_B, label_uz), fontsize = self.font_label)
+        plt.xlabel(r'{} [nT]'.format(label_Buz), fontsize = self.font_label)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
     

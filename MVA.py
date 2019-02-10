@@ -11,23 +11,23 @@ import statistics as st
 import os
 
 from mag import shock_date
-#from delimitacionshock import Bx, By, Bz, t_mag, Bu
-#from subestructuras_calculos import N
 import coplanaridad_funciones as fcop
 
-#B_vec = np.array([Bx, By, Bz]).T
+from delimitacionshock import Bx, By, Bz, t_mag, Bu
+from subestructuras_calculos import N
+B_vec = np.array([Bx, By, Bz]).T
 
 path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(shock_date)
 if not os.path.exists(path_analisis):
     os.makedirs(path_analisis)
 
 #%% (EJEMPLO) datos 5:18:20.49 a 5:19:26 Oct 19 1984
-
-path = r'C:\Users\sofia\Documents\Facultad\Tesis\Ejercicio MVA cap8/'
-t_mag, B_x, B_y, B_z, v_x, v_y, v_z, N = np.loadtxt(path+'datos.txt', skiprows = 1, unpack = True)
-B_vec = np.array([B_x, B_y, B_z]).T
-            
-#unidades: T(s), B(nT), v(km/s), N(particles/cm^3)
+#
+#path = r'C:\Users\sofia\Documents\Facultad\Tesis\Ejercicio MVA cap8/'
+#t_mag, B_x, B_y, B_z, v_x, v_y, v_z, N = np.loadtxt(path+'datos.txt', skiprows = 1, unpack = True)
+#B_vec = np.array([B_x, B_y, B_z]).T
+#            
+##unidades: T(s), B(nT), v(km/s), N(particles/cm^3)
 
 #%%----------------------------------- FUNCIONES GENERALES -------------------------------------------
 
@@ -170,6 +170,9 @@ for m in range(len(B_vec[:,0])):
 
 #angulo con Bu
 thetaMVA = fcop.alpha(Bu,x[2,:])
+
+#<Bn>
+av_Bx3 = np.mean(B_vec, axis = 0)
    
 
 # errores 
@@ -185,7 +188,7 @@ cono_err_x3 = max(err_x_grad[2,0],err_x_grad[2,1])
 
 
 #error <Bn> (en unidades de campo magnetico)
-err_Bx3 = err_B(l[2], m, err_x[2,1], err_x[2,0], x, np.mean(B_vec, axis = 0))
+err_Bx3 = err_B(l[2], m, err_x[2,1], err_x[2,0], x, av_Bx3)
 
 
 #%% ESTUDIO Bn

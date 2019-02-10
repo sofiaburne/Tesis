@@ -31,7 +31,7 @@ if not os.path.exists(path_analisis):
 
 
 #%%---------------------------- COPLANARIDAD PARA UN INTERVALO UP/DOWN DADO ----------------------------
-#me falta propagar errores normal y angulos &&
+
 
 
 #hay 5 normales que se pueden calcular a partir de coplanaridad
@@ -115,6 +115,8 @@ err_thetaV_Vu = fcop.err_alpha(Vu, nV, std_Vu, err_nV)
 
 
 #angulos entre vel nave y normales
+err_v_nave = np.array([1e-8,1e-8,1e-8])
+
 thetaB_vnave = fcop.alpha(v_nave,nB)
 err_thetaB_vnave = fcop.err_alpha(v_nave, nB, err_v_nave, err_nB)
 
@@ -212,204 +214,204 @@ if MODO_coplanaridad == 1:
 
 #analizo que tan estables son las normales repitiendo los calculos con una y otra mitad de los intervalos
 
-
-
-#calculo campos B y V up/downstream para cada medio subintervalo del original
-
-half_u, half_d, half_Bu, half_Bd, std_half_Bu, std_half_Bd = fcop.campos_half(i_u, f_u, i_d, f_d, B1, B2)
-half_uv, half_dv, half_Vu, half_Vd, std_half_Vu, std_half_Vd = fcop.campos_half(iu_v, fu_v, id_v, fd_v, np.float64(V1), np.float64(V2))   
+if MODO_coplanaridad == 1:
     
-
-#calculo normales combinando cada una de las mitades de los intervalos upstream y downstream
-#tengo 4 combinaciones en total
+    #calculo campos B y V up/downstream para cada medio subintervalo del original
     
-half11_nB, half11_nBuV, half11_nBdV, half11_nBduV, half11_nV = fcop.norm_coplanar(half_Bd[0,:],half_Bu[0,:],half_Vd[0,:],half_Vu[0,:])
-half12_nB, half12_nBuV, half12_nBdV, half12_nBduV, half12_nV = fcop.norm_coplanar(half_Bd[1,:],half_Bu[0,:],half_Vd[1,:],half_Vu[0,:])
-half21_nB, half21_nBuV, half21_nBdV, half21_nBduV, half21_nV = fcop.norm_coplanar(half_Bd[0,:],half_Bu[1,:],half_Vd[0,:],half_Vu[1,:])
-half22_nB, half22_nBuV, half22_nBdV, half22_nBduV, half22_nV = fcop.norm_coplanar(half_Bd[1,:],half_Bu[1,:],half_Vd[1,:],half_Vu[1,:])
-
-err_half11_nB, err_half11_nBuV, err_half11_nBdV, err_half11_nBduV, err_half11_nV = fcop.err_norm_coplanar(half_Bd[0,:],half_Bu[0,:],half_Vd[0,:],half_Vu[0,:], std_half_Bd[0,:], std_half_Bu[0,:], std_half_Vd[0,:], std_half_Vu[0,:])
-err_half12_nB, err_half12_nBuV, err_half12_nBdV, err_half12_nBduV, err_half12_nV = fcop.err_norm_coplanar(half_Bd[1,:],half_Bu[0,:],half_Vd[1,:],half_Vu[0,:], std_half_Bd[1,:], std_half_Bu[0,:], std_half_Vd[1,:], std_half_Vu[0,:])
-err_half21_nB, err_half21_nBuV, err_half21_nBdV, err_half21_nBduV, err_half21_nV = fcop.err_norm_coplanar(half_Bd[0,:],half_Bu[1,:],half_Vd[0,:],half_Vu[1,:], std_half_Bd[0,:], std_half_Bu[1,:], std_half_Vd[0,:], std_half_Vu[1,:])
-err_half22_nB, err_half22_nBuV, err_half22_nBdV, err_half22_nBduV, err_half22_nV = fcop.err_norm_coplanar(half_Bd[1,:],half_Bu[1,:],half_Vd[1,:],half_Vu[1,:], std_half_Bd[1,:], std_half_Bu[1,:], std_half_Vd[1,:], std_half_Vu[1,:])
-
-#ordeno en vectores
-half_nB = np.array([half11_nB, half12_nB, half21_nB, half22_nB])
-half_nBuV = np.array([half11_nBuV, half12_nBuV, half21_nBuV, half22_nBuV])
-half_nBdV = np.array([half11_nBdV, half12_nBdV, half21_nBdV, half22_nBdV])
-half_nBduV = np.array([half11_nBduV, half12_nBduV, half21_nBduV, half22_nBduV])
-half_nV = np.array([half11_nV, half12_nV, half21_nV, half22_nV])
-
-err_half_nB = np.array([err_half11_nB, err_half12_nB, err_half21_nB, err_half22_nB])
-err_half_nBuV = np.array([err_half11_nBuV, err_half12_nBuV, err_half21_nBuV, err_half22_nBuV])
-err_half_nBdV = np.array([err_half11_nBdV, err_half12_nBdV, err_half21_nBdV, err_half22_nBdV])
-err_half_nBduV = np.array([err_half11_nBduV, err_half12_nBduV, err_half21_nBduV, err_half22_nBduV])
-err_half_nV = np.array([err_half11_nV, err_half12_nV, err_half21_nV, err_half22_nV])
-
-
-
-#comparo las angulos de las nuevas normales con la del fit
-# para cada tipo de normal tengo 4 angulos por cada una de
-# las combinaciones de medios subintervalos
-
-ang_N_nB, err_ang_N_nB = fcop.half_angulo_N(half_nB, N, err_half_nB, err_N)
-ang_N_nBuV, err_ang_N_nBuV = fcop.half_angulo_N(half_nBuV, N, err_half_nBuV, err_N)
-ang_N_nBdV, err_ang_N_nBdV = fcop.half_angulo_N(half_nBdV, N, err_half_nBdV, err_N)
-ang_N_nBduV, err_ang_N_nBduV = fcop.half_angulo_N(half_nBduV, N, err_half_nBduV, err_N)
-ang_N_nV, err_ang_N_nV = fcop.half_angulo_N(half_nV, N, err_half_nV, err_N)
-
-
-
-#si, para un dado tipo de normal, el angulo con la normal del fit de alguna sus 4 normales posibles
-# es zeda (=5 default) grados mayor que otro de esos 4, considero que los calculos con los intervalos
-# completos son potencialmente inestables y elijo la combinacion de mitades que menor angulo
-# me de para esa normal coplanar
-# si no se cumple esa condicion, salta el mensaje "los calculos son estables" 
-
-half_nB_best, ang_N_nB_best, ind_nB =  fcop.half_best_n(ang_N_nB, half_nB)
-half_nBuV_best, ang_N_nBuV_best, ind_nBuV =  fcop.half_best_n(ang_N_nBuV, half_nBuV)
-half_nBdV_best, ang_N_nBdV_best, ind_nBdV =  fcop.half_best_n(ang_N_nBdV, half_nBuV)
-half_nBduV_best, ang_N_nBduV_best, ind_nBduV =  fcop.half_best_n(ang_N_nBduV, half_nBduV)
-half_nV_best, ang_N_nV_best, ind_nV =  fcop.half_best_n(ang_N_nV, half_nV)
-
-#si para 2 de 5 normales coplanares los calculos me dan inestables, considero que los calculos
-# efectivamente son inestables para todas las normales y paso a elegir la mejor combinacion de
-# medios subintervalos
-
-#chequeo si existen las variables (si existen es porque se cumplio la condicion de half_best_n)
-try: ind_nB
-except NameError: ind_nB = None
-
-try: ind_nBuV
-except NameError: ind_nBuV = None
-
-try: ind_nBdV
-except NameError: ind_nBdV = None
-
-try: ind_nBduV
-except NameError: ind_nBduV = None
-
-try: ind_nV
-except NameError: ind_nV = None
-
-
-#vector de indices de mejor combinacion de medios subintervalos
-#si una dada normal coplanar era estable, entonces el indice de
-# mejor combinacion es None
-ind_comb = np.array([ind_nB, ind_nBuV, ind_nBdV, ind_nBduV, ind_nV])
-
-
-#chequeo si tengo por lo menos dos normales coplanares inestables, en ese caso
-# redefino los campos y normales con las de la mejor combinacion
-test1 = np.count_nonzero(ind_comb!=None)
-if test1 >= 2:
-
-    #tomo como mejor combinacion de subintervalos aquella que más se repita en la eleccion de mejor normal
-    
-    def most_common(lst):
-        return max(lst, key=lst.count)
-    
-    ind_best = most_common(list(ind_comb[ind_comb!=None])) #evaluo el elemento no nulo mas repetido
-    
-    #me quedo con las normales de la mejor combinacion de subintervalos
-    mitad_nB = half_nB[ind_best,:]
-    mitad_nBuV = half_nBuV[ind_best,:]
-    mitad_nBdV = half_nBdV[ind_best,:]
-    mitad_nBduV = half_nBduV[ind_best,:]
-    mitad_nV = half_nV[ind_best,:]
-    
-    err_mitad_nB = err_half_nB[ind_best,:]
-    err_mitad_nBuV = err_half_nBuV[ind_best,:]
-    err_mitad_nBdV = err_half_nBdV[ind_best,:]
-    err_mitad_nBduV = err_half_nBduV[ind_best,:]
-    err_mitad_nV = err_half_nV[ind_best,:]
-    
-    err_perp_mitad_nB = err_mitad_nB - np.dot(np.dot(err_mitad_nB,mitad_nB),mitad_nB)
-    err_perp_mitad_nBuV = err_mitad_nBuV - np.dot(np.dot(err_mitad_nBuV,mitad_nBuV),mitad_nBuV)
-    err_perp_mitad_nBdV = err_mitad_nBdV - np.dot(np.dot(err_mitad_nBdV,mitad_nBdV),mitad_nBdV)
-    err_perp_mitad_nBduV = err_mitad_nBduV - np.dot(np.dot(err_mitad_nBduV,mitad_nBduV),mitad_nBduV)
-    err_perp_mitad_nV = err_mitad_nV - np.dot(np.dot(err_mitad_nV,mitad_nV),mitad_nV)
-    
-    cono_err_mitad_nB = fcop.alpha(mitad_nB, err_perp_mitad_nB)
-    cono_err_mitad_nBuV = fcop.alpha(mitad_nBuV, err_perp_mitad_nBuV)
-    cono_err_mitad_nBdV = fcop.alpha(mitad_nBdV, err_perp_mitad_nBdV)
-    cono_err_mitad_nBduV = fcop.alpha(mitad_nBduV, err_perp_mitad_nBduV)
-    cono_err_mitad_nV = fcop.alpha(mitad_nV, err_perp_mitad_nV)
-    
-    
-    #angulos con normal del fit, para normales de la mejor combinacion de subintervalos
-    mitad_angN_nB = ang_N_nB[ind_best]
-    mitad_angN_nBuV = ang_N_nBuV[ind_best]
-    mitad_angN_nBdV = ang_N_nBdV[ind_best]
-    mitad_angN_nBduV = ang_N_nBduV[ind_best]
-    mitad_angN_nV = ang_N_nV[ind_best]
-    
-    err_mitad_angN_nB = err_ang_N_nB[ind_best]
-    err_mitad_angN_nBuV = err_ang_N_nBuV[ind_best]
-    err_mitad_angN_nBdV = err_ang_N_nBdV[ind_best]
-    err_mitad_angN_nBduV = err_ang_N_nBduV[ind_best]
-    err_mitad_angN_nV = err_ang_N_nV[ind_best]
-    
-    
-    #me quedo con los campos correspondientes a los mejores subintervalos
-    if ind_best == 0 or 1:
-        mitad_Bu = half_Bu[0:,]
-        std_mitad_Bu = std_half_Bu[0:,]
-        mitad_Vu = half_Vu[0:,]
-        std_mitad_Vu = std_half_Vu[0:,]
-        
-    elif ind_best == 2 or 3:
-        mitad_Bu = half_Bu[1:,]
-        std_mitad_Bu = std_half_Bu[1:,]
-        mitad_Vu = half_Vu[1:,]
-        std_mitad_Vu = std_half_Vu[1:,]
-    
-    if ind_best == 0 or 2:
-        mitad_Bd = half_Bd[0:,]
-        std_mitad_Bd = std_half_Bd[0:,]
-        mitad_Vd = half_Vd[0:,]
-        std_mitad_Vd = std_half_Vd[0:,]
-    
-    elif ind_best == 1 or 3:  
-        std_mitad_Bd = std_half_Bd[1:,]
-        mitad_Bd = half_Bd[1:,]
-        mitad_Vd = half_Vd[1:,]
-        std_mitad_Vd = std_half_Vd[1:,]
-
-
-    #angulos con campo upstream para las mejores normales de los semi-intervalos
-    mitad_thetaB = fcop.alpha(mitad_Bu,mitad_nB)
-    mitad_thetaBuV = fcop.alpha(mitad_Bu,mitad_nBuV)
-    mitad_thetaBdV = fcop.alpha(mitad_Bu,mitad_nBdV)
-    mitad_thetaBduV = fcop.alpha(mitad_Bu,mitad_nBduV)
-    mitad_thetaV = fcop.alpha(mitad_Bu,mitad_nV)
-    
-    err_mitad_thetaB = fcop.err_alpha(mitad_Bu, mitad_nB, std_mitad_Bu, err_mitad_nB)
-    err_mitad_thetaBuV = fcop.err_alpha(mitad_Bu, mitad_nBuV, std_mitad_Bu, err_mitad_nBuV)
-    err_mitad_thetaBdV = fcop.err_alpha(mitad_Bu, mitad_nBdV, std_mitad_Bu, err_mitad_nBdV)
-    err_mitad_thetaBduV = fcop.err_alpha(mitad_Bu, mitad_nBduV, std_mitad_Bu, err_mitad_nBduV)
-    err_mitad_thetaV = fcop.err_alpha(mitad_Bu, mitad_nV, std_mitad_Bu, err_mitad_nV)
+    half_u, half_d, half_Bu, half_Bd, std_half_Bu, std_half_Bd = fcop.campos_half(i_u, f_u, i_d, f_d, B1, B2)
+    half_uv, half_dv, half_Vu, half_Vd, std_half_Vu, std_half_Vd = fcop.campos_half(iu_v, fu_v, id_v, fd_v, np.float64(V1), np.float64(V2))   
         
     
+    #calculo normales combinando cada una de las mitades de los intervalos upstream y downstream
+    #tengo 4 combinaciones en total
+        
+    half11_nB, half11_nBuV, half11_nBdV, half11_nBduV, half11_nV = fcop.norm_coplanar(half_Bd[0,:],half_Bu[0,:],half_Vd[0,:],half_Vu[0,:])
+    half12_nB, half12_nBuV, half12_nBdV, half12_nBduV, half12_nV = fcop.norm_coplanar(half_Bd[1,:],half_Bu[0,:],half_Vd[1,:],half_Vu[0,:])
+    half21_nB, half21_nBuV, half21_nBdV, half21_nBduV, half21_nV = fcop.norm_coplanar(half_Bd[0,:],half_Bu[1,:],half_Vd[0,:],half_Vu[1,:])
+    half22_nB, half22_nBuV, half22_nBdV, half22_nBduV, half22_nV = fcop.norm_coplanar(half_Bd[1,:],half_Bu[1,:],half_Vd[1,:],half_Vu[1,:])
     
-    #comparo los angulos de normal del fit entre las normales de los mejores subintervalos
-    # y las normales de los intervalos completos. Si la diferencia entre 2 angulos con las
-    # nuevas normales y las normales con los intervalos completos es mayor a kappa grados,
-    # entonces me quedo con las normales y campos de los subintervalos
+    err_half11_nB, err_half11_nBuV, err_half11_nBdV, err_half11_nBduV, err_half11_nV = fcop.err_norm_coplanar(half_Bd[0,:],half_Bu[0,:],half_Vd[0,:],half_Vu[0,:], std_half_Bd[0,:], std_half_Bu[0,:], std_half_Vd[0,:], std_half_Vu[0,:])
+    err_half12_nB, err_half12_nBuV, err_half12_nBdV, err_half12_nBduV, err_half12_nV = fcop.err_norm_coplanar(half_Bd[1,:],half_Bu[0,:],half_Vd[1,:],half_Vu[0,:], std_half_Bd[1,:], std_half_Bu[0,:], std_half_Vd[1,:], std_half_Vu[0,:])
+    err_half21_nB, err_half21_nBuV, err_half21_nBdV, err_half21_nBduV, err_half21_nV = fcop.err_norm_coplanar(half_Bd[0,:],half_Bu[1,:],half_Vd[0,:],half_Vu[1,:], std_half_Bd[0,:], std_half_Bu[1,:], std_half_Vd[0,:], std_half_Vu[1,:])
+    err_half22_nB, err_half22_nBuV, err_half22_nBdV, err_half22_nBduV, err_half22_nV = fcop.err_norm_coplanar(half_Bd[1,:],half_Bu[1,:],half_Vd[1,:],half_Vu[1,:], std_half_Bd[1,:], std_half_Bu[1,:], std_half_Vd[1,:], std_half_Vu[1,:])
     
-    kappa = 5
+    #ordeno en vectores
+    half_nB = np.array([half11_nB, half12_nB, half21_nB, half22_nB])
+    half_nBuV = np.array([half11_nBuV, half12_nBuV, half21_nBuV, half22_nBuV])
+    half_nBdV = np.array([half11_nBdV, half12_nBdV, half21_nBdV, half22_nBdV])
+    half_nBduV = np.array([half11_nBduV, half12_nBduV, half21_nBduV, half22_nBduV])
+    half_nV = np.array([half11_nV, half12_nV, half21_nV, half22_nV])
     
-    mitad_angN = np.array([mitad_angN_nB, mitad_angN_nBuV, mitad_angN_nBdV, mitad_angN_nBduV, mitad_angN_nV])
-    angN = np.array([fcop.alpha(nB,N), fcop.alpha(nBuV,N), fcop.alpha(nBdV,N), fcop.alpha(nBduV,N), fcop.alpha(nV,N)])
-    resta_angN = abs(mitad_angN - angN)
+    err_half_nB = np.array([err_half11_nB, err_half12_nB, err_half21_nB, err_half22_nB])
+    err_half_nBuV = np.array([err_half11_nBuV, err_half12_nBuV, err_half21_nBuV, err_half22_nBuV])
+    err_half_nBdV = np.array([err_half11_nBdV, err_half12_nBdV, err_half21_nBdV, err_half22_nBdV])
+    err_half_nBduV = np.array([err_half11_nBduV, err_half12_nBduV, err_half21_nBduV, err_half22_nBduV])
+    err_half_nV = np.array([err_half11_nV, err_half12_nV, err_half21_nV, err_half22_nV])
     
-    test2 = np.count_nonzero(resta_angN>=kappa)
     
-    if test2 > 1: #si por lo menos dos normales me dan apreciablemente diferentes...
-        print('los calculos en semi-intervalos son más estables')
     
-    else: raise ValueError('los calculos en los intervalos completos son estables')
+    #comparo las angulos de las nuevas normales con la del fit
+    # para cada tipo de normal tengo 4 angulos por cada una de
+    # las combinaciones de medios subintervalos
+    
+    ang_N_nB, err_ang_N_nB = fcop.half_angulo_N(half_nB, N, err_half_nB, err_N)
+    ang_N_nBuV, err_ang_N_nBuV = fcop.half_angulo_N(half_nBuV, N, err_half_nBuV, err_N)
+    ang_N_nBdV, err_ang_N_nBdV = fcop.half_angulo_N(half_nBdV, N, err_half_nBdV, err_N)
+    ang_N_nBduV, err_ang_N_nBduV = fcop.half_angulo_N(half_nBduV, N, err_half_nBduV, err_N)
+    ang_N_nV, err_ang_N_nV = fcop.half_angulo_N(half_nV, N, err_half_nV, err_N)
+    
+    
+    
+    #si, para un dado tipo de normal, el angulo con la normal del fit de alguna sus 4 normales posibles
+    # es zeda (=5 default) grados mayor que otro de esos 4, considero que los calculos con los intervalos
+    # completos son potencialmente inestables y elijo la combinacion de mitades que menor angulo
+    # me de para esa normal coplanar
+    # si no se cumple esa condicion, salta el mensaje "los calculos son estables" 
+    
+    half_nB_best, ang_N_nB_best, ind_nB =  fcop.half_best_n(ang_N_nB, half_nB)
+    half_nBuV_best, ang_N_nBuV_best, ind_nBuV =  fcop.half_best_n(ang_N_nBuV, half_nBuV)
+    half_nBdV_best, ang_N_nBdV_best, ind_nBdV =  fcop.half_best_n(ang_N_nBdV, half_nBuV)
+    half_nBduV_best, ang_N_nBduV_best, ind_nBduV =  fcop.half_best_n(ang_N_nBduV, half_nBduV)
+    half_nV_best, ang_N_nV_best, ind_nV =  fcop.half_best_n(ang_N_nV, half_nV)
+    
+    #si para 2 de 5 normales coplanares los calculos me dan inestables, considero que los calculos
+    # efectivamente son inestables para todas las normales y paso a elegir la mejor combinacion de
+    # medios subintervalos
+    
+    #chequeo si existen las variables (si existen es porque se cumplio la condicion de half_best_n)
+    try: ind_nB
+    except NameError: ind_nB = None
+    
+    try: ind_nBuV
+    except NameError: ind_nBuV = None
+    
+    try: ind_nBdV
+    except NameError: ind_nBdV = None
+    
+    try: ind_nBduV
+    except NameError: ind_nBduV = None
+    
+    try: ind_nV
+    except NameError: ind_nV = None
+    
+    
+    #vector de indices de mejor combinacion de medios subintervalos
+    #si una dada normal coplanar era estable, entonces el indice de
+    # mejor combinacion es None
+    ind_comb = np.array([ind_nB, ind_nBuV, ind_nBdV, ind_nBduV, ind_nV])
+    
+    
+    #chequeo si tengo por lo menos dos normales coplanares inestables, en ese caso
+    # redefino los campos y normales con las de la mejor combinacion
+    test1 = np.count_nonzero(ind_comb!=None)
+    if test1 >= 2:
+    
+        #tomo como mejor combinacion de subintervalos aquella que más se repita en la eleccion de mejor normal
+        
+        def most_common(lst):
+            return max(lst, key=lst.count)
+        
+        ind_best = most_common(list(ind_comb[ind_comb!=None])) #evaluo el elemento no nulo mas repetido
+        
+        #me quedo con las normales de la mejor combinacion de subintervalos
+        mitad_nB = half_nB[ind_best,:]
+        mitad_nBuV = half_nBuV[ind_best,:]
+        mitad_nBdV = half_nBdV[ind_best,:]
+        mitad_nBduV = half_nBduV[ind_best,:]
+        mitad_nV = half_nV[ind_best,:]
+        
+        err_mitad_nB = err_half_nB[ind_best,:]
+        err_mitad_nBuV = err_half_nBuV[ind_best,:]
+        err_mitad_nBdV = err_half_nBdV[ind_best,:]
+        err_mitad_nBduV = err_half_nBduV[ind_best,:]
+        err_mitad_nV = err_half_nV[ind_best,:]
+        
+        err_perp_mitad_nB = err_mitad_nB - np.dot(np.dot(err_mitad_nB,mitad_nB),mitad_nB)
+        err_perp_mitad_nBuV = err_mitad_nBuV - np.dot(np.dot(err_mitad_nBuV,mitad_nBuV),mitad_nBuV)
+        err_perp_mitad_nBdV = err_mitad_nBdV - np.dot(np.dot(err_mitad_nBdV,mitad_nBdV),mitad_nBdV)
+        err_perp_mitad_nBduV = err_mitad_nBduV - np.dot(np.dot(err_mitad_nBduV,mitad_nBduV),mitad_nBduV)
+        err_perp_mitad_nV = err_mitad_nV - np.dot(np.dot(err_mitad_nV,mitad_nV),mitad_nV)
+        
+        cono_err_mitad_nB = fcop.alpha(mitad_nB, err_perp_mitad_nB)
+        cono_err_mitad_nBuV = fcop.alpha(mitad_nBuV, err_perp_mitad_nBuV)
+        cono_err_mitad_nBdV = fcop.alpha(mitad_nBdV, err_perp_mitad_nBdV)
+        cono_err_mitad_nBduV = fcop.alpha(mitad_nBduV, err_perp_mitad_nBduV)
+        cono_err_mitad_nV = fcop.alpha(mitad_nV, err_perp_mitad_nV)
+        
+        
+        #angulos con normal del fit, para normales de la mejor combinacion de subintervalos
+        mitad_angN_nB = ang_N_nB[ind_best]
+        mitad_angN_nBuV = ang_N_nBuV[ind_best]
+        mitad_angN_nBdV = ang_N_nBdV[ind_best]
+        mitad_angN_nBduV = ang_N_nBduV[ind_best]
+        mitad_angN_nV = ang_N_nV[ind_best]
+        
+        err_mitad_angN_nB = err_ang_N_nB[ind_best]
+        err_mitad_angN_nBuV = err_ang_N_nBuV[ind_best]
+        err_mitad_angN_nBdV = err_ang_N_nBdV[ind_best]
+        err_mitad_angN_nBduV = err_ang_N_nBduV[ind_best]
+        err_mitad_angN_nV = err_ang_N_nV[ind_best]
+        
+        
+        #me quedo con los campos correspondientes a los mejores subintervalos
+        if ind_best == 0 or 1:
+            mitad_Bu = half_Bu[0:,]
+            std_mitad_Bu = std_half_Bu[0:,]
+            mitad_Vu = half_Vu[0:,]
+            std_mitad_Vu = std_half_Vu[0:,]
             
+        elif ind_best == 2 or 3:
+            mitad_Bu = half_Bu[1:,]
+            std_mitad_Bu = std_half_Bu[1:,]
+            mitad_Vu = half_Vu[1:,]
+            std_mitad_Vu = std_half_Vu[1:,]
+        
+        if ind_best == 0 or 2:
+            mitad_Bd = half_Bd[0:,]
+            std_mitad_Bd = std_half_Bd[0:,]
+            mitad_Vd = half_Vd[0:,]
+            std_mitad_Vd = std_half_Vd[0:,]
+        
+        elif ind_best == 1 or 3:  
+            std_mitad_Bd = std_half_Bd[1:,]
+            mitad_Bd = half_Bd[1:,]
+            mitad_Vd = half_Vd[1:,]
+            std_mitad_Vd = std_half_Vd[1:,]
+    
+    
+        #angulos con campo upstream para las mejores normales de los semi-intervalos
+        mitad_thetaB = fcop.alpha(mitad_Bu,mitad_nB)
+        mitad_thetaBuV = fcop.alpha(mitad_Bu,mitad_nBuV)
+        mitad_thetaBdV = fcop.alpha(mitad_Bu,mitad_nBdV)
+        mitad_thetaBduV = fcop.alpha(mitad_Bu,mitad_nBduV)
+        mitad_thetaV = fcop.alpha(mitad_Bu,mitad_nV)
+        
+        err_mitad_thetaB = fcop.err_alpha(mitad_Bu, mitad_nB, std_mitad_Bu, err_mitad_nB)
+        err_mitad_thetaBuV = fcop.err_alpha(mitad_Bu, mitad_nBuV, std_mitad_Bu, err_mitad_nBuV)
+        err_mitad_thetaBdV = fcop.err_alpha(mitad_Bu, mitad_nBdV, std_mitad_Bu, err_mitad_nBdV)
+        err_mitad_thetaBduV = fcop.err_alpha(mitad_Bu, mitad_nBduV, std_mitad_Bu, err_mitad_nBduV)
+        err_mitad_thetaV = fcop.err_alpha(mitad_Bu, mitad_nV, std_mitad_Bu, err_mitad_nV)
+            
+        
+        
+        #comparo los angulos de normal del fit entre las normales de los mejores subintervalos
+        # y las normales de los intervalos completos. Si la diferencia entre 2 angulos con las
+        # nuevas normales y las normales con los intervalos completos es mayor a kappa grados,
+        # entonces me quedo con las normales y campos de los subintervalos
+        
+        kappa = 5
+        
+        mitad_angN = np.array([mitad_angN_nB, mitad_angN_nBuV, mitad_angN_nBdV, mitad_angN_nBduV, mitad_angN_nV])
+        angN = np.array([fcop.alpha(nB,N), fcop.alpha(nBuV,N), fcop.alpha(nBdV,N), fcop.alpha(nBduV,N), fcop.alpha(nV,N)])
+        resta_angN = abs(mitad_angN - angN)
+        
+        test2 = np.count_nonzero(resta_angN>=kappa)
+        
+        if test2 > 1: #si por lo menos dos normales me dan apreciablemente diferentes...
+            print('los calculos en semi-intervalos son más estables')
+        
+        else: raise ValueError('los calculos en los intervalos completos son estables')
+                
     
 #%%#####################################################################################################
 ########################################################################################################
@@ -749,7 +751,7 @@ err_thetaV_su = np.empty(Luv)
 
 for i in range(Lu):    
     nB_su[i,:], _, _, _, _ = fcop.norm_coplanar(Bd,Bu_s[i,:],Vd,Vu_s[i,:])
-    err_nB_su[i,:], _, _, _, _ = fcop.err_norm_coplanar(Bd,Bu_s[i,:],Vd,Vu_s[i,:])
+    err_nB_su[i,:], _, _, _, _ = fcop.err_norm_coplanar(Bd,Bu_s[i,:],Vd,Vu_s[i,:],std_Bd,err_Bu_s[i,:],std_Vd,err_Vu_s[i,:])
     thetaB_su[i] = fcop.alpha(Bu_s[i,:],nB_su[i,:])
     err_thetaB_su[i] = fcop.err_alpha(Bu_s[i,:],nB_su[i,:],err_Bu_s[i,:],err_nB_su[i,:])
 for i in range(Luv):    
@@ -970,21 +972,21 @@ if MODO_coplanaridad == 1:
     
     #campo magnetico
     
-    cpl.hist_campos_variacion_updown(Bu_s, av_Bu_s, norm_Bu_s, av_norm_Bu_s, 22, 'Campo magnético upstream', 'B', 'u', 'ux', 'uy', 'uz')
+    cpl.hist_campos_variacion_updown(Bu_s, av_Bu_s, norm_Bu_s, av_norm_Bu_s, 22, 'Campo magnético upstream', r'$B_u$', r'$B_{ux}$', r'$B_{uy}$', r'$B_{uz}$')
     plt.savefig(path_analisis+'hist_Bu_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_Bu_copl_variacion_up_down{}.pdf'.format(shock_date))
     
-    cpl.hist_campos_variacion_updown(Bd_s, av_Bd_s, norm_Bd_s, av_norm_Bd_s, 23, 'Campo magnético downstream', 'B', 'd', 'dx', 'dy', 'dz')
+    cpl.hist_campos_variacion_updown(Bd_s, av_Bd_s, norm_Bd_s, av_norm_Bd_s, 23, 'Campo magnético downstream', r'$B_d$', r'$B_{dx}$', r'$B_{dy}$', r'$B_{dz}$')
     plt.savefig(path_analisis+'hist_Bd_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_Bd_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     #velocidad
     
-    cpl.hist_campos_variacion_updown(Vu_s, av_Vu_s, norm_Vu_s, av_norm_Vu_s, 24, 'Velocidad flujo upstream', 'V', 'u', 'ux', 'uy', 'uz')
+    cpl.hist_campos_variacion_updown(Vu_s, av_Vu_s, norm_Vu_s, av_norm_Vu_s, 24, 'Velocidad flujo upstream', r'$V_u$', r'$V_{ux}$', r'$V_{uy}$', r'$V_{uz}$')
     plt.savefig(path_analisis+'hist_Vu_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_Vu_copl_variacion_up_down{}.pdf'.format(shock_date))
     
-    cpl.hist_campos_variacion_updown(Vd_s, av_Vd_s, norm_Vd_s, av_norm_Vd_s, 25, 'Velocidad flujo downstream', 'V', 'd', 'dx', 'dy', 'dz')
+    cpl.hist_campos_variacion_updown(Vd_s, av_Vd_s, norm_Vd_s, av_norm_Vd_s, 25, 'Velocidad flujo downstream', r'$V_d$', r'$V_{dx}$', r'$V_{dy}$', r'$V_{dz}$')
     plt.savefig(path_analisis+'hist_Vd_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_Vd_copl_variacion_up_down{}.pdf'.format(shock_date))
     

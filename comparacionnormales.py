@@ -1,26 +1,52 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_fit = 0
+MODO_fit = 1
 
 
 from mag import shock_date
 from delimitacionshock import v_nave
-from subestructuras_calculos import L, N, theta_N, theta_NRc, Rc
-from coplanaridad_calculos import nB, nBuV, nBdV, nBduV, nV, thetaB, thetaBuV, thetaBdV, thetaBduV, thetaV, cono_err_nB, cono_err_nBuV, cono_err_nBdV, cono_err_nBduV, cono_err_nV
-from mva import cono_err_x3, x, thetaMVA
-n_mva = x[2,:]
+#from subestructuras_calculos import L, N, theta_N, theta_NRc, Rc
+#from coplanaridad_calculos import nB, nBuV, nBdV, nBduV, nV, thetaB, thetaBuV, thetaBdV, thetaBduV, thetaV, cono_err_nB, cono_err_nBuV, cono_err_nBdV, cono_err_nBduV, cono_err_nV
+#from mva import cono_err_x3, x, thetaMVA
+#n_mva = x[2,:]
 import coplanaridad_funciones as fcop
 import bowshock_funciones as fbow
 
 
 from importlib import reload
 import numpy as np
+import matplotlib.pyplot as plt
 import os
 
 
 path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(shock_date)
 if not os.path.exists(path_analisis):
     os.makedirs(path_analisis)
+
+#%%
+L = 1.676
+N = np.array([0.827, -0.302, - 0.475])
+theta_N = 163.062
+theta_NRc = 62.406
+Rc = np.array([-0.286, -1.320, -2.077])
+nB = np.array([0.444, -0.411, 0.796])
+nBuV = np.array([0.259, -0.843, 0.470]) 
+nBdV = np.array([0.188, -0.920, 0.343])
+nBduV = np.array([0.131, -0.961, 0.242])
+nV = np.array([0.750, 0.374, -0.545])
+thetaB = 102.536
+thetaBuV = 100.461
+thetaBdV = 99.178
+thetaBduV = 98.062
+thetaV = 147.367
+cono_err_nB = 90
+cono_err_nBuV = 90
+cono_err_nBdV = 90
+cono_err_nBduV = 90
+cono_err_nV = 90
+cono_err_x3 = 0.051
+thetaMVA = 82.552
+n_mva = np.array([0.181, 0.538, 0.823])
 
 #%%
 
@@ -134,6 +160,7 @@ if MODO_fit == 1:
     ax.legend(loc=0, fontsize=20)
     
     plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}'.format(shock_date))
+    plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}.pdf'.format(shock_date))
 
 
 #%%------------------------------- GUARDO RESULTADOS ------------------------------

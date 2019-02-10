@@ -142,7 +142,7 @@ def err_norm_coplanar(Bd, Bu, Vd, Vu, err_Bu, err_Bd, err_Vu, err_Vd):
     err_nBuV = err_n(Bu, delta_V, delta_B, err_Bu, err_delta_V, err_delta_B)
     err_nBdV = err_n(Bd, delta_V, delta_B, err_Bd, err_delta_V, err_delta_B)
     err_nBduV = err_n(delta_B, delta_V, delta_B, err_delta_B, err_delta_V, err_delta_B)
-    err_nV = err_nv(delta_v, err_delta_V)
+    err_nV = err_nv(delta_V, err_delta_V)
     
     return err_nB, err_nBuV, err_nBdV, err_nBduV, err_nV
 
@@ -239,9 +239,9 @@ def half_angulo_N(half_n, N, err_half_n, err_N):
     ang_N_half22_n = alpha(half_n[3,:],N)
     
     err_ang_N_half11_n = err_alpha(half_n[0,:],N, err_half_n[0,:], err_N)
-    err_ang_N_half12_n = alpha(half_n[1,:],N, err_half_n[1,:], err_N)
-    err_ang_N_half21_n = alpha(half_n[2,:],N, err_half_n[2,:], err_N)
-    err_ang_N_half22_n = alpha(half_n[3,:],N, err_half_n[3,:], err_N)
+    err_ang_N_half12_n = err_alpha(half_n[1,:],N, err_half_n[1,:], err_N)
+    err_ang_N_half21_n = err_alpha(half_n[2,:],N, err_half_n[2,:], err_N)
+    err_ang_N_half22_n = err_alpha(half_n[3,:],N, err_half_n[3,:], err_N)
     
     ang_N_n = np.array([ang_N_half11_n, ang_N_half12_n, ang_N_half21_n, ang_N_half22_n])
     err_ang_N_n = np.array([err_ang_N_half11_n, err_ang_N_half12_n, err_ang_N_half21_n, err_ang_N_half22_n])
