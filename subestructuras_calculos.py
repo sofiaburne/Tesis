@@ -5,7 +5,7 @@ MODO_subestructuras = 1
 
 from mag import shock_date
 import delimitacionshock as ds
-from delimitacionshock import v_nave, t_apo11, t_apo12, t_apo21, t_apo22, x, y, z, B, Bx, By, Bz, t_mag, t_swia_mom, densidad_swia, t_swea, nivelesenergia_swea, flujosenergia_swea, t_swia_spec, nivelesenergia_swia, flujosenergia_swia, i_u, f_u, i_d, f_d, Bu, Bd, norm_Bu, norm_Bd, std_Bu, std_Bd, std_norm_Bu, std_norm_Bd
+from delimitacionshock import v_nave, t_apo11, t_apo12, t_apo21, t_apo22, x, y, z, B, Bx, By, Bz, t_mag, t_swia_mom, densidad_swia, t_swea, nivelesenergia_swea, flujosenergia_swea, t_swia_spec, nivelesenergia_swia, flujosenergia_swia, i_u, f_u, i_d, f_d, iu_v, fu_v, id_v, fd_v, Bu, Bd, norm_Bu, norm_Bd, std_Bu, std_Bd, std_norm_Bu, std_norm_Bd, Vu, std_Vu
 import bowshock_funciones as fbow
 import coplanaridad_funciones as fcop
 
@@ -238,6 +238,43 @@ def filter_data(data, fs_new = 8, fs_data = 32):
     return data_new
 
 
+
+
+def vel_shock(sgn, N, theta_N, theta_NVu, Vu, W_ci, delta_t_foot, percent):
+    
+    '''
+    Velocidad del shock a lo largo de la normal (ref.: Giagkiozis S. 2017).
+    Metodo A: Moses 1985
+    Metodo B: Gosling & Thomsen 1985
+    
+    sgn = +1 si outbound
+    sgn = -1 si inbound
+    
+    Las unidades de Vsh serán las mismas que las de Vu.
+    delta_t_foot y W_ci deben tener las mismas unidades temporales.
+    
+    
+    Como estas formulas suponen que las estructuras son estacionarias, hago los
+    calculos suponiendo que el ancho temporal observado del foot es un X% del
+    ancho total (ie, que el foot esta X% desarrollado cuando la nave lo mide).
+    '''
+    
+    delta_t_ft = percent*delta_t_foot
+    VuN = np.dot(Vu,N)
+    
+    #A
+    X_L = 0.68 * np.sin(theta_N)**2 / (W_ci * delta_t_ft)
+    Vsh_A = np.linalg.norm(VuN * np.cos(theta_NVu) * X_L / (1 + sgn*X_L))
+    
+    #B
+    t_ot = (1/W_ci)*np.arccos(- np.cos(theta_N)**2 / np.sin(theta_N)**2)
+    f = W_ci*t_ot*(2*np.cos(theta_N)**2 - 1) + 2*np.sin(theta_N)**2 * np.sin(W_ci*t_ot)
+    X_G = f/ (W_ci * delta_t_ft)
+    Vsh_B = np.linalg.norm(VuN * np.cos(theta_NVu) * X_G / (1 + sgn*X_G))
+    
+    return Vsh_A, Vsh_B
+
+
 #%%
 
 #comparación de sigmas de Bd
@@ -261,7 +298,7 @@ if MODO_subestructuras == 1:
     t_mag_mid = filter_data(t_mag)
     
     
-    figsize = (30,60)
+    figsize = (60,30)
     lw = 3
     msize = 8
     font_title = 30
@@ -427,7 +464,7 @@ if MODO_subestructuras == 1:
     #ploteo para ver si elegi bien los limites a ojo
     
     
-    figsize = (30,60)
+    figsize = (60,30)
     lw = 3
     msize = 8
     font_title = 30
@@ -663,6 +700,22 @@ C = (np.abs(t_mag-tc)).argmin()
 Rc = np.array([x[C], y[C], z[C]])
 err_Rc = np.array([1e-8, 1e-8, 1e-8])
 
+
+#anchos temporales (en s)
+
+#foot
+ancho_foot_temp = 3600*abs(ti_foot - ti_ramp)
+#ramp
+ancho_ramp_temp = 3600*abs(ti_ramp - ti_over)
+#overshoot
+ancho_over_temp = 3600*abs(ti_over - tf_over)
+#shock (foot + ramp)
+ancho_shock_temp = 3600*abs(ti_foot - ti_over)
+
+##ancho espacial del shock en km
+#ancho_shock = ancho_shock_temp*np.array([abs(v_nave[0]), abs(v_nave[1]), abs(v_nave[2])])
+#norm_ancho_shock = np.linalg.norm(ancho_shock)
+
 #%%
 
 if MODO_subestructuras == 1:
@@ -724,24 +777,126 @@ if MODO_subestructuras == 1:
 #    plt.xlim(9.5,10.5)
 #    plt.ylim(0,50)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+#    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
     plt.legend(loc = 0, fontsize = font_leg)
+    
+    
+#%%
+
+#hago subplots para que se vea mejor cada subestructura    
+    
+    
+if MODO_subestructuras == 1:
+    
+    #ploteo todos los limites determinados (a ojo y automatizados)
+    
+    figsize = (30,15)
+    lw = 3
+    msize = 8
+    font_title = 30
+    font_label = 30
+    font_leg = 15
+    ticks_l = 6
+    ticks_w = 3
+    grid_alpha = 0.8
+    updown_alpha = 0.5
+    xlim_foot = [9.81159, 9.82212]
+    xlim_ramp = [9.81938,9.81958]
+    xlim_over = [9.81777,9.86354]
+    
+    
+    
+    plt.figure(55, figsize = figsize)
+    plt.title('Delimitacion de subestructuras', fontsize = font_label)
+    plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
+    
+    plt.subplot(131)
+    plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
+    #asintotas de Bu y Bd
+    plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
+    plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
+    #inicio foot
+    plt.axvline(x = Ti1_foot_eye, linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+    plt.axvline(x = Ti2_foot_eye, linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = ti1_foot, linewidth = lw, linestyle = '-', color = 'm', label = 'inicio foot')
+    plt.axvline(x = ti2_foot, linewidth = lw, linestyle = '-', color = 'm')
+    #inicio ramp
+    plt.axvline(x = Ti1_ramp_eye, linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = Ti2_ramp_eye, linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = ti1_ramp, linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+    plt.axvline(x = ti2_ramp, linewidth = lw, linestyle = '-', color = 'c')
+    plt.xlim(xlim_foot[0], xlim_foot[1])
+    plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 3, endpoint = True))
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
+#    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    plt.legend(loc = 0, fontsize = font_leg)  
+    
+    
+    plt.subplot(132)
+    plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
+    #asintotas de Bu y Bd
+    plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+    plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
+    plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+    #inicio ramp
+    plt.axvline(x = Ti1_ramp_eye, linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+    plt.axvline(x = Ti2_ramp_eye, linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = ti1_ramp, linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+    plt.axvline(x = ti2_ramp, linewidth = lw, linestyle = '-', color = 'c')
+    #ajustes ramp
+    plt.plot(t_mag[i1_ramp:f1_rampfit+1], i1_params[0]*t_mag[i1_ramp:f1_rampfit+1] + i1_params[1], linewidth = lw, color = 'y', linestyle = '-.')
+    plt.plot(t_mag[i2_ramp:f2_rampfit+1], i2_params[0]*t_mag[i2_ramp:f2_rampfit+1] + i2_params[1], linewidth = lw, color = 'r', linestyle = '-.')
+    plt.axvline(x = t_mag[C], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+    #inicio overshoot
+    plt.axvline(x = Ti1_over_eye, linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = Ti2_over_eye, linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = ti1_over, linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+    plt.axvline(x = ti2_over, linewidth = lw, linestyle = '-', color = 'g')
+    plt.xlim(xlim_ramp[0], xlim_ramp[1])
+    plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 3, endpoint = True))
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.xlabel('Tiempo [hora decimal]', fontsize = font_label)
+#    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    plt.legend(loc = 0, fontsize = font_leg)
+    
+    plt.subplot(133)
+    plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
+    #asintotas de Bu y Bd
+    plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+    plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+    #inicio overshoot
+    plt.axvline(x = Ti1_over_eye, linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+    plt.axvline(x = Ti2_over_eye, linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = ti1_over, linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+    plt.axvline(x = ti2_over, linewidth = lw, linestyle = '-', color = 'g')
+    plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple', label = 'máximo overshoot')
+    #final overshoot
+    plt.axvline(x = Tf1_over_eye, linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = Tf2_over_eye, linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = tf1_over, linewidth = lw, linestyle = '-', color = 'y', label = 'final overshoot')
+    plt.axvline(x = tf2_over, linewidth = lw, linestyle = '-', color = 'y')
+    plt.xlim(xlim_over[0], xlim_over[1])
+    plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 3, endpoint = True))
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+#    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    plt.legend(loc = 0, fontsize = font_leg)
+    
+    
     
     plt.savefig(path_analisis+'subestructuras_temporal_{}'.format(shock_date))
     plt.savefig(path_analisis+'subestructuras_temporal_{}.pdf'.format(shock_date))
     
+    
+
+    
 
 #%%
-
+    
+# Habiendo determinado el centro del shock, calculo angulo cenital y normal del fit global del bs    
+    
 #zenith angle
 cenit = fcop.alpha(Rc,np.array([1,0,0])) #el segundo vector es el versor x_MSO
-
-
-#ancho temporal del shock en seg (inicio foot : final ramp)
-ancho_shock_temp = 3600*abs(ti_foot - ti_over)
-##ancho espacial del shock en km
-#ancho_shock = ancho_shock_temp*np.array([abs(v_nave[0]), abs(v_nave[1]), abs(v_nave[2])])
-#norm_ancho_shock = np.linalg.norm(ancho_shock)
 
 
 #normal del shock reescalando el fit macro del bowshock
@@ -750,17 +905,278 @@ L = fbow.L_fit(Rc) #redefino L para que el fit contenga el centro de mi shock y 
 err_L = fbow.error_L_vignes(Rc, err_Rc)
 
 N = fbow.norm_fit_MGS(Rc[0], Rc[1], Rc[2], L)
-err_N = fbow.err_N_fit(Rc, err_Rc, L, err_L)
-err_perp_N = err_N - np.dot(np.dot(err_N,N),N)
-cono_err_N = fcop.alpha(N, (N + err_perp_N))
+#err_N = fbow.err_N_fit(Rc, err_Rc, L, err_L)
+#err_perp_N = err_N - np.dot(np.dot(err_N,N),N)
+#cono_err_N = fcop.alpha(N, (N + err_perp_N))
 
 #angulo entre campo upstream y normal del fit
 theta_N = fcop.alpha(Bu,N)
-err_theta_N = fcop.err_alpha(Bu, N, std_Bu, err_N)
+#err_theta_N = fcop.err_alpha(Bu, N, std_Bu, err_N)
+
+#angulo entre vel_SW upstream y normal del fit
+theta_NVu = fcop.alpha(Vu,N)
+#err_theta_N = fcop.err_alpha(Vu, N, std_Vu, err_N)
 
 #angulo entre posicion de la nave en el centro del shock y normal del fit
 theta_NRc = fcop.alpha(Rc,N)
-err_theta_NRc = fcop.err_alpha(Rc, N, err_Rc, err_N)
+#err_theta_NRc = fcop.err_alpha(Rc, N, err_Rc, err_N)
+
+
+#%%
+
+#paso del espacio temporal al espacial
+
+
+#ion cyclotron angular frequency (unidades de rad/s en SI)
+
+qp = 1.6e-19 #Coulombs (q electrica del proton)
+mp = 1.67e-27 #kg (masa del proton)
+W_ci = qp*Bu*(1e-9)/mp #rad/s (pase B de nT a T)
+
+
+sgn = -1 #*  (-1 inbound, +1 outbound)
+
+#suponiendo foot desarrollado al 100%
+Vsh_A_100, Vsh_B_100 = vel_shock(sgn, N, theta_N, theta_NVu, Vu, W_ci, ancho_foot_temp, 1)
+
+#suponiendo foot desarrollado al perX% y perY%
+perX = 0.85 #*
+perY = 0.75 #*
+Vsh_A_perX, Vsh_B_perX = vel_shock(sgn, N, theta_N, theta_NVu, Vu, W_ci, ancho_foot_temp, perX)
+Vsh_A_perY, Vsh_B_perY = vel_shock(sgn, N, theta_N, theta_NVu, Vu, W_ci, ancho_foot_temp, perY)
+
+
+#anchos espaciales en km (pues Vsh esta en km/s igual que Vu)
+
+#con metodo A
+
+#para 100%
+ancho_foot_km_A100 = Vsh_A_100*ancho_foot_temp
+ancho_ramp_km_A100 = Vsh_A_100*ancho_ramp_temp
+ancho_over_km_A100 = Vsh_A_100*ancho_over_temp
+ancho_shock_km_A100 = Vsh_A_100*ancho_shock_temp
+
+#para perX%
+ancho_foot_km_AperX = Vsh_A_perX*ancho_foot_temp
+ancho_ramp_km_AperX = Vsh_A_perX*ancho_ramp_temp
+ancho_over_km_AperX = Vsh_A_perX*ancho_over_temp
+ancho_shock_km_AperX = Vsh_A_perX*ancho_shock_temp
+
+#para perY%
+ancho_foot_km_AperY = Vsh_A_perY*ancho_foot_temp
+ancho_ramp_km_AperY = Vsh_A_perY*ancho_ramp_temp
+ancho_over_km_AperY = Vsh_A_perY*ancho_over_temp
+ancho_shock_km_AperY = Vsh_A_perY*ancho_shock_temp
+
+
+#con metodo B
+
+#para 100%
+ancho_foot_km_B100 = Vsh_B_100*ancho_foot_temp
+ancho_ramp_km_B100 = Vsh_B_100*ancho_ramp_temp
+ancho_over_km_B100 = Vsh_B_100*ancho_over_temp
+ancho_shock_km_B100 = Vsh_B_100*ancho_shock_temp
+
+#para perX%
+ancho_foot_km_BperX = Vsh_B_perX*ancho_foot_temp
+ancho_ramp_km_BperX = Vsh_B_perX*ancho_ramp_temp
+ancho_over_km_BperX = Vsh_B_perX*ancho_over_temp
+ancho_shock_km_BperX = Vsh_B_perX*ancho_shock_temp
+
+#para perY%
+ancho_foot_km_BperY = Vsh_B_perY*ancho_foot_temp
+ancho_ramp_km_BperY = Vsh_B_perY*ancho_ramp_temp
+ancho_over_km_BperY = Vsh_B_perY*ancho_over_temp
+ancho_shock_km_BperY = Vsh_B_perY*ancho_shock_temp
+
+
+
+#anchos espaciales en unidades de ion inertial lengths = di ("c/Wpi")
+
+densnum_u = np.mean(densidad_swia[min(iu_v,fu_v):max(iu_v,fu_v)]) #en 1/cm^3
+di = 2.28e7 / np.sqrt(densnum_u) #en cm 
+
+#necesito pasar los anchos de km a cm y dividir por di para tenerlos en unidades de di
+
+#con metodo A
+
+#para 100%
+ancho_foot_A100 = ancho_foot_km_A100*(1e5) / di
+ancho_ramp_A100 = ancho_ramp_km_A100*(1e5) / di
+ancho_over_A100 = ancho_over_km_A100*(1e5) / di
+ancho_shock_A100 = ancho_shock_km_A100*(1e5) / di
+
+#para perX
+ancho_foot_AperX = ancho_foot_km_AperX*(1e5) / di
+ancho_ramp_AperX = ancho_ramp_km_AperX*(1e5) / di
+ancho_over_AperX = ancho_over_km_AperX*(1e5) / di
+ancho_shock_AperX = ancho_shock_km_AperX*(1e5) / di
+
+#para perY
+ancho_foot_AperY = ancho_foot_km_AperY*(1e5) / di
+ancho_ramp_AperY = ancho_ramp_km_AperY*(1e5) / di
+ancho_over_AperY = ancho_over_km_AperY*(1e5) / di
+ancho_shock_AperY = ancho_shock_km_AperY*(1e5) / di
+
+
+#con metodo B
+
+#para 100%
+ancho_foot_B100 = ancho_foot_km_B100*(1e5) / di
+ancho_ramp_B100 = ancho_ramp_km_B100*(1e5) / di
+ancho_over_B100 = ancho_over_km_B100*(1e5) / di
+ancho_shock_B100 = ancho_shock_km_B100*(1e5) / di
+
+#para perX
+ancho_foot_BperX = ancho_foot_km_BperX*(1e5) / di
+ancho_ramp_BperX = ancho_ramp_km_BperX*(1e5) / di
+ancho_over_BperX = ancho_over_km_BperX*(1e5) / di
+ancho_shock_BperX = ancho_shock_km_BperX*(1e5) / di
+
+#para perY
+ancho_foot_BperY = ancho_foot_km_BperY*(1e5) / di
+ancho_ramp_BperY = ancho_ramp_km_BperY*(1e5) / di
+ancho_over_BperY = ancho_over_km_BperY*(1e5) / di
+ancho_shock_BperY = ancho_shock_km_BperY*(1e5) / di
+
+
+#%%
+
+#ploteo perfiles espaciales para el caso foot desarrollado al 100% (metodos A y B)
+#ploteo todos los limites determinados (a ojo y automatizados)
+
+if MODO_subestructuras == 1:
+
+    #metodo A
+
+    xdiA = t_mag*3600*Vsh_A_100*(1e5)/di
+    
+    
+    figsize = (30,15)
+    lw = 3
+    msize = 8
+    font_title = 30
+    font_label = 30
+    font_leg = 15
+    ticks_l = 6
+    ticks_w = 3
+    grid_alpha = 0.8
+    updown_alpha = 0.5
+    
+    
+    plt.figure(6, figsize = figsize)
+    plt.title('Delimitacion espacial de subestructuras - Método A', fontsize = font_label)
+    
+    plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+    #regiones up/down
+    plt.axvspan(xmin = xdiA[i_u], xmax = xdiA[f_u], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
+    plt.axvspan(xmin = xdiA[i_d], xmax = xdiA[f_d], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
+    #asintotas de Bu y Bd
+    plt.axhline(y = norm_Bu, linewidth = lw, color = 'r')
+    plt.axhline(y = norm_Bd, linewidth = lw, color = 'r')
+    plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
+    plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+    #inicio foot
+    plt.axvline(x = xdiA[i1_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiA[i2_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiA[i1_foot], linewidth = lw, linestyle = '-', color = 'm')
+    plt.axvline(x = xdiA[i2_foot], linewidth = lw, linestyle = '-', color = 'm')
+    #inicio ramp
+    plt.axvline(x = xdiA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c')
+    plt.axvline(x = xdiA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+    #ajustes ramp
+    plt.plot(xdiA[i1_ramp:f1_rampfit+1], i1_params[0]*xdiA[i1_ramp:f1_rampfit+1] + i1_params[1], linewidth = lw, color = 'y', linestyle = '-.')
+    plt.plot(xdiA[i2_ramp:f2_rampfit+1], i2_params[0]*xdiA[i2_ramp:f2_rampfit+1] + i2_params[1], linewidth = lw, color = 'r', linestyle = '-.')
+    plt.axvline(x = xdiA[C], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+    #inicio overshoot
+    plt.axvline(x = xdiA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiA[i1_over], linewidth = lw, linestyle = '-', color = 'g')
+    plt.axvline(x = xdiA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+    plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple')
+    #final overshoot
+    plt.axvline(x = xdiA[f1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiA[f2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiA[f1_over], linewidth = lw, linestyle = '-', color = 'y')
+    plt.axvline(x = xdiA[f2_over], linewidth = lw, linestyle = '-', color = 'y')
+    
+    plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+    plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    plt.legend(loc = 0, fontsize = font_leg)
+    
+    plt.savefig(path_analisis+'subestructuras_espacial_metodoA{}'.format(shock_date))
+    plt.savefig(path_analisis+'subestructuras_espacial_metodoA{}.pdf'.format(shock_date))
+
+
+
+    #metodo B
+    
+    xdiB = t_mag*3600*Vsh_B_100*(1e5)/di
+    
+    #ploteo todos los limites determinados (a ojo y automatizados)
+    
+    figsize = (30,15)
+    lw = 3
+    msize = 8
+    font_title = 30
+    font_label = 30
+    font_leg = 15
+    ticks_l = 6
+    ticks_w = 3
+    grid_alpha = 0.8
+    updown_alpha = 0.5
+    
+    
+    plt.figure(7, figsize = figsize)
+    plt.title('Delimitacion espacial de subestructuras - Método B', fontsize = font_label)
+    
+    plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+    #regiones up/down
+    plt.axvspan(xmin = xdiB[i_u], xmax = xdiB[f_u], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
+    plt.axvspan(xmin = xdiB[i_d], xmax = xdiB[f_d], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
+    #asintotas de Bu y Bd
+    plt.axhline(y = norm_Bu, linewidth = lw, color = 'r')
+    plt.axhline(y = norm_Bd, linewidth = lw, color = 'r')
+    plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
+    plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+    #inicio foot
+    plt.axvline(x = xdiB[i1_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i2_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i1_foot], linewidth = lw, linestyle = '-', color = 'm')
+    plt.axvline(x = xdiB[i2_foot], linewidth = lw, linestyle = '-', color = 'm')
+    #inicio ramp
+    plt.axvline(x = xdiB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c')
+    plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+    #ajustes ramp
+    plt.plot(xdiB[i1_ramp:f1_rampfit+1], i1_params[0]*xdiB[i1_ramp:f1_rampfit+1] + i1_params[1], linewidth = lw, color = 'y', linestyle = '-.')
+    plt.plot(xdiB[i2_ramp:f2_rampfit+1], i2_params[0]*xdiB[i2_ramp:f2_rampfit+1] + i2_params[1], linewidth = lw, color = 'r', linestyle = '-.')
+    plt.axvline(x = xdiB[C], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+    #inicio overshoot
+    plt.axvline(x = xdiB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i1_over], linewidth = lw, linestyle = '-', color = 'g')
+    plt.axvline(x = xdiB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+    plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple')
+    #final overshoot
+    plt.axvline(x = xdiB[f1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[f2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[f1_over], linewidth = lw, linestyle = '-', color = 'y')
+    plt.axvline(x = xdiB[f2_over], linewidth = lw, linestyle = '-', color = 'y')
+    
+    plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+    plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    plt.legend(loc = 0, fontsize = font_leg)
+    
+    plt.savefig(path_analisis+'subestructuras_espacial_metodoB{}'.format(shock_date))
+    plt.savefig(path_analisis+'subestructuras_espacial_metodoB{}.pdf'.format(shock_date))
 
 
 

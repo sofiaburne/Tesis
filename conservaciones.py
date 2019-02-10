@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_hipotesisMHD = 1
+MODO_hipotesisMHD = 0
 
 
 from mag import shock_date
@@ -124,8 +124,8 @@ if MODO_hipotesisMHD == 1:
     
     plot1.legend(handles = [gr1,gr2], loc = 0, fontsize = font_leg)
     
-    #f2.savefig(path_analisis+'fast_shock_{}'.format(shock_date))
-    #f2.savefig(path_analisis+'fast_shock_{}.pdf'.format(shock_date))
+    f2.savefig(path_analisis+'fast_shock_{}'.format(shock_date))
+    f2.savefig(path_analisis+'fast_shock_{}.pdf'.format(shock_date))
 
 #%%
     
@@ -310,7 +310,7 @@ M_f_loc = np.abs(np.dot(Vu,norm))/np.sqrt(v_alfv_2**2 + v_cs**2)
 
 
 #beta del plasma upstream
-beta = Pu/(B_u**2/2*mu)
+beta = Pu/(np.linalg.norm(B_u)**2/(2*mu))
 
 
 #chequeo si se cumple la hipotesis de evolucion adiabatica (gamma da 5/3)

@@ -146,7 +146,7 @@ if MODO_delimitacion == 1:
     
     #ploteo magnitudes importantes
     
-    figsize = (30,60)
+    figsize = (60,30)
     lw = 3
     font_title = 30
     font_label = 30
@@ -304,6 +304,7 @@ if MODO_delimitacion == 1:
     par2 = host.twinx()
     
     host.set_xlabel('Tiempo\n[hora decimal]', fontsize = font_label)
+    host.set_xlim(xmin = 9, xmax = 11) #*
     host.set_ylabel('B\n[nT]', color = 'C0', fontsize = font_label)
     par1.set_ylabel('$V$ MSO\n[km/s]', color = 'C1', fontsize = font_label)
     par2.set_ylabel('$n_p$\n[$cm^{-3}$]',color = 'C2', fontsize = font_label)
@@ -360,7 +361,7 @@ fd_v = (np.abs(t_mag[f_d]-t_swia_mom)).argmin()
 
 
 #centro del shock (primera estimacion, despues lo refino cuando analizo subestructuras)
-tc0 = 9.9 #*
+tc0 = 9.81947 #*
 C0 = (np.abs(t_mag-tc0)).argmin()
 #posicion de la nave en el centro del shock
 Rc0 = np.array([x[C0], y[C0], z[C0]])
@@ -369,10 +370,10 @@ Rc0 = np.array([x[C0], y[C0], z[C0]])
 #para variar intervalos up/down
 
 #limites extremos donde encontrar posibles regiones up/down (1 = lim a izq, 2 = lim a der)
-lim_t1u = 9 #*
-lim_t2u = 9.7799 #*
-lim_t1d = 9.96 #*
-lim_t2d = 10.3699 #*
+lim_t1u = 9.40 #*
+lim_t2u = 9.80 #*
+lim_t1d = 9.9 #*
+lim_t2d = 10.1 #*
 
 #%%
 
@@ -445,9 +446,12 @@ std_norm_Vd = st.stdev(np.float64(norm_V2))
 
 #pitch angle
 pitch = fcop.alpha(Vu,Bu)
+err_pitch = fcop.err_alpha(Vu, Bu, std_Vu, std_Bu)
 
 #zenith angle (lo vuelvo a calcular cuando analizo subestructuras y mejoro Rc)
 cenit0 = fcop.alpha(Rc0,np.array([1,0,0])) #el segundo vector es el versor x_MSO
+err_cenit0 = fcop.err_alpha(Rc0, np.array([1,0,0]), np.array([1e-8,1e-8,1e-8]), np.array([1e-8,1e-8,1e-8]))
+
 
 #%%
 
@@ -458,7 +462,7 @@ if MODO_delimitacion == 1:
     Ahora las velocidades estan medidas en SR shock MSO (reste vel de la nave).
     '''
     
-    figsize = (30,60)
+    figsize = (60,30)
     lw = 3
     font_title = 30
     font_label = 30
@@ -467,6 +471,9 @@ if MODO_delimitacion == 1:
     ticks_w = 3
     grid_alpha = 0.8
     updown_alpha = 0.5
+    xmin = 9.7
+    xmax = 10.1
+    
     
     
     f1, ((g1,g4), (g2,g5), (g3,g6)) = plt.subplots(3,2, sharex = True, figsize = figsize) #ojo con sharex y los distintos inst
@@ -500,6 +507,7 @@ if MODO_delimitacion == 1:
     g1.set_ylabel('Flujo electrones\n[$(cm^2 sr s)^{-1}$]', fontsize = font_label)
     g1.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g1.axes.grid(axis = 'both', which = 'major', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    g1.set_xlim(xmin = xmin, xmax = xmax)
     g1.legend(loc = 0, fontsize = font_leg)
     
     
@@ -529,6 +537,7 @@ if MODO_delimitacion == 1:
     g2.set_ylabel('Flujo iones\n[$(cm^2 sr s)^{-1}$]', fontsize = font_label)
     g2.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g2.axes.grid(axis = 'both', which = 'major', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    g2.set_xlim(xmin = xmin, xmax = xmax)
     g2.legend(loc = 0, fontsize = font_leg)
     
     
@@ -544,6 +553,7 @@ if MODO_delimitacion == 1:
     g3.set_xlabel('Tiempo\n[hora decimal]', fontsize = font_label)
     g3.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g3.axes.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    g3.set_xlim(xmin = xmin, xmax = xmax)
     g3.legend(loc = 0, fontsize = font_leg)
     
     
@@ -555,6 +565,7 @@ if MODO_delimitacion == 1:
     g4.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g4.axes.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
     g4.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = font_label)
+    g4.set_xlim(xmin = xmin, xmax = xmax)
     g4.legend(loc = 0, fontsize = font_leg)
     
     
@@ -569,6 +580,7 @@ if MODO_delimitacion == 1:
     g5.set_ylabel('Velocidad MSO\nen referencial shock\n[km/s]', fontsize = font_label)
     g5.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g5.axes.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    g5.set_xlim(xmin = xmin, xmax = xmax)
     g5.legend(loc = 4, fontsize = font_leg)
     
     
@@ -584,6 +596,7 @@ if MODO_delimitacion == 1:
     g6.set_ylabel('Campo magnético\n[nT]', fontsize = font_label)
     g6.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g6.axes.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    g6.set_xlim(xmin = xmin, xmax = xmax)
     g6.legend(loc = 4, fontsize = font_leg)
     
     f1.savefig(path_analisis+'datos_MAVEN_sombreados_{}'.format(shock_date))
