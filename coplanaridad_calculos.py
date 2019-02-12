@@ -8,7 +8,7 @@ from delimitacionshock import B, Bx, By, Bz, t_mag
 from delimitacionshock import t_swea, flujosenergia_swea, nivelesenergia_swea
 from delimitacionshock import t_swia_mom, t_swia_spec, densidad_swia, velocidad_swia, velocidad_swia_norm, temperatura_swia, temperatura_swia_norm, flujosenergia_swia, nivelesenergia_swia
 from delimitacionshock import B1, B2, V1, V2, Bd, Bu, Vd, Vu, std_Bd, std_Bu, std_Vu, std_Vd, i_u, f_u, i_d, f_d, iu_v, fu_v, id_v, fd_v, lim_t1u, lim_t2u, lim_t1d, lim_t2d, vel, v_nave
-from subestructuras_calculos import N, err_N, theta_N, Rc, err_Rc
+from subestructuras_calculos_2 import N, err_N, theta_N, Rc, err_Rc
 from conservaciones import M_A, M_c
 import coplanaridad_funciones as fcop
 
@@ -38,18 +38,21 @@ if not os.path.exists(path_analisis):
 nB, nBuV, nBdV, nBduV, nV = fcop.norm_coplanar(Bd,Bu,Vd,Vu)
 err_nB, err_nBuV, err_nBdV, err_nBduV, err_nV = fcop.err_norm_coplanar(Bd, Bu, Vd, Vu, std_Bu, std_Bd, std_Vu, std_Vd)
 
-#conos de error
-err_perp_nB = err_nB - np.dot(np.dot(err_nB,nB),nB)
-err_perp_nBuV = err_nBuV - np.dot(np.dot(err_nBuV,nBuV),nBuV)
-err_perp_nBdV = err_nBdV - np.dot(np.dot(err_nBdV,nBdV),nBdV)
-err_perp_nBduV = err_nBduV - np.dot(np.dot(err_nBduV,nBduV),nBduV)
-err_perp_nV = err_nV - np.dot(np.dot(err_nV,nB),nV)
 
-cono_err_nB = fcop.alpha(nB, nB + err_perp_nB)
-cono_err_nBuV = fcop.alpha(nBuV, nBuV + err_perp_nBuV)
-cono_err_nBdV = fcop.alpha(nBdV, nBdV + err_perp_nBdV)
-cono_err_nBduV = fcop.alpha(nBduV, nBduV + err_perp_nBduV)
-cono_err_nV = fcop.alpha(nV, nV + err_perp_nV)
+#dejo los conos de error de variacion de intervalos porque estos son muy grandes
+
+##conos de error
+#err_perp_nB = err_nB - np.dot(np.dot(err_nB,nB),nB)
+#err_perp_nBuV = err_nBuV - np.dot(np.dot(err_nBuV,nBuV),nBuV)
+#err_perp_nBdV = err_nBdV - np.dot(np.dot(err_nBdV,nBdV),nBdV)
+#err_perp_nBduV = err_nBduV - np.dot(np.dot(err_nBduV,nBduV),nBduV)
+#err_perp_nV = err_nV - np.dot(np.dot(err_nV,nB),nV)
+#
+#cono_err_nB = fcop.alpha(nB, nB + err_perp_nB)
+#cono_err_nBuV = fcop.alpha(nBuV, nBuV + err_perp_nBuV)
+#cono_err_nBdV = fcop.alpha(nBdV, nBdV + err_perp_nBdV)
+#cono_err_nBduV = fcop.alpha(nBduV, nBduV + err_perp_nBduV)
+#cono_err_nV = fcop.alpha(nV, nV + err_perp_nV)
 
 
 #flags: los angulos con Bu cercanos a 0 y 90 son problematicos (uso normal del fit como ref)
@@ -595,7 +598,7 @@ for i in range(Lu):
         
 for i in range(Ld):
     Bd_s[i,:] = np.mean(Bb[:,:,i], axis = 0)
-    err_Bu_s[i,:] = np.array([st.stdev(Bb[:,0,i]), st.stdev(Bb[:,1,i]), st.stdev(Bb[:,2,i])])
+    err_Bd_s[i,:] = np.array([st.stdev(Bb[:,0,i]), st.stdev(Bb[:,1,i]), st.stdev(Bb[:,2,i])])
     norm_Bb = np.empty_like(Bb[:,0,i])
     for j in range(len(Bb[:,0,0])):
         norm_Bb[j] = np.linalg.norm([Bb[j,0,i], Bb[j,1,i], Bb[j,2,i]])
@@ -869,20 +872,20 @@ la primer eleccion de intervalos up/downstream, a partir de desv
 std por variacion de ambos intervalos a la vez
 '''
 
-#err_perp_nB = std_nB_s2 - (np.dot(std_nB_s2, nB))*nB
-#cono_err_nB = fcop.alpha(nB, nB + err_perp_nB)
-#
-#err_perp_nBuV = std_nBuV_s2 - (np.dot(std_nBuV_s2, nBuV))*nBuV
-#cono_err_nBuV = fcop.alpha(nBuV, nBuV + err_perp_nBuV)
-#
-#err_perp_nBdV = std_nBdV_s2 - (np.dot(std_nBdV_s2, nBdV))*nBdV
-#cono_err_nBdV = fcop.alpha(nBdV, nBdV + err_perp_nBdV)
-#
-#err_perp_nBduV = std_nBduV_s2 - (np.dot(std_nBduV_s2, nBduV))*nBduV
-#cono_err_nBduV = fcop.alpha(nBduV, nBduV + err_perp_nBduV)
-#
-#err_perp_nV = std_nV_s2 - (np.dot(std_nV_s2, nV))*nV
-#cono_err_nV = fcop.alpha(nV, nV + err_perp_nV)
+err_perp_nB = std_nB_s2 - (np.dot(std_nB_s2, nB))*nB
+cono_err_nB = fcop.alpha(nB, nB + err_perp_nB)
+
+err_perp_nBuV = std_nBuV_s2 - (np.dot(std_nBuV_s2, nBuV))*nBuV
+cono_err_nBuV = fcop.alpha(nBuV, nBuV + err_perp_nBuV)
+
+err_perp_nBdV = std_nBdV_s2 - (np.dot(std_nBdV_s2, nBdV))*nBdV
+cono_err_nBdV = fcop.alpha(nBdV, nBdV + err_perp_nBdV)
+
+err_perp_nBduV = std_nBduV_s2 - (np.dot(std_nBduV_s2, nBduV))*nBduV
+cono_err_nBduV = fcop.alpha(nBduV, nBduV + err_perp_nBduV)
+
+err_perp_nV = std_nV_s2 - (np.dot(std_nV_s2, nV))*nV
+cono_err_nV = fcop.alpha(nV, nV + err_perp_nV)
 
 #%%
 

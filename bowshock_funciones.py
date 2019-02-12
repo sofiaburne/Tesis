@@ -42,7 +42,6 @@ def L_fit(Rc):
 
 
 
-
 def error_L_vignes(Rc, err_Rc):
     
     '''

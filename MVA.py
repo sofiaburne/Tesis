@@ -14,7 +14,7 @@ from mag import shock_date
 import coplanaridad_funciones as fcop
 
 from delimitacionshock import Bx, By, Bz, t_mag, Bu
-from subestructuras_calculos import N
+from subestructuras_calculos_2 import N
 B_vec = np.array([Bx, By, Bz]).T
 
 path_analisis = r'C:\Users\sofia\Documents\Facultad\Tesis\Analisis/{}/'.format(shock_date)
@@ -81,16 +81,16 @@ def err_B(l_3, m, err_v32, err_v31, x, B):
 
 
 #metodo bootstrap
-def boot(B, N):
+def boot(B, Ns):
     
-    norm = np.empty([N,3])
-    b_mean = np.empty([N,3])
-    E = np.empty([N,5]) #col de E: err_13 / err_13_grad / err_23 / err_23_grad / err_B3
+    norm = np.empty([Ns,3])
+    b_mean = np.empty([Ns,3])
+    E = np.empty([Ns,5]) #col de E: err_13 / err_13_grad / err_23 / err_23_grad / err_B3
     
     
     C = list(B)
     
-    for i in range(N):
+    for i in range(Ns):
         
         b = [random.choice(C) for _ in range(len(C))]
         b = np.array(b)

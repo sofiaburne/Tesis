@@ -351,14 +351,19 @@ def intervalo(Bx,By,Bz,t,t1,t2,q):
     t2 = t[i_t2]
     
     s = int((t2 - (t1 + q))*120 + 1)   #cant de samples de ancho temporal q
-   
-    #cant de elementos de t en un ancho temporal q
-    i_tq = (np.abs(t - (t1 + q))).argmin()
-    k = abs(i_tq - i_t1)    
-   
-    b1 = np.empty([k, 3, s])
-    for i in range(s):
-        j = (np.abs(t-(t1 + i/120))).argmin()   #indice de t con valor mas cercano a t1, t1 + medio min, etc
-        b1[:,:,i] = np.array([Bx[j:j + k], By[j:j + k], Bz[j:j + k]]).T 
-    return b1
+    
+    if s > 1: #si se puede hacer por lo menos 2 sample de ancho q
+        
+        #cant de elementos de t en un ancho temporal q
+        i_tq = (np.abs(t - (t1 + q))).argmin()
+        k = abs(i_tq - i_t1)    
+       
+        b1 = np.empty([k, 3, s])
+        for i in range(s):
+            j = (np.abs(t-(t1 + i/120))).argmin()   #indice de t con valor mas cercano a t1, t1 + medio min, etc
+            b1[:,:,i] = np.array([Bx[j:j + k], By[j:j + k], Bz[j:j + k]]).T 
+        return b1
+    
+    else:
+        print('No se puede variar intervalo')
 

@@ -11,7 +11,7 @@ import os
 #Datos MAG
 
 path_mag = r'C:\Users\sofia\Documents\Facultad\Tesis\Datos Maven\MAG/'
-d, h, m, day_frac, Bx, By, Bz, X, Y, Z = np.loadtxt(path_mag+'alta_frec/2014/12/mvn_mag_l2_2014359pc_20141225_v01_r01.sts', skiprows = 147, usecols = (1,2,3,6,7,8,9,11,12,13),unpack = True)
+d, h, m, day_frac, Bx, By, Bz, X, Y, Z = np.loadtxt(path_mag+'baja_frec/2014/12/mvn_mag_l2_2014359ss1s_20141225_v01_r01.sts', skiprows = 147, usecols = (1,2,3,6,7,8,9,11,12,13),unpack = True)
 
 #paso a unidades de radios marciano
 x, y, z = X/3390, Y/3390, Z/3390

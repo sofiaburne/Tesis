@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_fit = 1
+MODO_fit = 0
 
 
 from mag import shock_date
@@ -24,29 +24,31 @@ if not os.path.exists(path_analisis):
     os.makedirs(path_analisis)
 
 #%%
-L = 1.676
-N = np.array([0.827, -0.302, - 0.475])
-theta_N = 163.062
-theta_NRc = 62.406
-Rc = np.array([-0.286, -1.320, -2.077])
-nB = np.array([0.444, -0.411, 0.796])
-nBuV = np.array([0.259, -0.843, 0.470]) 
-nBdV = np.array([0.188, -0.920, 0.343])
-nBduV = np.array([0.131, -0.961, 0.242])
-nV = np.array([0.750, 0.374, -0.545])
-thetaB = 102.536
-thetaBuV = 100.461
-thetaBdV = 99.178
-thetaBduV = 98.062
-thetaV = 147.367
-cono_err_nB = 90
-cono_err_nBuV = 90
-cono_err_nBdV = 90
-cono_err_nBduV = 90
-cono_err_nV = 90
-cono_err_x3 = 0.051
-thetaMVA = 82.552
-n_mva = np.array([0.181, 0.538, 0.823])
+L = 2.06564282725141
+N = np.array([ 0.87080225,  0.26450542, -0.41441564])
+theta_N = 69.02464886575244
+theta_NRc = 55.60348473748498
+Rc = np.array([ 0.21370354,  1.32791652, -2.08052212])
+
+nB = np.array([ 0.93809579, -0.11924487, -0.32520295])
+nBuV = np. array([ 0.72598442,  0.34536685, -0.59470022])
+nBdV = np.array([ 0.72943029,  0.34113676, -0.59292256])
+nBduV = np.array([ 0.7312194 ,  0.33892431, -0.59198691])
+nV = np.array([ 0.7503115 ,  0.37426314, -0.5449402 ])
+thetaB = 75.69540417002123
+thetaBuV = 78.11906010799035
+thetaBdV = 78.07335894456841
+thetaBduV = 78.0496594184282
+thetaV = 74.53904359490727
+cono_err_nB = 3.864464034524949
+cono_err_nBuV = 1.0236434346889554
+cono_err_nBdV = 0.927137156225793
+cono_err_nBduV = 0.910804618042254
+cono_err_nV = 0.3491447802817096
+
+cono_err_x3 = 0.2881386029310508
+thetaMVA = 71.92927737118515
+n_mva = np.array([ 0.00243827, -0.47471115,  0.88013827])
 
 #%%
 

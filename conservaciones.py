@@ -7,7 +7,7 @@ from mag import shock_date
 from delimitacionshock import B, t_mag
 from delimitacionshock import t_swia_mom, densidad_swia, temperatura_swia_norm, t_swea, flujosenergia_swea, nivelesenergia_swea
 from delimitacionshock import Bu, Bd, norm_Bu, norm_Bd, Vu, Vd, iu_v, fu_v, id_v, fd_v
-from subestructuras_calculos import N
+from subestructuras_calculos_2 import N
 
 
 from importlib import reload
@@ -81,16 +81,17 @@ if MODO_hipotesisMHD == 1:
     font_leg = 26
     ticks_l = 6
     ticks_w = 3
-    xarrow_B = 9.75
-    xarrow_rho = 9.70
-    xlim_B = np.array([t_mag[3020], t_mag[4244]])
-    xlim_rho = np.array([t_swia_mom[755], t_swia_mom[1060]])
-    ylim_B = 50
-    ylim_rho = 200
+    
+    xarrow_B = 9.75 #*
+    xarrow_rho = 9.70 #*
+    xlim_B = np.array([t_mag[3020], t_mag[4244]]) #*
+    xlim_rho = np.array([t_swia_mom[755], t_swia_mom[1060]]) #*
+    ylim_B = 50 #*
+    ylim_rho = 200 #*
     
     
-    den_u = np.mean(densidad_swia[iu_v:fu_v])
-    den_d = np.mean(densidad_swia[id_v:fd_v])
+    den_u = np.mean(densidad_swia[min(iu_v,fu_v):max(iu_v,fu_v)])
+    den_d = np.mean(densidad_swia[min(id_v,fd_v):max(id_v,fd_v)])
     
     saltoB = norm_Bd/norm_Bu
     saltorho = den_d/den_u
@@ -102,7 +103,7 @@ if MODO_hipotesisMHD == 1:
     plot1.axhline(y = norm_Bu, linewidth = lw, color = 'C1')
     plot1.axhline(y = norm_Bd, linewidth = lw, color = 'C1')
     plot1.annotate('', xy=(xarrow_B, norm_Bd), xycoords='data', xytext=(xarrow_B, norm_Bu), textcoords='data', arrowprops=dict(arrowstyle='<->', connectionstyle='arc3', color='C1', lw=lw))
-    plot1.text(xarrow_B-0.01, (norm_Bd + norm_Bu)/2, '$\Delta$B = {}'.format(int(saltoB)), rotation = 90, verticalalignment='center', fontsize = font_leg, color = 'C1', bbox=dict(facecolor='white', edgecolor='None', alpha=1))
+    plot1.text(xarrow_B-0.01, (norm_Bd + norm_Bu)/2, 'Bd:Bu = {}'.format(int(saltoB)), rotation = 90, verticalalignment='center', fontsize = font_leg, color = 'C1', bbox=dict(facecolor='white', edgecolor='None', alpha=1))
     plot1.set_xlabel('Tiempo\n[hora decimal]', fontsize = font_label)
     plot1.set_ylabel('B\n[nT]', fontsize = font_label)
     plt.xlim(xlim_B)
@@ -116,7 +117,7 @@ if MODO_hipotesisMHD == 1:
     plot2.axhline(y = den_u, linewidth = lw, color = 'C3')
     plot2.axhline(y = den_d, linewidth = lw, color = 'C3')
     plt.annotate('', xy=(xarrow_rho, den_d), xycoords='data', xytext=(xarrow_rho, den_u), textcoords='data', arrowprops=dict(arrowstyle='<->', connectionstyle='arc3', color='C3', lw=lw))
-    plt.text(xarrow_rho-0.01, (den_d + den_u)/2, '$\Delta$n = {}'.format(int(saltorho)), rotation = 90, verticalalignment='center', fontsize = font_leg, color = 'C3', bbox=dict(facecolor='white', edgecolor='None', alpha=1))
+    plt.text(xarrow_rho-0.01, (den_d + den_u)/2, 'nd:nu = {}'.format(int(saltorho)), rotation = 90, verticalalignment='center', fontsize = font_leg, color = 'C3', bbox=dict(facecolor='white', edgecolor='None', alpha=1))
     plt.xlim(xlim_rho)
     plt.ylim(ymax = ylim_rho)
     plot2.set_ylabel('$n_p$\n[$cm^{-3}$]', fontsize = font_label)
