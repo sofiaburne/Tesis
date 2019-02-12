@@ -120,7 +120,7 @@ def err_N_fit(Rc, err_Rc, L, err_L):
 
 
 '''
-para plotear cono especificando angulo de apertura (theta), altura (h) y eje de revolucion
+para plotear cono especificando angulo de apertura (theta grados), altura (h) y eje de revolucion
 d  = vector describing orientation of axis of cone
 format: 2x3 vector with x,y,z coordinates of two points lying on the
 axis of the cone. d(1,:) = (x1,y1,z1); d(2,:) = (x2,y2,z2).

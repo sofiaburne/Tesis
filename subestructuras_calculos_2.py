@@ -1,11 +1,11 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_subestructuras = 0
+MODO_subestructuras = 1
 
 
 from mag import shock_date
 import delimitacionshock as ds
-from delimitacionshock import v_nave, t_swia_mom, densidad_swia, t_swea, nivelesenergia_swea, flujosenergia_swea, t_swia_spec, nivelesenergia_swia, flujosenergia_swia, iu_v, fu_v, id_v, fd_v, Vu, std_Vu
+from delimitacionshock import v_nave, t_swia_mom, densidad_swia, t_swea, nivelesenergia_swea, flujosenergia_swea, t_swia_spec, nivelesenergia_swia, flujosenergia_swia, iu_v, fu_v, id_v, fd_v, Vu, std_Vu, norm_Vu
 #from delimitacionshock import t_apo11, t_apo12, t_apo21, t_apo22, x, y, z, B, Bx, By, Bz, t_mag, i_u, f_u, i_d, f_d, t_iu, t_fu, t_id, t_fd, Bu, Bd, norm_Bu, norm_Bd, std_Bu, std_Bd, std_norm_Bu, std_norm_Bd
 from delimitacionshock import t_apo11, t_apo12, t_apo21, t_apo22, B, t_mag, x, y, z, t_iu, t_fu, t_id, t_fd, Bu, std_Bu
 import bowshock_funciones as fbow
@@ -325,7 +325,7 @@ def filter_data(data, fs_new = 8, fs_data = 32):
 
 
 
-def vel_shock(sgn, N, theta_N, theta_NVu, Vu, W_ci, delta_t_foot, percent):
+def vel_shock(sgn, N, theta_N, theta_NVu, norm_Vu, W_ci, delta_t_foot, percent):
     
     '''
     Velocidad del shock a lo largo de la normal (ref.: Giagkiozis S. 2017).
@@ -345,20 +345,28 @@ def vel_shock(sgn, N, theta_N, theta_NVu, Vu, W_ci, delta_t_foot, percent):
     '''
     
     delta_t_ft = percent*delta_t_foot
-    VuN = np.dot(Vu,N)
+#    #VuN = np.dot(Vu,N)
+#    Vu = np.linalg.norm(Vu)
+#    theta_N = theta_N*np.pi/180
+#    theta_NVu = theta_NVu*np.pi/180
+    
     
     #A
-    X_L = 0.68 * np.sin(theta_N)**2 / (W_ci * delta_t_ft)
-    Vsh_A = np.linalg.norm(VuN * np.cos(theta_NVu) * X_L / (1 + sgn*X_L))
+    X_L = 0.68 * np.sin(np.deg2rad( theta_N ))**2 / (W_ci * delta_t_ft)
+    #Vsh_A = np.linalg.norm(Vu * np.cos(np.deg2rad(theta_NVu)) * X_L / (1 + sgn*X_L))
+    Vsh_A = norm_Vu * np.cos(np.deg2rad( theta_NVu )) * X_L / (1 + sgn*X_L)
     
     #B
-    t_ot = (1/W_ci)*np.arccos(- np.cos(theta_N)**2 / np.sin(theta_N)**2)
-    f = W_ci*t_ot*(2*np.cos(theta_N)**2 - 1) + 2*np.sin(theta_N)**2 * np.sin(W_ci*t_ot)
+    t_ot = (1/W_ci)*np.arccos((1 - 2*(np.cos(np.deg2rad( theta_N )))**2) / (2*(np.sin(np.deg2rad( theta_N ))**2)) )
+    f = W_ci*t_ot*(2*np.cos(np.deg2rad( theta_N ))**2 - 1) + 2*np.sin(np.deg2rad( theta_N ))**2 * np.sin(np.deg2rad( W_ci*t_ot))
     X_G = f/ (W_ci * delta_t_ft)
-    Vsh_B = np.linalg.norm(VuN * np.cos(theta_NVu) * X_G / (1 + sgn*X_G))
+    #Vsh_B = np.linalg.norm(Vu * np.cos(theta_NVu) * X_G / (1 + sgn*X_G))
+    Vsh_B = norm_Vu * np.cos(np.deg2rad(theta_NVu)) * X_G / (1 + sgn*X_G)
     
-    return Vsh_A, Vsh_B
-
+    if Vsh_A < 0: print('Vsh_A negativa, el shock se aleja de la nave')
+    if Vsh_B < 0: print('Vsh_B negativa, el shock se aleja de la nave')
+    
+    return abs(Vsh_A), abs(Vsh_B)
 
 #%%
 
@@ -1126,26 +1134,27 @@ err_theta_NRc = fcop.err_alpha(Rc, N, err_Rc, err_N)
 
 #paso del espacio temporal al espacial
 
-
 #ion cyclotron angular frequency (unidades de rad/s en SI)
 
 qp = 1.6e-19 #Coulombs (q electrica del proton)
 mp = 1.67e-27 #kg (masa del proton)
-W_ci = qp*Bu*(1e-9)/mp #rad/s (pase B de nT a T)
+W_ci = qp*norm_Bu*(1e-9)/mp #rad/s (pase B de nT a T)
 
-
-sgn = -1 #*  (-1 inbound, +1 outbound)
+if tipo == 'in': sgn = -1 #*  (-1 inbound, +1 outbound)
+elif tipo == 'out': sgn = 1
 
 #suponiendo foot desarrollado al 100%
-Vsh_A_100, Vsh_B_100 = vel_shock(sgn, N, theta_N, theta_NVu, Vu, W_ci, ancho_foot_temp, 1)
+Vsh_A_100, Vsh_B_100 = vel_shock(sgn, N, theta_N, theta_NVu, norm_Vu, W_ci, ancho_foot_temp, 1)
 
 #suponiendo foot desarrollado al perX% y perY%
 perX = 0.85 #*
 perY = 0.75 #*
-Vsh_A_perX, Vsh_B_perX = vel_shock(sgn, N, theta_N, theta_NVu, Vu, W_ci, ancho_foot_temp, perX)
-Vsh_A_perY, Vsh_B_perY = vel_shock(sgn, N, theta_N, theta_NVu, Vu, W_ci, ancho_foot_temp, perY)
+Vsh_A_perX, Vsh_B_perX = vel_shock(sgn, N, theta_N, theta_NVu, norm_Vu, W_ci, ancho_foot_temp, perX)
+Vsh_A_perY, Vsh_B_perY = vel_shock(sgn, N, theta_N, theta_NVu, norm_Vu, W_ci, ancho_foot_temp, perY)
 
 
+
+#%%
 #anchos espaciales en km (pues Vsh esta en km/s igual que Vu)
 
 #con metodo A
@@ -1189,55 +1198,67 @@ ancho_ramp_km_BperY = Vsh_B_perY*ancho_ramp_temp
 ancho_over_km_BperY = Vsh_B_perY*ancho_over_temp
 ancho_shock_km_BperY = Vsh_B_perY*ancho_shock_temp
 
+#%%
+
+#anchos espaciales en unidades de:
+#                                  "ion inertial lengths" = "di" ("c/Wpi") para overshoot
+#                                  "ion gyroradii" = "ri" para overshoot y foot
+#                                  "electron inertial length" = "de" para la ramp
 
 
-#anchos espaciales en unidades de ion inertial lengths = di ("c/Wpi")
 
 densnum_u = np.mean(densidad_swia[min(iu_v,fu_v):max(iu_v,fu_v)]) #en 1/cm^3
-di = 2.28e7 / np.sqrt(densnum_u) #en cm 
+di = 2.28e2 / np.sqrt(densnum_u) # en km 
+de = 5.31 / np.sqrt(densnum_u)  # en km
+ri = norm_Vu / W_ci            #en km
 
-#necesito pasar los anchos de km a cm y dividir por di para tenerlos en unidades de di
 
 #con metodo A
 
 #para 100%
-ancho_foot_A100 = ancho_foot_km_A100*(1e5) / di
-ancho_ramp_A100 = ancho_ramp_km_A100*(1e5) / di
-ancho_over_A100 = ancho_over_km_A100*(1e5) / di
-ancho_shock_A100 = ancho_shock_km_A100*(1e5) / di
+ancho_foot_ri_A100 = ancho_foot_km_A100 / ri
+ancho_ramp_de_A100 = ancho_ramp_km_A100 / de
+ancho_over_di_A100 = ancho_over_km_A100 / di
+ancho_over_ri_A100 = ancho_over_km_A100 / ri
+ancho_shock_ri_A100 = ancho_shock_km_A100 / ri
 
 #para perX
-ancho_foot_AperX = ancho_foot_km_AperX*(1e5) / di
-ancho_ramp_AperX = ancho_ramp_km_AperX*(1e5) / di
-ancho_over_AperX = ancho_over_km_AperX*(1e5) / di
-ancho_shock_AperX = ancho_shock_km_AperX*(1e5) / di
+ancho_foot_ri_AperX = ancho_foot_km_AperX / ri
+ancho_ramp_de_AperX = ancho_ramp_km_AperX / de
+ancho_over_di_AperX = ancho_over_km_AperX / di
+ancho_over_ri_AperX = ancho_over_km_AperX / ri
+ancho_shock_ri_AperX = ancho_shock_km_AperX / ri
 
 #para perY
-ancho_foot_AperY = ancho_foot_km_AperY*(1e5) / di
-ancho_ramp_AperY = ancho_ramp_km_AperY*(1e5) / di
-ancho_over_AperY = ancho_over_km_AperY*(1e5) / di
-ancho_shock_AperY = ancho_shock_km_AperY*(1e5) / di
+ancho_foot_ri_AperY = ancho_foot_km_AperY / ri
+ancho_ramp_de_AperY = ancho_ramp_km_AperY / de
+ancho_over_di_AperY = ancho_over_km_AperY / di
+ancho_over_ri_AperY = ancho_over_km_AperY / ri
+ancho_shock_ri_AperY = ancho_shock_km_AperY / ri
 
 
 #con metodo B
 
 #para 100%
-ancho_foot_B100 = ancho_foot_km_B100*(1e5) / di
-ancho_ramp_B100 = ancho_ramp_km_B100*(1e5) / di
-ancho_over_B100 = ancho_over_km_B100*(1e5) / di
-ancho_shock_B100 = ancho_shock_km_B100*(1e5) / di
+ancho_foot_ri_B100 = ancho_foot_km_B100 / ri
+ancho_ramp_de_B100 = ancho_ramp_km_B100 / de
+ancho_over_di_B100 = ancho_over_km_B100 / di
+ancho_over_ri_B100 = ancho_over_km_B100 / ri
+ancho_shock_ri_B100 = ancho_shock_km_B100 / ri
 
 #para perX
-ancho_foot_BperX = ancho_foot_km_BperX*(1e5) / di
-ancho_ramp_BperX = ancho_ramp_km_BperX*(1e5) / di
-ancho_over_BperX = ancho_over_km_BperX*(1e5) / di
-ancho_shock_BperX = ancho_shock_km_BperX*(1e5) / di
+ancho_foot_ri_BperX = ancho_foot_km_BperX / ri
+ancho_ramp_de_BperX = ancho_ramp_km_BperX / de
+ancho_over_di_BperX = ancho_over_km_BperX / di
+ancho_over_ri_BperX = ancho_over_km_BperX / ri
+ancho_shock_ri_BperX = ancho_shock_km_BperX / ri
 
 #para perY
-ancho_foot_BperY = ancho_foot_km_BperY*(1e5) / di
-ancho_ramp_BperY = ancho_ramp_km_BperY*(1e5) / di
-ancho_over_BperY = ancho_over_km_BperY*(1e5) / di
-ancho_shock_BperY = ancho_shock_km_BperY*(1e5) / di
+ancho_foot_ri_BperY = ancho_foot_km_BperY / ri
+ancho_ramp_de_BperY = ancho_ramp_km_BperY / de
+ancho_over_di_BperY = ancho_over_km_BperY / di
+ancho_over_ri_BperY = ancho_over_km_BperY / ri
+ancho_shock_ri_BperY = ancho_shock_km_BperY / ri
 
 
 #%%
@@ -1249,8 +1270,8 @@ if MODO_subestructuras == 1:
 
     #metodo A
 
-    xdiA = t_mag*3600*Vsh_A_100*(1e5)/di
-    
+    xdiA = t_mag*3600*Vsh_A_100/di
+    #xdiA = 2.28e2 / np.sqrt(densidad_swia)
     
     figsize = (30,15)
     lw = 3
@@ -1315,7 +1336,7 @@ if MODO_subestructuras == 1:
 
     #metodo B
     
-    xdiB = t_mag*3600*Vsh_B_100*(1e5)/di
+    xdiB = t_mag*3600*Vsh_B_100/di
     
     #ploteo todos los limites determinados (a ojo y automatizados)
     
