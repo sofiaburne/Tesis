@@ -1266,12 +1266,21 @@ ancho_shock_ri_BperY = ancho_shock_km_BperY / ri
 #ploteo perfiles espaciales para el caso foot desarrollado al 100% (metodos A y B)
 #ploteo todos los limites determinados (a ojo y automatizados)
 
+xdiA = np.empty(len(t_mag))
+xdiB = np.empty(len(t_mag))
+for i in range(len(t_mag)):
+    if i == 0:
+        xdiA[i] = 0
+        xdiB[i] = 0
+    else:
+        xdiA[i] = (t_mag[i] - t_mag[i-1])*3600*Vsh_A_100/di
+        xdiB[i] = (t_mag[i] - t_mag[i-1])*3600*Vsh_B_100/di
+
+
 if MODO_subestructuras == 1:
 
     #metodo A
 
-    xdiA = t_mag*3600*Vsh_A_100/di
-    #xdiA = 2.28e2 / np.sqrt(densidad_swia)
     
     figsize = (30,15)
     lw = 3
@@ -1336,9 +1345,6 @@ if MODO_subestructuras == 1:
 
     #metodo B
     
-    xdiB = t_mag*3600*Vsh_B_100/di
-    
-    #ploteo todos los limites determinados (a ojo y automatizados)
     
     figsize = (30,15)
     lw = 3
