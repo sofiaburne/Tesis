@@ -897,7 +897,7 @@ if MODO_subestructuras == 1:
         updown_alpha = 0.5
         
         xlim_foot = [9.81159, 9.82212] #*
-        xlim_ramp = [9.81938,9.81958] #*
+        xlim_ramp = [9.81938,9.81954] #*
         xlim_over = [9.81777,9.86354] #*
         
         
@@ -1001,7 +1001,7 @@ if MODO_subestructuras == 1:
         updown_alpha = 0.5
         
         xlim_foot = [9.81159, 9.82212] #*
-        xlim_ramp = [9.81938,9.81958] #*
+        xlim_ramp = [9.81938,9.81954] #*
         xlim_over = [9.81777,9.86354] #*
         
         
@@ -1266,15 +1266,15 @@ ancho_shock_ri_BperY = ancho_shock_km_BperY / ri
 #ploteo perfiles espaciales para el caso foot desarrollado al 100% (metodos A y B)
 #ploteo todos los limites determinados (a ojo y automatizados)
 
-xdiA = np.empty(len(t_mag))
-xdiB = np.empty(len(t_mag))
-for i in range(len(t_mag)):
-    if i == 0:
-        xdiA[i] = 0
-        xdiB[i] = 0
-    else:
-        xdiA[i] = (t_mag[i] - t_mag[i-1])*3600*Vsh_A_100/di
-        xdiB[i] = (t_mag[i] - t_mag[i-1])*3600*Vsh_B_100/di
+
+xdiA = (t_mag-t_mag[C_high])*3600*Vsh_A_100/di
+xdiB = (t_mag-t_mag[C_high])*3600*Vsh_B_100/di
+
+
+#%%
+
+#plots completos
+
 
 
 if MODO_subestructuras == 1:
@@ -1292,15 +1292,14 @@ if MODO_subestructuras == 1:
     ticks_w = 3
     grid_alpha = 0.8
     updown_alpha = 0.5
+    xlim = [-15,45]
+    ymax = 50
     
     
     plt.figure(6, figsize = figsize)
     plt.title('Delimitacion espacial de subestructuras - Método A', fontsize = font_label)
     
     plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
-    #regiones up/down
-    plt.axvspan(xmin = xdiA[i_u], xmax = xdiA[f_u], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
-    plt.axvspan(xmin = xdiA[i_d], xmax = xdiA[f_d], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
     #asintotas de Bu y Bd
     plt.axhline(y = norm_Bu, linewidth = lw, color = 'r')
     plt.axhline(y = norm_Bd, linewidth = lw, color = 'r')
@@ -1316,9 +1315,9 @@ if MODO_subestructuras == 1:
     plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
     plt.axvline(x = xdiA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c')
     plt.axvline(x = xdiA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
-    #ajustes ramp
-    plt.plot(xdiA[i1_ramp:f1_rampfit+1], i1_params[0]*xdiA[i1_ramp:f1_rampfit+1] + i1_params[1], linewidth = lw, color = 'y', linestyle = '-.')
-    plt.plot(xdiA[i2_ramp:f2_rampfit+1], i2_params[0]*xdiA[i2_ramp:f2_rampfit+1] + i2_params[1], linewidth = lw, color = 'r', linestyle = '-.')
+#    #ajustes ramp (os parametros estan para rectas temporales)
+#    plt.plot(xdiA[i1_ramp:f1_rampfit+1], i1_params[0]*xdiA[i1_ramp:f1_rampfit+1] + i1_params[1], linewidth = lw, color = 'y', linestyle = '-.')
+#    plt.plot(xdiA[i2_ramp:f2_rampfit+1], i2_params[0]*xdiA[i2_ramp:f2_rampfit+1] + i2_params[1], linewidth = lw, color = 'r', linestyle = '-.')
     plt.axvline(x = xdiA[C], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
     #inicio overshoot
     plt.axvline(x = xdiA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
@@ -1332,20 +1331,75 @@ if MODO_subestructuras == 1:
     plt.axvline(x = xdiA[f1_over], linewidth = lw, linestyle = '-', color = 'y')
     plt.axvline(x = xdiA[f2_over], linewidth = lw, linestyle = '-', color = 'y')
     
+    plt.xlim(xlim[0], xlim[1])
+    plt.ylim(ymax = ymax)
     plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
     plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
     plt.legend(loc = 0, fontsize = font_leg)
     
-    plt.savefig(path_analisis+'subestructuras_espacial_metodoA{}'.format(shock_date))
-    plt.savefig(path_analisis+'subestructuras_espacial_metodoA{}.pdf'.format(shock_date))
 
 
 
     #metodo B
     
     
+    plt.figure(7, figsize = figsize)
+    plt.title('Delimitacion espacial de subestructuras - Método B', fontsize = font_label)
+    
+    plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+#    #asintotas de Bu y Bd
+    plt.axhline(y = norm_Bu, linewidth = lw, color = 'r')
+    plt.axhline(y = norm_Bd, linewidth = lw, color = 'r')
+    plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
+    plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+#    #inicio foot
+    plt.axvline(x = xdiB[i1_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i2_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i1_foot], linewidth = lw, linestyle = '-', color = 'm')
+    plt.axvline(x = xdiB[i2_foot], linewidth = lw, linestyle = '-', color = 'm')
+#    #inicio ramp
+    plt.axvline(x = xdiB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c')
+    plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+#    #ajustes ramp (os parametros estan para rectas temporales)
+#    plt.plot(xdiB[i1_ramp:f1_rampfit+1], i1_params[0]*xdiB[i1_ramp:f1_rampfit+1] + i1_params[1], linewidth = lw, color = 'y', linestyle = '-.')
+#    plt.plot(xdiB[i2_ramp:f2_rampfit+1], i2_params[0]*xdiB[i2_ramp:f2_rampfit+1] + i2_params[1], linewidth = lw, color = 'r', linestyle = '-.')
+    plt.axvline(x = xdiB[C], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+#    #inicio overshoot
+    plt.axvline(x = xdiB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[i1_over], linewidth = lw, linestyle = '-', color = 'g')
+    plt.axvline(x = xdiB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+    plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple')
+#    #final overshoot
+    plt.axvline(x = xdiB[f1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[f2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+    plt.axvline(x = xdiB[f1_over], linewidth = lw, linestyle = '-', color = 'y')
+    plt.axvline(x = xdiB[f2_over], linewidth = lw, linestyle = '-', color = 'y')
+    
+    plt.xlim(xlim[0], xlim[1])
+    plt.ylim(ymax = ymax)
+    plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+    plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+    plt.legend(loc = 0, fontsize = font_leg)
+    
+
+#%%
+
+#hago subplots para que se vea mejor cada subestructura    
+
+# Metodo A    
+    
+if MODO_subestructuras == 1:
+    
+    
+    #ploteo todos los limites determinados (a ojo y automatizados)
+        
     figsize = (30,15)
     lw = 3
     msize = 8
@@ -1357,54 +1411,349 @@ if MODO_subestructuras == 1:
     grid_alpha = 0.8
     updown_alpha = 0.5
     
+    xlim_foot = [-10, 0] #*
+    xlim_ramp = [-0.1,0.1] #*
+    xlim_over = [0,45] #*
     
-    plt.figure(7, figsize = figsize)
-    plt.title('Delimitacion espacial de subestructuras - Método B', fontsize = font_label)
+    tipo = 'in' #*
     
-    plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
-    #regiones up/down
-    plt.axvspan(xmin = xdiB[i_u], xmax = xdiB[f_u], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
-    plt.axvspan(xmin = xdiB[i_d], xmax = xdiB[f_d], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
-    #asintotas de Bu y Bd
-    plt.axhline(y = norm_Bu, linewidth = lw, color = 'r')
-    plt.axhline(y = norm_Bd, linewidth = lw, color = 'r')
-    plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
-    plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
-    #inicio foot
-    plt.axvline(x = xdiB[i1_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
-    plt.axvline(x = xdiB[i2_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
-    plt.axvline(x = xdiB[i1_foot], linewidth = lw, linestyle = '-', color = 'm')
-    plt.axvline(x = xdiB[i2_foot], linewidth = lw, linestyle = '-', color = 'm')
-    #inicio ramp
-    plt.axvline(x = xdiB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
-    plt.axvline(x = xdiB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
-    plt.axvline(x = xdiB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c')
-    plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
-    #ajustes ramp
-    plt.plot(xdiB[i1_ramp:f1_rampfit+1], i1_params[0]*xdiB[i1_ramp:f1_rampfit+1] + i1_params[1], linewidth = lw, color = 'y', linestyle = '-.')
-    plt.plot(xdiB[i2_ramp:f2_rampfit+1], i2_params[0]*xdiB[i2_ramp:f2_rampfit+1] + i2_params[1], linewidth = lw, color = 'r', linestyle = '-.')
-    plt.axvline(x = xdiB[C], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
-    #inicio overshoot
-    plt.axvline(x = xdiB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-    plt.axvline(x = xdiB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-    plt.axvline(x = xdiB[i1_over], linewidth = lw, linestyle = '-', color = 'g')
-    plt.axvline(x = xdiB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
-    plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple')
-    #final overshoot
-    plt.axvline(x = xdiB[f1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-    plt.axvline(x = xdiB[f2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-    plt.axvline(x = xdiB[f1_over], linewidth = lw, linestyle = '-', color = 'y')
-    plt.axvline(x = xdiB[f2_over], linewidth = lw, linestyle = '-', color = 'y')
     
-    plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
-    plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
-    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
-    plt.legend(loc = 0, fontsize = font_leg)
     
-    plt.savefig(path_analisis+'subestructuras_espacial_metodoB{}'.format(shock_date))
-    plt.savefig(path_analisis+'subestructuras_espacial_metodoB{}.pdf'.format(shock_date))
+    if tipo == 'in':
+                
+        
+        plt.figure(9, figsize = figsize)
+        plt.title('Delimitacion espacial de subestructuras - Método A', fontsize = font_label)
+        plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
+        
+        plt.subplot(131)
+        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
+        plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
+        #inicio foot
+        plt.axvline(x = xdiA[i1_foot_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiA[i2_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_foot], linewidth = lw, linestyle = '-', color = 'm', label = 'inicio foot')
+        plt.axvline(x = xdiA[i2_foot], linewidth = lw, linestyle = '-', color = 'm')
+        #inicio ramp
+        plt.axvline(x = xdiA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdiA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.xlim(xlim_foot[0], xlim_foot[1])
+        plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)  
+        
+        
+        plt.subplot(132)
+        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+        #inicio ramp
+        plt.axvline(x = xdiA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdiA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        #ajustes ramp
+        plt.axvline(x = xdiA[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        #inicio overshoot
+        plt.axvline(x = xdiA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdiA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.xlim(xlim_ramp[0], xlim_ramp[1])
+        plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)
+        
+        plt.subplot(133)
+        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+        #inicio overshoot
+        plt.axvline(x = xdiA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdiA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple', label = 'máximo overshoot')
+        #final overshoot
+        plt.axvline(x = xdiA[f1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[f2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[f1_over], linewidth = lw, linestyle = '-', color = 'y', label = 'final overshoot')
+        plt.axvline(x = xdiA[f2_over], linewidth = lw, linestyle = '-', color = 'y')
+        plt.xlim(xlim_over[0], xlim_over[1])
+        plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)
+        
+        
+        
+        plt.savefig(path_analisis+'subestructuras_espacial_A_{}'.format(shock_date))
+        plt.savefig(path_analisis+'subestructuras_espacial_A_{}.pdf'.format(shock_date))
+    
+    
+    
+    if tipo == 'out':        
+        
+        
+        plt.figure(9, figsize = figsize)
+        plt.title('Delimitacion espacial de subestructuras - Método A', fontsize = font_label)
+        plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
+        
+        plt.subplot(133)
+        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
+        plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
+        #inicio foot
+        plt.axvline(x = xdiA[i1_foot_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiA[i2_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_foot], linewidth = lw, linestyle = '-', color = 'm', label = 'inicio foot')
+        plt.axvline(x = xdiA[i2_foot], linewidth = lw, linestyle = '-', color = 'm')
+        #inicio ramp
+        plt.axvline(x = xdiA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdiA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.xlim(xlim_foot[0], xlim_foot[1])
+        plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)  
+        
+        
+        plt.subplot(132)
+        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+        #inicio ramp
+        plt.axvline(x = xdiA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdiA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        #ajustes ramp
+        plt.axvline(x = xdiA[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        #inicio overshoot
+        plt.axvline(x = xdiA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdiA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.xlim(xlim_ramp[0], xlim_ramp[1])
+        plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)
+        
+        plt.subplot(131)
+        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+        #inicio overshoot
+        plt.axvline(x = xdiA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdiA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple', label = 'máximo overshoot')
+        #final overshoot
+        plt.axvline(x = xdiA[f1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[f2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[f1_over], linewidth = lw, linestyle = '-', color = 'y', label = 'final overshoot')
+        plt.axvline(x = xdiA[f2_over], linewidth = lw, linestyle = '-', color = 'y')
+        plt.xlim(xlim_over[0], xlim_over[1])
+        plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)
+        
+        
+        
+        plt.savefig(path_analisis+'subestructuras_espacial_A_{}'.format(shock_date))
+        plt.savefig(path_analisis+'subestructuras_espacial_A_{}.pdf'.format(shock_date))
+    
 
+
+# Metodo B
+        
+    if tipo == 'in':
+                
+        
+        plt.figure(10, figsize = figsize)
+        plt.title('Delimitacion espacial de subestructuras - Método B', fontsize = font_label)
+        plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
+        
+        plt.subplot(131)
+        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
+        plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
+        #inicio foot
+        plt.axvline(x = xdiB[i1_foot_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiB[i2_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_foot], linewidth = lw, linestyle = '-', color = 'm', label = 'inicio foot')
+        plt.axvline(x = xdiB[i2_foot], linewidth = lw, linestyle = '-', color = 'm')
+        #inicio ramp
+        plt.axvline(x = xdiB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.xlim(xlim_foot[0], xlim_foot[1])
+        plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)  
+        
+        
+        plt.subplot(132)
+        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+        #inicio ramp
+        plt.axvline(x = xdiB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        #ajustes ramp
+        plt.axvline(x = xdiB[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        #inicio overshoot
+        plt.axvline(x = xdiB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdiB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.xlim(xlim_ramp[0], xlim_ramp[1])
+        plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)
+        
+        plt.subplot(133)
+        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+        #inicio overshoot
+        plt.axvline(x = xdiB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdiB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple', label = 'máximo overshoot')
+        #final overshoot
+        plt.axvline(x = xdiB[f1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[f2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[f1_over], linewidth = lw, linestyle = '-', color = 'y', label = 'final overshoot')
+        plt.axvline(x = xdiB[f2_over], linewidth = lw, linestyle = '-', color = 'y')
+        plt.xlim(xlim_over[0], xlim_over[1])
+        plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)
+        
+        
+        
+        plt.savefig(path_analisis+'subestructuras_espacial_B_{}'.format(shock_date))
+        plt.savefig(path_analisis+'subestructuras_espacial_B_{}.pdf'.format(shock_date))
+    
+    
+    
+    if tipo == 'out':        
+        
+        
+        plt.figure(10, figsize = figsize)
+        plt.title('Delimitacion espacial de subestructuras - Método B', fontsize = font_label)
+        plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
+        
+        plt.subplot(133)
+        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
+        plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
+        #inicio foot
+        plt.axvline(x = xdiB[i1_foot_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiB[i2_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_foot], linewidth = lw, linestyle = '-', color = 'm', label = 'inicio foot')
+        plt.axvline(x = xdiB[i2_foot], linewidth = lw, linestyle = '-', color = 'm')
+        #inicio ramp
+        plt.axvline(x = xdiB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.xlim(xlim_foot[0], xlim_foot[1])
+        plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)  
+        
+        
+        plt.subplot(132)
+        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+        #inicio ramp
+        plt.axvline(x = xdiB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        #ajustes ramp
+        plt.axvline(x = xdiB[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        #inicio overshoot
+        plt.axvline(x = xdiB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdiB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.xlim(xlim_ramp[0], xlim_ramp[1])
+        plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)
+        
+        plt.subplot(131)
+        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        #asintotas de Bu y Bd
+        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
+        #inicio overshoot
+        plt.axvline(x = xdiB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdiB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple', label = 'máximo overshoot')
+        #final overshoot
+        plt.axvline(x = xdiB[f1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[f2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiB[f1_over], linewidth = lw, linestyle = '-', color = 'y', label = 'final overshoot')
+        plt.axvline(x = xdiB[f2_over], linewidth = lw, linestyle = '-', color = 'y')
+        plt.xlim(xlim_over[0], xlim_over[1])
+        plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 3, endpoint = True))
+        plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
+        plt.legend(loc = 0, fontsize = font_leg)
+        
+        
+        
+        plt.savefig(path_analisis+'subestructuras_espacial_B_{}'.format(shock_date))
+        plt.savefig(path_analisis+'subestructuras_espacial_B_{}.pdf'.format(shock_date))
+
+
+
+#%%
 
 
 #%%------------------------------- GUARDO RESULTADOS ------------------------------

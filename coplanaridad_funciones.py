@@ -153,8 +153,8 @@ def err_norm_coplanar(Bd, Bu, Vd, Vu, err_Bu, err_Bd, err_Vu, err_Vd):
 def alpha(x,y):
     
    a = abs(np.arccos((np.dot(x,y))/(np.linalg.norm(x)*np.linalg.norm(y)))*180/(np.pi))
-   if a > 180:
-       a = abs(360 - a)
+   if a > 90:
+       a = abs(180 - a)
        
    return a
 

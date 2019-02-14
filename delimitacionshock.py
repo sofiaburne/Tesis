@@ -445,7 +445,7 @@ std_norm_Vd = st.stdev(np.float64(norm_V2))
 
 
 
-#pitch angle
+#pitch angle  (Vu_par a Bu es Vu*cos(pithc) y Vu_per es Vu*sin(pitch), y pitch = arctan(Vu_per/Vu_par))
 pitch = fcop.alpha(Vu,Bu)
 err_pitch = fcop.err_alpha(Vu, Bu, std_Vu, std_Bu)
 
