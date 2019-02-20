@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_subestructuras = 1
+MODO_subestructuras = 0
 
 
 from mag import shock_date
@@ -377,6 +377,9 @@ std_BdBd = abs(2*np.dot(Bd, std_Bd) + np.dot(std_Bd, std_Bd))
 ratio_sig = min(std_BdBd, std_norm_Bd**2)/max(std_BdBd, std_norm_Bd**2)
 print('cociente entre sigmas Bd = ', round(ratio_sig,2))
 
+#%%
+
+tipo = 'in' #*
 
 #%%
 
@@ -803,10 +806,6 @@ ancho_over_temp = 3600*abs(ti_over - tf_over)
 #shock (foot + ramp)
 ancho_shock_temp = 3600*abs(ti_foot - ti_over)
 
-##ancho espacial del shock en km
-#ancho_shock = ancho_shock_temp*np.array([abs(v_nave[0]), abs(v_nave[1]), abs(v_nave[2])])
-#norm_ancho_shock = np.linalg.norm(ancho_shock)
-
 #%%
 
 if MODO_subestructuras == 1:
@@ -814,7 +813,7 @@ if MODO_subestructuras == 1:
     #ploteo todos los limites determinados (a ojo y automatizados)
     
     figsize = (30,15)
-    lw = 3
+    lw = 1
     msize = 8
     font_title = 30
     font_label = 30
@@ -879,14 +878,13 @@ if MODO_subestructuras == 1:
     
 if MODO_subestructuras == 1:
     
-    tipo = 'in' #*
     
     if tipo == 'in':
         
         #ploteo todos los limites determinados (a ojo y automatizados)
         
         figsize = (30,15)
-        lw = 3
+        lw = 1
         msize = 8
         font_title = 30
         font_label = 30
@@ -907,7 +905,7 @@ if MODO_subestructuras == 1:
         plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
         
         plt.subplot(131)
-        plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(t_mag, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
         plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
@@ -930,7 +928,7 @@ if MODO_subestructuras == 1:
         
         
         plt.subplot(132)
-        plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(t_mag, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
@@ -956,7 +954,7 @@ if MODO_subestructuras == 1:
         plt.legend(loc = 0, fontsize = font_leg)
         
         plt.subplot(133)
-        plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(t_mag, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
@@ -990,7 +988,7 @@ if MODO_subestructuras == 1:
         #ploteo todos los limites determinados (a ojo y automatizados)
         
         figsize = (30,15)
-        lw = 3
+        lw = 1
         msize = 8
         font_title = 30
         font_label = 30
@@ -1011,7 +1009,7 @@ if MODO_subestructuras == 1:
         plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
         
         plt.subplot(133)
-        plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(t_mag, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
         plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
@@ -1034,7 +1032,7 @@ if MODO_subestructuras == 1:
         
         
         plt.subplot(132)
-        plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(t_mag, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
@@ -1060,7 +1058,7 @@ if MODO_subestructuras == 1:
         plt.legend(loc = 0, fontsize = font_leg)
         
         plt.subplot(131)
-        plt.plot(t_mag, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(t_mag, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
@@ -1269,6 +1267,8 @@ ancho_shock_ri_BperY = ancho_shock_km_BperY / ri
 
 xdiA = (t_mag-t_mag[C_high])*3600*Vsh_A_100/di
 xdiB = (t_mag-t_mag[C_high])*3600*Vsh_B_100/di
+xdeA = (t_mag-t_mag[C_high])*3600*Vsh_A_100/de
+xdeB = (t_mag-t_mag[C_high])*3600*Vsh_B_100/de
 
 
 #%%
@@ -1401,7 +1401,7 @@ if MODO_subestructuras == 1:
     #ploteo todos los limites determinados (a ojo y automatizados)
         
     figsize = (30,15)
-    lw = 3
+    lw = 1
     msize = 8
     font_title = 30
     font_label = 30
@@ -1412,7 +1412,7 @@ if MODO_subestructuras == 1:
     updown_alpha = 0.5
     
     xlim_foot = [-10, 0] #*
-    xlim_ramp = [-0.1,0.1] #*
+    xlim_ramp = [-2.5,2.5] #*
     xlim_over = [0,45] #*
     
     tipo = 'in' #*
@@ -1427,7 +1427,7 @@ if MODO_subestructuras == 1:
         plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
         
         plt.subplot(131)
-        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdiA, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
         plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
@@ -1444,37 +1444,38 @@ if MODO_subestructuras == 1:
         plt.xlim(xlim_foot[0], xlim_foot[1])
         plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 3, endpoint = True))
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
         plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)  
         
         
         plt.subplot(132)
-        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdeA, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
         #inicio ramp
-        plt.axvline(x = xdiA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
-        plt.axvline(x = xdiA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.axvline(x = xdeA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdeA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdeA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
         #ajustes ramp
-        plt.axvline(x = xdiA[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        plt.axvline(x = xdeA[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
         #inicio overshoot
-        plt.axvline(x = xdiA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
-        plt.axvline(x = xdiA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.axvline(x = xdeA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdeA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
         plt.xlim(xlim_ramp[0], xlim_ramp[1])
         plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 3, endpoint = True))
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+        plt.xlabel(r'$c/\omega_{pe}$', fontsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
         
         plt.subplot(133)
-        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdiA, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
@@ -1491,6 +1492,7 @@ if MODO_subestructuras == 1:
         plt.axvline(x = xdiA[f2_over], linewidth = lw, linestyle = '-', color = 'y')
         plt.xlim(xlim_over[0], xlim_over[1])
         plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 3, endpoint = True))
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
@@ -1510,7 +1512,7 @@ if MODO_subestructuras == 1:
         plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
         
         plt.subplot(133)
-        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdiA, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
         plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
@@ -1527,32 +1529,32 @@ if MODO_subestructuras == 1:
         plt.xlim(xlim_foot[0], xlim_foot[1])
         plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 3, endpoint = True))
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-        plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)  
         
         
         plt.subplot(132)
-        plt.plot(xdiA, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdeA, B, linewidth = lw, marker = 'o', markersize = msize)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
         #inicio ramp
-        plt.axvline(x = xdiA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
-        plt.axvline(x = xdiA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.axvline(x = xdeA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdeA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdeA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
         #ajustes ramp
-        plt.axvline(x = xdiA[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        plt.axvline(x = xdeA[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
         #inicio overshoot
-        plt.axvline(x = xdiA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
-        plt.axvline(x = xdiA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.axvline(x = xdeA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdeA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
         plt.xlim(xlim_ramp[0], xlim_ramp[1])
         plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 3, endpoint = True))
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+        plt.xlabel(r'$c/\omega_{pe}$', fontsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
         
@@ -1574,6 +1576,8 @@ if MODO_subestructuras == 1:
         plt.axvline(x = xdiA[f2_over], linewidth = lw, linestyle = '-', color = 'y')
         plt.xlim(xlim_over[0], xlim_over[1])
         plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 3, endpoint = True))
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+        plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
@@ -1595,7 +1599,7 @@ if MODO_subestructuras == 1:
         plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
         
         plt.subplot(131)
-        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdiB, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
         plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
@@ -1612,37 +1616,38 @@ if MODO_subestructuras == 1:
         plt.xlim(xlim_foot[0], xlim_foot[1])
         plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 3, endpoint = True))
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
         plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)  
         
         
         plt.subplot(132)
-        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdeB, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
         #inicio ramp
-        plt.axvline(x = xdiB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = xdiB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
-        plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.axvline(x = xdeB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdeB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdeB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
         #ajustes ramp
-        plt.axvline(x = xdiB[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        plt.axvline(x = xdeB[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
         #inicio overshoot
-        plt.axvline(x = xdiB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiB[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
-        plt.axvline(x = xdiB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.axvline(x = xdeB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeB[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdeB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
         plt.xlim(xlim_ramp[0], xlim_ramp[1])
         plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 3, endpoint = True))
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+        plt.xlabel(r'$c/\omega_{pe}$', fontsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
         
         plt.subplot(133)
-        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdiB, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
@@ -1659,6 +1664,7 @@ if MODO_subestructuras == 1:
         plt.axvline(x = xdiB[f2_over], linewidth = lw, linestyle = '-', color = 'y')
         plt.xlim(xlim_over[0], xlim_over[1])
         plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 3, endpoint = True))
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
@@ -1678,7 +1684,7 @@ if MODO_subestructuras == 1:
         plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
         
         plt.subplot(133)
-        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdiB, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
         plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
@@ -1694,38 +1700,38 @@ if MODO_subestructuras == 1:
         plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
         plt.xlim(xlim_foot[0], xlim_foot[1])
         plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 3, endpoint = True))
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-        plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)  
         
         
         plt.subplot(132)
-        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdeB, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
         #inicio ramp
-        plt.axvline(x = xdiB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = xdiB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
-        plt.axvline(x = xdiB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.axvline(x = xdeB[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdeB[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeB[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdeB[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
         #ajustes ramp
-        plt.axvline(x = xdiB[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        plt.axvline(x = xdeB[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
         #inicio overshoot
-        plt.axvline(x = xdiB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiB[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
-        plt.axvline(x = xdiB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.axvline(x = xdeB[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeB[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeB[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdeB[i2_over], linewidth = lw, linestyle = '-', color = 'g')
         plt.xlim(xlim_ramp[0], xlim_ramp[1])
         plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 3, endpoint = True))
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+        plt.xlabel(r'$c/\omega_{pe}$', fontsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
         
         plt.subplot(131)
-        plt.plot(xdiB, B, linewidth = lw, marker = 'o', markersize = msize)
+        plt.plot(xdiB, B, linewidth = lw)
         #asintotas de Bu y Bd
         plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
@@ -1742,6 +1748,8 @@ if MODO_subestructuras == 1:
         plt.axvline(x = xdiB[f2_over], linewidth = lw, linestyle = '-', color = 'y')
         plt.xlim(xlim_over[0], xlim_over[1])
         plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 3, endpoint = True))
+        plt.xlabel(r'$c/\omega_{pi}$', fontsize = font_label)
+        plt.ylabel(r'$|\vec{B}|$ [nT]', fontsize = font_label)
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
@@ -1750,10 +1758,6 @@ if MODO_subestructuras == 1:
         
         plt.savefig(path_analisis+'subestructuras_espacial_B_{}'.format(shock_date))
         plt.savefig(path_analisis+'subestructuras_espacial_B_{}.pdf'.format(shock_date))
-
-
-
-#%%
 
 
 #%%------------------------------- GUARDO RESULTADOS ------------------------------

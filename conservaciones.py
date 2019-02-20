@@ -76,7 +76,7 @@ if MODO_hipotesisMHD == 1:
     
     figsize = (30,15)
     msize = 8
-    lw = 3
+    lw = 1
     font_label = 30
     font_leg = 26
     ticks_l = 6
@@ -99,7 +99,7 @@ if MODO_hipotesisMHD == 1:
     f2, plot1 = plt.subplots(figsize = figsize)
     f2.taight_layout = True
     
-    gr1, = plot1.plot(t_mag, B, linewidth = lw, marker ='o', markersize = msize, color = 'C0', label = '$B$')
+    gr1, = plot1.plot(t_mag, B, linewidth = lw, color = 'C0', label = '$B$')
     plot1.axhline(y = norm_Bu, linewidth = lw, color = 'C1')
     plot1.axhline(y = norm_Bd, linewidth = lw, color = 'C1')
     plot1.annotate('', xy=(xarrow_B, norm_Bd), xycoords='data', xytext=(xarrow_B, norm_Bu), textcoords='data', arrowprops=dict(arrowstyle='<->', connectionstyle='arc3', color='C1', lw=lw))
@@ -113,7 +113,7 @@ if MODO_hipotesisMHD == 1:
     
     
     plot2 = plt.twinx(plot1)
-    gr2, = plot2.plot(t_swia_mom, densidad_swia, linewidth = lw, marker ='o', markersize = msize,  color = 'C2', label = '$n_p$')
+    gr2, = plot2.plot(t_swia_mom, densidad_swia, linewidth = lw,  color = 'C2', label = '$n_p$')
     plot2.axhline(y = den_u, linewidth = lw, color = 'C3')
     plot2.axhline(y = den_d, linewidth = lw, color = 'C3')
     plt.annotate('', xy=(xarrow_rho, den_d), xycoords='data', xytext=(xarrow_rho, den_u), textcoords='data', arrowprops=dict(arrowstyle='<->', connectionstyle='arc3', color='C3', lw=lw))
@@ -129,115 +129,115 @@ if MODO_hipotesisMHD == 1:
     f2.savefig(path_analisis+'fast_shock_{}.pdf'.format(shock_date))
 
 #%%
-    
-#calculo Te
-    
-#ploteo distribucion de e vs energias a t fijo para elegir parametros y region para hacer fit
-
-tu_Te = 9.75 #*
-td_Te = 9.92 #*
-
-ind_tu_Te = (abs(t_swea - tu_Te)).argmin()
-ind_td_Te = (abs(t_swea - td_Te)).argmin()
-
-
-
-if MODO_hipotesisMHD == 1:
-    
-    figsize = (30,15)
-    font_title = 30
-    font_label = 30
-    font_leg = 26
-    lw = 3
-    msize = 8
-    colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
-    ticks_l = 6
-    ticks_w = 3
-    grid_alpha = 0.8
-    
-    ylim_min_u = 1e6
-    ylim_min_d = 1e6
-    
-    
-    plt.figure(11, figsize = figsize)
-       
-    plt.subplot(121)
-    plt.title(r' Upstream - t = {} hora decimal'.format(round(t_swea[ind_tu_Te],3)), fontsize = font_title)
-    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_tu_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
-    plt.yscale('log')
-    plt.xscale('log')
-    plt.ylabel(r'Distribución de electrones', fontsize = font_label)
-    plt.xlabel('Energía [eV]', fontsize = font_label)
-    plt.ylim(ymin = ylim_min_u)
-    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
-    
-    plt.subplot(122)
-    plt.title(r' Downstream - t = {} hora decimal'.format(round(t_swea[ind_td_Te],3)), fontsize = font_title)
-    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_td_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
-    plt.yscale('log')
-    plt.xscale('log')
-    plt.xlabel('Energía [eV]', fontsize = font_label)
-    plt.ylim(ymin = ylim_min_d)
-    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
-    
-    
-
-
-Te_u, ind_aam_u, aam_u, f_gauss_u, params_u, ind_Emin_fit_u, ind_Emax_fit_u = Te(ind_tu_Te, 4, 43, 2e8, 10, 1, dist_e = flujosenergia_swea, energ = nivelesenergia_swea, t = t_swea)  #* 
-Te_d, ind_aam_d, aam_d, f_gauss_d, params_d, ind_Emin_fit_d, ind_Emax_fit_d = Te(ind_td_Te, 16, 88, 6e8, 30, 1, dist_e = flujosenergia_swea, energ = nivelesenergia_swea, t = t_swea)  #*
-
-if  MODO_hipotesisMHD == 1:
-    
-    
-    plt.figure(12, figsize = figsize)
-    
-    plt.subplot(121)
-    plt.title(r' Upstream - t = {} hora decimal'.format(round(t_swea[ind_tu_Te],3)), fontsize = font_title)
-    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_tu_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
-    plt.plot(nivelesenergia_swea, f_gauss_u, linewidth = lw, marker = 'o', markersize = msize, color = colors[1])
-    
-    plt.axvspan(xmin = nivelesenergia_swea[ind_Emin_fit_u], xmax = nivelesenergia_swea[ind_Emax_fit_u], facecolor = colors[2], alpha = 0.3)
-    plt.axhline(y = aam_u, linewidth = lw, color = colors[3], label = 'FWHM')
-    plt.axvline(x = Te_u, linewidth = lw, color = colors[4], label = r'$T_e$ = {} eV'.format(round(np.float64(Te_u),2)))
-    plt.axvline(x = params_u[1], linewidth = lw, color = colors[5], label = r'$\mu$')
-    
-    plt.yscale('log')
-    plt.xscale('log')
-    plt.ylabel(r'Distribución de electrones', fontsize = font_label)
-    plt.xlabel('Energía [eV]', fontsize = font_label)
-    plt.ylim(ymin = ylim_min_u)
-    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-    plt.legend(loc = 0, fontsize = font_leg)
-    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
-    
-    
-    plt.subplot(122)
-    plt.title(r' Downstream - t = {} hora decimal'.format(round(t_swea[ind_td_Te],3)), fontsize = font_title)
-    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_td_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
-    plt.plot(nivelesenergia_swea, f_gauss_d, linewidth = lw, marker = 'o', markersize = msize, color = colors[1])
-    
-    plt.axvspan(xmin = nivelesenergia_swea[ind_Emin_fit_d], xmax = nivelesenergia_swea[ind_Emax_fit_d], facecolor = colors[2], alpha = 0.3)
-    plt.axhline(y = aam_d, linewidth = lw, color = colors[3], label = 'FWHM')
-    plt.axvline(x = Te_d, linewidth = lw, color = colors[4], label = r'$T_e$ = {} eV'.format(round(np.float64(Te_d),2)))
-    plt.axvline(x = params_d[1], linewidth = lw, color = colors[5], label = r'$\mu$')
-    
-    plt.yscale('log')
-    plt.xscale('log')
-    plt.xlabel('Energía [eV]', fontsize = font_label)
-    plt.ylim(ymin = ylim_min_d)
-    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-    plt.legend(loc = 0, fontsize = font_leg)
-    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
-    
-    plt.savefig(path_analisis+'Te{}'.format(shock_date))
-    plt.savefig(path_analisis+'Te{}.pdf'.format(shock_date)) 
-        
-    
-    
-    
-
+#    
+##calculo Te
+#    
+##ploteo distribucion de e vs energias a t fijo para elegir parametros y region para hacer fit
+#
+#tu_Te = 9.75 #*
+#td_Te = 9.92 #*
+#
+#ind_tu_Te = (abs(t_swea - tu_Te)).argmin()
+#ind_td_Te = (abs(t_swea - td_Te)).argmin()
+#
+#
+#
+#if MODO_hipotesisMHD == 1:
+#    
+#    figsize = (30,15)
+#    font_title = 30
+#    font_label = 30
+#    font_leg = 26
+#    lw = 3
+#    msize = 8
+#    colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
+#    ticks_l = 6
+#    ticks_w = 3
+#    grid_alpha = 0.8
+#    
+#    ylim_min_u = 1e6
+#    ylim_min_d = 1e6
+#    
+#    
+#    plt.figure(11, figsize = figsize)
+#       
+#    plt.subplot(121)
+#    plt.title(r' Upstream - t = {} hora decimal'.format(round(t_swea[ind_tu_Te],3)), fontsize = font_title)
+#    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_tu_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
+#    plt.yscale('log')
+#    plt.xscale('log')
+#    plt.ylabel(r'Distribución de electrones', fontsize = font_label)
+#    plt.xlabel('Energía [eV]', fontsize = font_label)
+#    plt.ylim(ymin = ylim_min_u)
+#    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+#    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+#    
+#    plt.subplot(122)
+#    plt.title(r' Downstream - t = {} hora decimal'.format(round(t_swea[ind_td_Te],3)), fontsize = font_title)
+#    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_td_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
+#    plt.yscale('log')
+#    plt.xscale('log')
+#    plt.xlabel('Energía [eV]', fontsize = font_label)
+#    plt.ylim(ymin = ylim_min_d)
+#    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+#    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+#    
+#    
+#
+#
+#Te_u, ind_aam_u, aam_u, f_gauss_u, params_u, ind_Emin_fit_u, ind_Emax_fit_u = Te(ind_tu_Te, 4, 43, 2e8, 10, 1, dist_e = flujosenergia_swea, energ = nivelesenergia_swea, t = t_swea)  #* 
+#Te_d, ind_aam_d, aam_d, f_gauss_d, params_d, ind_Emin_fit_d, ind_Emax_fit_d = Te(ind_td_Te, 16, 88, 6e8, 30, 1, dist_e = flujosenergia_swea, energ = nivelesenergia_swea, t = t_swea)  #*
+#
+#if  MODO_hipotesisMHD == 1:
+#    
+#    
+#    plt.figure(12, figsize = figsize)
+#    
+#    plt.subplot(121)
+#    plt.title(r' Upstream - t = {} hora decimal'.format(round(t_swea[ind_tu_Te],3)), fontsize = font_title)
+#    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_tu_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
+#    plt.plot(nivelesenergia_swea, f_gauss_u, linewidth = lw, marker = 'o', markersize = msize, color = colors[1])
+#    
+#    plt.axvspan(xmin = nivelesenergia_swea[ind_Emin_fit_u], xmax = nivelesenergia_swea[ind_Emax_fit_u], facecolor = colors[2], alpha = 0.3)
+#    plt.axhline(y = aam_u, linewidth = lw, color = colors[3], label = 'FWHM')
+#    plt.axvline(x = Te_u, linewidth = lw, color = colors[4], label = r'$T_e$ = {} eV'.format(round(np.float64(Te_u),2)))
+#    plt.axvline(x = params_u[1], linewidth = lw, color = colors[5], label = r'$\mu$')
+#    
+#    plt.yscale('log')
+#    plt.xscale('log')
+#    plt.ylabel(r'Distribución de electrones', fontsize = font_label)
+#    plt.xlabel('Energía [eV]', fontsize = font_label)
+#    plt.ylim(ymin = ylim_min_u)
+#    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+#    plt.legend(loc = 0, fontsize = font_leg)
+#    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+#    
+#    
+#    plt.subplot(122)
+#    plt.title(r' Downstream - t = {} hora decimal'.format(round(t_swea[ind_td_Te],3)), fontsize = font_title)
+#    plt.plot(nivelesenergia_swea, flujosenergia_swea[ind_td_Te,:], linewidth = lw, marker = 'o', markersize = msize, color = colors[0])
+#    plt.plot(nivelesenergia_swea, f_gauss_d, linewidth = lw, marker = 'o', markersize = msize, color = colors[1])
+#    
+#    plt.axvspan(xmin = nivelesenergia_swea[ind_Emin_fit_d], xmax = nivelesenergia_swea[ind_Emax_fit_d], facecolor = colors[2], alpha = 0.3)
+#    plt.axhline(y = aam_d, linewidth = lw, color = colors[3], label = 'FWHM')
+#    plt.axvline(x = Te_d, linewidth = lw, color = colors[4], label = r'$T_e$ = {} eV'.format(round(np.float64(Te_d),2)))
+#    plt.axvline(x = params_d[1], linewidth = lw, color = colors[5], label = r'$\mu$')
+#    
+#    plt.yscale('log')
+#    plt.xscale('log')
+#    plt.xlabel('Energía [eV]', fontsize = font_label)
+#    plt.ylim(ymin = ylim_min_d)
+#    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+#    plt.legend(loc = 0, fontsize = font_leg)
+#    plt.grid(which = 'major', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+#    
+#    plt.savefig(path_analisis+'Te{}'.format(shock_date))
+#    plt.savefig(path_analisis+'Te{}.pdf'.format(shock_date)) 
+#        
+#    
+#    
+#    
+#
 #%%
 #chequeo relaciones RH
 

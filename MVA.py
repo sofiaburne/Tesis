@@ -200,7 +200,7 @@ if MODO_mva == 1:
     font_title = 30
     font_label = 30
     font_leg = 26
-    lw = 3
+    lw = 1
     colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
     ticks_l = 6
     ticks_w = 3
@@ -228,7 +228,7 @@ if MODO_mva == 1:
     font_title = 30
     font_label = 30
     font_leg = 26
-    lw = 3
+    lw = 1
     msize = 15
     colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
     ticks_l = 6

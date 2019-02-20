@@ -147,7 +147,7 @@ if MODO_delimitacion == 1:
     #ploteo magnitudes importantes
     
     figsize = (60,30)
-    lw = 3
+    lw = 1
     font_title = 30
     font_label = 30
     font_leg = 15
@@ -289,7 +289,7 @@ if MODO_delimitacion == 1:
     '''
     
     figsize = (30,15)
-    lw = 3
+    lw = 1
     font_title = 30
     font_label = 30
     font_leg = 26
@@ -464,7 +464,7 @@ if MODO_delimitacion == 1:
     '''
     
     figsize = (60,30)
-    lw = 3
+    lw = 1
     font_title = 30
     font_label = 30
     font_leg = 15
