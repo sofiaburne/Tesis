@@ -330,11 +330,9 @@ cons_masa_d = np.abs(rho_d*U_dn)
 cons_masa = np.min([cons_masa_u,cons_masa_d])/np.max([cons_masa_u,cons_masa_d])*100
 
 #consevacion del impulso normal al shock
-cons_impul_n_u = np.abs(rho_u*U_un**2 + Pu + B_u**2/(2*mu))
-cons_impul_n_d = np.abs(rho_d*U_dn**2 + Pd + B_d**2/(2*mu))
-cons_impul_n = np.empty_like(cons_impul_n_u)
-for i in range(len(cons_impul_n_u)):
-    cons_impul_n[i] = np.min([cons_impul_n_d[i],cons_impul_n_u[i]])/np.max([cons_impul_n_d[i],cons_impul_n_u[i]])*100
+cons_impul_n_u = np.abs(rho_u*U_un**2 + Pu + np.dot(B_u,B_u)/(2*mu))
+cons_impul_n_d = np.abs(rho_d*U_dn**2 + Pd + np.dot(B_d,B_d)/(2*mu))
+cons_impul_n = np.min([cons_impul_n_d,cons_impul_n_u])/np.max([cons_impul_n_d,cons_impul_n_u])*100
 
 #conservacion del impulso tangencial al shock
 cons_impul_t_u = np.abs(rho_u*U_un*U_ut - B_un/mu*B_ut)
@@ -345,11 +343,9 @@ for i in range(len(cons_impul_t_u)):
 
 #consevacion de la energia
 gamma = 5/3
-cons_energ_u = np.abs(rho_u*U_un*(1/2*U_u**2 + gamma/(gamma-1)*Pu/rho_u) + U_un*B_u**2/mu - np.dot(U_u,B_u)*B_un/mu)
-cons_energ_d = np.abs(rho_d*U_dn*(1/2*U_d**2 + gamma/(gamma-1)*Pd/rho_d) + U_dn*B_d**2/mu - np.dot(U_d,B_d)*B_dn/mu)
-cons_energ = np.empty_like(cons_energ_u)
-for i in range(len(cons_energ)):
-    cons_energ[i] = np.min([cons_energ_d[i],cons_energ_u[i]])/np.max([cons_energ_d[i],cons_energ_u[i]])*100
+cons_energ_u = np.abs(rho_u*U_un*(1/2*np.dot(U_u,U_u) + gamma/(gamma-1)*Pu/rho_u) + U_un*np.dot(B_u,B_u)/mu - np.dot(U_u,B_u)*B_un/mu)
+cons_energ_d = np.abs(rho_d*U_dn*(1/2*np.dot(U_d,U_d) + gamma/(gamma-1)*Pd/rho_d) + U_dn*np.dot(B_d,B_d)/mu - np.dot(U_d,B_d)*B_dn/mu)
+cons_energ = np.min([cons_energ_d,cons_energ_u])/np.max([cons_energ_d,cons_energ_u])*100
 
 #conservacion de componente normal de B
 cons_Bn_u = np.abs(B_un)
