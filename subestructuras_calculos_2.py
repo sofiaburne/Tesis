@@ -1127,6 +1127,10 @@ err_theta_NVu = fcop.err_alpha(Vu, N, std_Vu, err_N)
 theta_NRc = fcop.alpha(Rc,N)
 err_theta_NRc = fcop.err_alpha(Rc, N, err_Rc, err_N)
 
+#angulo entre vel nave y normal del fit
+err_v_nave = np.array([1e-8,1e-8,1e-8])
+theta_Nvnave = fcop.alpha(v_nave,N)
+err_theta_Nvnave = fcop.err_alpha(v_nave, N, err_v_nave, err_N)
 
 #%%
 
