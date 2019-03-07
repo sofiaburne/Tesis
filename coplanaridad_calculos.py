@@ -144,6 +144,8 @@ Bn_BdV = np.dot(np.array([Bx,By,Bz]).T, nBdV)
 Bn_BduV = np.dot(np.array([Bx,By,Bz]).T, nBduV)
 Bn_V = np.dot(np.array([Bx,By,Bz]).T, nV)
 
+BN = np.dot(np.array([Bx,By,Bz]).T, N)
+
 if MODO_coplanaridad == 1:
     
     fignum = 0
@@ -161,16 +163,17 @@ if MODO_coplanaridad == 1:
     plt.figure(fignum, figsize = figsize)
     plt.suptitle(r'Componente normal del campo magnético - coplanaridad', fontsize = font_title)
     
-    plot0 = plt.subplot(511)
+    plot0 = plt.subplot(611)
     plt.setp(plot0.get_xticklabels(), visible = False)
     #plt.title('n1', fontsize = font_label)
     plt.plot(t_mag, Bn_B, linewidth = lw, color = colors[0])
     plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
     plt.ylabel(r'$B_n$ [nT]'+'\nn1', fontsize = font_label)
+    #plt.xlim(xmin = 9.814988, xmax = 9.81946749)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    p2 = plt.subplot(512, sharex = plot0)
+    p2 = plt.subplot(612, sharex = plot0)
     plt.setp(p2.get_xticklabels(), visible = False)
     #plt.title('n2', fontsize = font_label)
     plt.plot(t_mag, Bn_BuV, linewidth = lw, color = colors[1])
@@ -179,7 +182,7 @@ if MODO_coplanaridad == 1:
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    p3 = plt.subplot(513, sharex = plot0)
+    p3 = plt.subplot(613, sharex = plot0)
     plt.setp(p3.get_xticklabels(), visible = False)
     #plt.title('n3', fontsize = font_label)
     plt.plot(t_mag, Bn_BdV, linewidth = lw, color = colors[2])
@@ -188,7 +191,7 @@ if MODO_coplanaridad == 1:
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    p4 = plt.subplot(514, sharex = plot0)
+    p4 = plt.subplot(614, sharex = plot0)
     plt.setp(p4.get_xticklabels(), visible = False)
     #plt.title('n4', fontsize = font_label)
     plt.plot(t_mag, Bn_BduV, linewidth = lw, color = colors[3])
@@ -197,7 +200,7 @@ if MODO_coplanaridad == 1:
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    p5 = plt.subplot(515, sharex = plot0)
+    p5 = plt.subplot(615, sharex = plot0)
     #plt.title('n5', fontsize = font_label)
     plt.plot(t_mag, Bn_V, linewidth = lw, color = colors[4])
     plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
@@ -206,8 +209,92 @@ if MODO_coplanaridad == 1:
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    plt.savefig(path_analisis+'Bn_coplanar{}'.format(shock_date))
-    plt.savefig(path_analisis+'Bn_coplanar{}.pdf'.format(shock_date))
+    p6 = plt.subplot(616, sharex = plot0)
+    #plt.title('N', fontsize = font_label)
+    plt.plot(t_mag, BN, linewidth = lw, color = colors[5])
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.xlabel(r'Tiempo [hora decimal]', fontsize = font_label)
+    plt.ylabel(r'$B_n$ [nT]'+'\nN', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    #plt.savefig(path_analisis+'Bn_coplanar{}'.format(shock_date))
+    #plt.savefig(path_analisis+'Bn_coplanar{}.pdf'.format(shock_date))
+    
+
+#%% analisis de Bn
+
+Bn_B = np.dot(np.array([Bx,By,Bz]).T, nB)
+Bn_BuV = np.dot(np.array([Bx,By,Bz]).T, nBuV)
+Bn_BdV = np.dot(np.array([Bx,By,Bz]).T, nBdV)
+Bn_BduV = np.dot(np.array([Bx,By,Bz]).T, nBduV)
+Bn_V = np.dot(np.array([Bx,By,Bz]).T, nV)
+
+BN = np.dot(np.array([Bx,By,Bz]).T, N)
+
+if MODO_coplanaridad == 1:
+     
+    fignum = 0
+    figsize = (30,15)
+    font_title = 30
+    font_label = 30
+    font_leg = 26
+    lw = 1
+    colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
+    ticks_l = 6
+    ticks_w = 3
+    grid_alpha = 0.8
+    
+    
+    plt.figure(fignum, figsize = figsize)
+    plt.suptitle(r'Componente normal del campo magnético - coplanaridad', fontsize = font_title)
+    
+    plot0 = plt.subplot(511)
+    plt.setp(plot0.get_xticklabels(), visible = False)
+    plt.plot(t_mag, B, linewidth = lw, color = colors[0])
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.ylabel(r'$|B_{SW,MSO}|$ [nT]', fontsize = font_label)
+    #plt.xlim(xmin = 9.814988, xmax = 9.81946749)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    p1 = plt.subplot(512, sharex = plot0)
+    plt.setp(p1.get_xticklabels(), visible = False)
+    plt.plot(t_mag, Bn_B, linewidth = lw, color = colors[1])
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.ylabel(r'$B_n$ [nT]'+'\nn1', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    p4 = plt.subplot(513, sharex = plot0)
+    plt.setp(p4.get_xticklabels(), visible = False)
+    plt.plot(t_mag, Bn_BduV, linewidth = lw, color = colors[2])
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.ylabel(r'$B_n$ [nT]'+'\nn4', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    p5 = plt.subplot(514, sharex = plot0)
+    plt.setp(p5.get_xticklabels(), visible = False)
+    plt.plot(t_mag, Bn_V, linewidth = lw, color = colors[3])
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.xlabel(r'Tiempo [hora decimal]', fontsize = font_label)
+    plt.ylabel(r'$B_n$ [nT]'+'\nn5', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    p6 = plt.subplot(515, sharex = plot0)
+    plt.plot(t_mag, BN, linewidth = lw, color = colors[4])
+    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
+    plt.xlabel(r'Tiempo [hora decimal]', fontsize = font_label)
+    plt.ylabel(r'$B_n$ [nT]'+'\nN', fontsize = font_label)
+    plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
+    plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
+    
+    #plt.savefig(path_analisis+'Bn_coplanar{}'.format(shock_date))
+    #plt.savefig(path_analisis+'Bn_coplanar{}.pdf'.format(shock_date))   
+
+
 
 #%%#####################################################################################################
 ########################################################################################################
@@ -509,28 +596,32 @@ if MODO_coplanaridad == 1:
     
     #normales
     
+    xticks_nx = np.arange(0.7, 0.76, 0.02)
+    xticks_ny = np.arange(0.3, 0.4, 0.02)
+    xticks_nz = np.arange(-0.62, -0.54, 0.02)
+    
     cpl.hist_norm_boot(nB_boot, av_nB_boot, 1,
-                       r'$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
+                       r'$n_{cop1} = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', xticks_nx, xticks_ny, xticks_nz)
     plt.savefig(path_analisis+'hist_normalB_copl_boot_{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_normalB_copl_boot_{}.pdf'.format(shock_date))
     
     cpl.hist_norm_boot(nBuV_boot, av_nBuV_boot, 2,
-                       r'$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
+                       r'$n_{cop2} = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', xticks_nx, xticks_ny, xticks_nz)
     plt.savefig(path_analisis+'hist_normalBuV_copl_boot_{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_normalBuV_copl_boot_{}.pdf'.format(shock_date))
     
     cpl.hist_norm_boot(nBdV_boot, av_nBdV_boot, 3,
-                       r'$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
+                       r'$n_{cop3} = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', xticks_nx, xticks_ny, xticks_nz)
     plt.savefig(path_analisis+'hist_normalBdV_copl_boot_{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_normalBdV_copl_boot_{}.pdf'.format(shock_date))
   
     cpl.hist_norm_boot(nBduV_boot, av_nBduV_boot, 4,
-                       r'$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
+                       r'$n_{cop4} = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', xticks_nx, xticks_ny, xticks_nz)
     plt.savefig(path_analisis+'hist_normalBduV_copl_boot_{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_normalBduV_copl_boot_{}.pdf'.format(shock_date))
     
     cpl.hist_norm_boot(nV_boot, av_nV_boot, 5,
-                       r'$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
+                       r'$n_{cop5} = \frac{V_d - V_u}{|V_d - V_u|}$', xticks_nx, xticks_ny, xticks_nz)
     plt.savefig(path_analisis+'hist_normalV_copl_boot_{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_normalV_copl_boot_{}.pdf'.format(shock_date))
     
@@ -543,6 +634,25 @@ if MODO_coplanaridad == 1:
     plt.savefig(path_analisis+'hist_thetaBun_copl_boot_{}'.format(shock_date))
     plt.savefig(path_analisis+'hist_thetaBun_copl_boot_{}.pdf'.format(shock_date))
 
+
+
+    #plot para thetaBduV_boot
+    plt.figure(200, figsize = (20,10))
+    #plt.suptitle(r'$\bf{Método}$ $\bf{bootstrap}$,   $\theta_{Bn}^{cop4}$', fontsize = 30)
+    
+    plt.hist(thetaB_boot[:,0], bins = 60, color = 'C3')
+    plt.axvline(x = av_thetaB_boot, linewidth = 2, label = r'$\theta_{Bn}$ medio', color = 'k')
+    plt.xlabel(r'$\theta_{Bn}$ [°]', fontsize = 30)
+    plt.ylabel(r'Número de ocurrencias', fontsize = 30)
+    plt.tick_params(axis = 'both', which = 'both', length = 6, width = 3, labelsize = 30)
+    plt.xticks(np.arange(72,81,1))
+    plt.legend(loc = 0, fontsize = 20)
+    plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
+    
+    plt.savefig(path_analisis+'hist_thetaBduV_copl_boot_{}'.format(shock_date))
+    plt.savefig(path_analisis+'hist_thetaBduV_copl_boot_{}.pdf'.format(shock_date))
+    
+    
 #%%#####################################################################################################
 ########################################################################################################
 ########################################################################################################
@@ -897,7 +1007,7 @@ if MODO_coplanaridad == 1:
     
     cpl.campos_variacion_updown(Bu_s, av_Bu_s, norm_Bu_s, av_norm_Bu_s,
                                 Bd_s, av_Bd_s, norm_Bd_s, av_norm_Bd_s,
-                                10, 'B', 'B', 4)
+                                10, 'B', np.arange(1,13,3), np.arange(6,24,3))
     plt.savefig(path_analisis+'BuBd_coplanarity_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'BuBd_coplanarity_variacion_up_down{}.pdf'.format(shock_date))
     
@@ -906,35 +1016,39 @@ if MODO_coplanaridad == 1:
     
     cpl.campos_variacion_updown(Vu_s, av_Vu_s, norm_Vu_s, av_norm_Vu_s,
                                 Vd_s, av_Vd_s, norm_Vd_s, av_norm_Vd_s,
-                                11, 'V', 'V', 80)
+                                11, 'V', np.arange(-400,500,200), np.arange(-300,400,200))
     plt.savefig(path_analisis+'VuVd_coplanarity_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'VuVd_coplanarity_variacion_up_down{}.pdf'.format(shock_date))
     
     
     #normales
     
+    xticks_ud = np.arange(0,16,5)
+    xticks_u = np.arange(0,41,10)
+    xticks_d = np.arange(0,16,5)
+    
     cpl.norm_variacion_updown(nB_s2, av_nB_s2, nB_su, av_nB_su, nB_sd, av_nB_sd,
-                              12, r'$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
+                              12, r'$n_{cop1} = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'nB_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'nB_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.norm_variacion_updown(nBuV_s2, av_nBuV_s2, nBuV_su, av_nBuV_su, nBuV_sd, av_nBuV_sd,
-                              13, r'$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
+                              13, r'$n_{cop2} = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'nBuV_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'nBuV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.norm_variacion_updown(nBdV_s2, av_nBdV_s2, nBdV_su, av_nBdV_su, nBdV_sd, av_nBdV_sd,
-                              14, r'$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
+                              14, r'$n_{cop3} = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'nBdV_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'nBdV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.norm_variacion_updown(nBduV_s2, av_nBduV_s2, nBduV_su, av_nBduV_su, nBduV_sd, av_nBduV_sd,
-                              15, r'$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
+                              15, r'$n_{cop4} = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'nBduV_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'nBduV_copl_variacion_up_down{}.pdf'.format(shock_date))
-    
+   
     cpl.norm_variacion_updown(nV_s2, av_nV_s2, nV_su, av_nV_su, nV_sd, av_nV_sd,
-                              16, r'$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
+                              16, r'$n_{cop5} = \frac{V_d - V_u}{|V_d - V_u|}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'nV_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'nV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
@@ -942,27 +1056,27 @@ if MODO_coplanaridad == 1:
     #angulos
 
     cpl.theta_variacion_updown(thetaB_s2, av_thetaB_s2, thetaB_su, av_thetaB_su, thetaB_sd, av_thetaB_sd,
-                              17, r'$n_1 = \frac{(B_d \times B_u) \times \Delta B}{|(B_d \times B_u) \times \Delta B|}$')
+                              17, r'$\theta_{Bn}^{cop1}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'thetaB_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'thetaB_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.theta_variacion_updown(thetaBuV_s2, av_thetaBuV_s2, thetaBuV_su, av_thetaBuV_su, thetaBuV_sd, av_thetaBuV_sd,
-                              18, r'$n_2 = \frac{(B_u \times \Delta V) \times \Delta B}{|(B_u \times \Delta V) \times \Delta B|}$')
+                              18, r'$\theta_{Bn}^{cop2}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'thetaBuV_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'thetaBuV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.theta_variacion_updown(thetaBdV_s2, av_thetaBdV_s2, thetaBdV_su, av_thetaBdV_su, thetaBdV_sd, av_thetaBdV_sd,
-                              19, r'$n_3 = \frac{(B_d \times \Delta V) \times \Delta B}{|(B_d \times \Delta V) \times \Delta B|}$')
+                              19, r'$\theta_{Bn}^{cop3}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'thetaBdV_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'thetaBdV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.theta_variacion_updown(thetaBduV_s2, av_thetaBduV_s2, thetaBduV_su, av_thetaBduV_su, thetaBduV_sd, av_thetaBduV_sd,
-                              20, r'$n_4 = \frac{(\Delta B \times \Delta V) \times \Delta B}{|(\Delta B \times \Delta V) \times \Delta B|}$')
+                              20, r'$\theta_{Bn}^{cop4}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'thetaBduV_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'thetaBduV_copl_variacion_up_down{}.pdf'.format(shock_date))
     
     cpl.theta_variacion_updown(thetaV_s2, av_thetaV_s2, thetaV_su, av_thetaV_su, thetaV_sd, av_thetaV_sd,
-                              21, r'$n_5 = \frac{V_d - V_u}{|V_d - V_u|}$')
+                              21, r'$\theta_{Bn}^{cop5}$', xticks_ud, xticks_u, xticks_d)
     plt.savefig(path_analisis+'thetaV_copl_variacion_up_down{}'.format(shock_date))
     plt.savefig(path_analisis+'thetaV_copl_variacion_up_down{}.pdf'.format(shock_date))
 

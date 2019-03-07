@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_fit = 0
+MODO_fit = 1
 
 
 from mag import shock_date
@@ -124,7 +124,7 @@ if MODO_fit == 1:
     ax.quiver(Rc[0], Rc[1], Rc[2], nV[0], nV[1], nV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C4', normalize = True, label = '$n_5$')
     
     #ploteo normal MVA
-    ax.quiver(Rc[0], Rc[1], Rc[2], n_mva[0], n_mva[1], n_mva[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C7', normalize = True, label = '$n_{MVA}$')
+    #ax.quiver(Rc[0], Rc[1], Rc[2], n_mva[0], n_mva[1], n_mva[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C7', normalize = True, label = '$n_{MVA}$')
     
     #ploteo normal del fit
     n_fit = fbow.norm_fit_MGS(Rc[0],Rc[1],Rc[2],L)
@@ -161,8 +161,8 @@ if MODO_fit == 1:
     
     ax.legend(loc=0, fontsize=20)
     
-    plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}'.format(shock_date))
-    plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}.pdf'.format(shock_date))
+   # plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}'.format(shock_date))
+   # plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}.pdf'.format(shock_date))
 
 
 #%%------------------------------- GUARDO RESULTADOS ------------------------------

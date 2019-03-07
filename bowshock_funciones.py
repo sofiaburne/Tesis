@@ -176,7 +176,7 @@ def esfera():
 
 #para plotear funciones 3D del tipo f(x,y,z,param) = 0
     
-def plot_implicit(fn, Rc, L, limites=(-2.5, 2.5)):
+def plot_implicit(fn, Rc, L, limites=(-3.5, 3.5)):
     xmin, xmax, ymin, ymax, zmin, zmax = limites*3 #limites tiene que ser una tupla (lim_min, lim_max)
     fig = plt.figure(figsize=(30,20))
     ax = fig.add_subplot(111, projection='3d')
@@ -185,7 +185,7 @@ def plot_implicit(fn, Rc, L, limites=(-2.5, 2.5)):
     B = np.linspace(zmin, zmax, 15) # number of slices
     A1,A2 = np.meshgrid(A,A) # grid on which the contour is plotted
 
-    for z in B: # plot contours in the XY plane
+    for z in B: # plot contours in the XY plane4
         X,Y = A1,A2
         Z = fn(X,Y,z,L)
         cset = ax.contour(X, Y, Z+z, [z], zdir='z')
@@ -209,9 +209,9 @@ def plot_implicit(fn, Rc, L, limites=(-2.5, 2.5)):
     ax.set_xlim3d(xmin,xmax)
     ax.set_ylim3d(ymin,ymax)
     
-    ax.set_xlabel(r'$X_{MSO}$ $[R_M]$', fontsize = 20)
-    ax.set_ylabel(r'$Y_{MSO}$ $[R_M]$', fontsize = 20)
-    ax.set_zlabel(r'$Z_{MSO}$ $[R_M]$', fontsize = 20)
+    ax.set_xlabel(r'$X_{MSO}$ $[R_M]$', fontsize = 20, labelpad = 30)
+    ax.set_ylabel(r'$Y_{MSO}$ $[R_M]$', fontsize = 20, labelpad = 30)
+    ax.set_zlabel(r'$Z_{MSO}$ $[R_M]$', fontsize = 20, labelpad = 30)
     plt.tick_params(axis='both', which = 'both', length = 4, width = 2, labelsize = 20)
     plt.legend(loc = 0, fontsize = 20)
     plt.show()

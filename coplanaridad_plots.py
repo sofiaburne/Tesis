@@ -5,7 +5,7 @@ from matplotlib import ticker
 
 class CoplanaridadPLOTS:
     
-    def __init__(self, figsize = (30,15), lw = 3, font_title = 30, font_label = 30, font_leg = 26,
+    def __init__(self, figsize = (30,15), lw = 1.5, font_title = 30, font_label = 30, font_leg = 20,
                  ticks_l = 6, ticks_w = 3, grid_alpha = 0.8, labelpad = 110, msize = 8, markers = ['o', 's', '^', '*'],
                  colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']):
         
@@ -24,44 +24,48 @@ class CoplanaridadPLOTS:
 
     
     
-    def hist_norm_boot(self, n, av_n, fignum, title, bins = 70, xtick_spacing = 0.02):
+    def hist_norm_boot(self, n, av_n, fignum, title, xticks_nx, xticks_ny, xticks_nz, bins = 60):
     
         self.nB_boot = n
         self.av_nB_boot = av_n
+        self.lw = 2
         
         
-        plt.figure(fignum, figsize = self.figsize)
-        plt.suptitle(r'Histogramas normal bootstrap - {}'.format(title), fontsize = self.font_title)
+        plt.figure(fignum, figsize = (25,10))
+        titulo = r'$\bf{Método}$ $\bf{bootstrap}$,'
+        plt.suptitle(titulo+r' {}'.format(title), fontsize = self.font_title)
+        plt.subplots_adjust(top=0.88, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.2)
         
         p = plt.subplot(131)
         plt.hist(self.nB_boot[:,0], bins = bins, color = self.colors[0])
-        plt.axvline(x = self.av_nB_boot[0], linewidth = self.lw, label = r'$n_x$ medio', color = self.colors[1])
+        plt.axvline(x = self.av_nB_boot[0], linewidth = self.lw, label = r'$n_x$ medio', color = 'k')
         plt.xlabel(r'$n_x$', fontsize = self.font_label)
+        plt.ylabel(r'Número de ocurrencias', fontsize = 30)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        p.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
-        #plt.xticks(np.arange(min(self.nB_boot[:,0]), max(self.nB_boot[:,0]), xtick_spacing))
+        #p.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        plt.xticks(xticks_nx)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
         p2 = plt.subplot(132, sharey = p)
         plt.setp(p2.get_yticklabels(), visible = False)
-        plt.hist(self.nB_boot[:,1], bins = bins, color = self.colors[2])
-        plt.axvline(x = self.av_nB_boot[1], linewidth = self.lw, label = r'$n_y$ medio', color = self.colors[3])
+        plt.hist(self.nB_boot[:,1], bins = bins, color = self.colors[1])
+        plt.axvline(x = self.av_nB_boot[1], linewidth = self.lw, label = r'$n_y$ medio', color = 'k')
         plt.xlabel(r'$n_y$', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        p2.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
-        #plt.xticks(np.arange(min(self.nB_boot[:,1]), max(self.nB_boot[:,1]), xtick_spacing))
+        #p2.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        plt.xticks(xticks_ny)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
         p3 = plt.subplot(133, sharey = p)
         plt.setp(p3.get_yticklabels(), visible = False)
-        plt.hist(self.nB_boot[:,2], bins = bins, color = self.colors[4])
-        plt.axvline(x = self.av_nB_boot[2], linewidth = self.lw, label = r'$n_z$ medio', color = self.colors[5])
+        plt.hist(self.nB_boot[:,2], bins = bins, color = self.colors[2])
+        plt.axvline(x = self.av_nB_boot[2], linewidth = self.lw, label = r'$n_z$ medio', color = 'k')
         plt.xlabel(r'$n_z$', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        p3.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
-        #plt.xticks(np.arange(min(self.nB_boot[:,2]), max(self.nB_boot[:,2]), xtick_spacing))
+        #p3.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+        plt.xticks(xticks_nz)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
@@ -144,7 +148,7 @@ class CoplanaridadPLOTS:
     
     def campos_variacion_updown(self, Bu, av_Bu, norm_Bu, av_norm_Bu,
                                 Bd, av_Bd, norm_Bd, av_norm_Bd,
-                                fignum, title, label_B, ytick_spacing):
+                                fignum, label_B, yticks_u, yticks_d):
         
         self.Bu_s = Bu
         self.av_Bu_s = av_Bu
@@ -155,30 +159,35 @@ class CoplanaridadPLOTS:
         self.norm_Bd_s = norm_Bd
         self.av_norm_Bd_s = av_norm_Bd
         
-        label_ux = 'ux'
-        label_uy = 'uy'
-        label_uz = 'uz'
-        label_dx = 'dx'
-        label_dy = 'dy'
-        label_dz = 'dz'
-        label_u = 'u'
-        label_d = 'd'
+
         
-        plt.figure(fignum, figsize = self.figsize)
-        plt.suptitle('{} ante variación de intervalos upstream y downstream'.format(title), fontsize = self.font_title)
+        plt.figure(fignum, figsize = (25,15))
+        plt.suptitle(r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$', fontsize = self.font_title)
+        plt.subplots_adjust(top=0.92, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.2)
         
         ax1 = plt.subplot(211)
         ax1.plot(self.Bu_s[:,0], linestyle='None', marker = self.markers[0], markersize = self.msize, color = self.colors[0])
         ax1.plot(self.Bu_s[:,1], linestyle='None', marker = self.markers[1], markersize = self.msize, color = self.colors[1])
         ax1.plot(self.Bu_s[:,2], linestyle='None', marker = self.markers[2], markersize = self.msize, color = self.colors[2])
         ax1.plot(self.norm_Bu_s, linestyle='None', marker = self.markers[3], markersize = self.msize, color = self.colors[3])
-        ax1.axhline(y = self.av_Bu_s[0], linewidth = self.lw, label = r'${}_{{}}$ medio'.format(label_B, label_ux), color = self.colors[0])
-        ax1.axhline(y = self.av_Bu_s[1], linewidth = self.lw, label = r'${}_{{}}$ medio'.format(label_B, label_uy), color = self.colors[1])
-        ax1.axhline(y = self.av_Bu_s[2], linewidth = self.lw, label = r'${}_{{}}$ medio'.format(label_B, label_uz), color = self.colors[2])
-        ax1.axhline(y = self.av_norm_Bu_s, linewidth = self.lw, label = r'$|{}_{{}}|$ medio'.format(label_B, label_u), color = self.colors[3])
-        ax1.set_ylabel(r'${}_u$ [nT]'.format(label_B), fontsize = self.font_label)
+        
+        if label_B == 'B':
+            ax1.axhline(y = self.av_Bu_s[0], linewidth = self.lw, label = r'$B_{ux}$ medio', color = self.colors[0])
+            ax1.axhline(y = self.av_Bu_s[1], linewidth = self.lw, label = r'$B_{uy}$ medio', color = self.colors[1])
+            ax1.axhline(y = self.av_Bu_s[2], linewidth = self.lw, label = r'$B_{uz}$ medio', color = self.colors[2])
+            ax1.axhline(y = self.av_norm_Bu_s, linewidth = self.lw, label = r'$|B_{u}|$ medio', color = self.colors[3])
+            ax1.set_ylabel(r'$B_u$ [nT]'.format(label_B), fontsize = self.font_label)
+        
+        elif label_B == 'V':
+            ax1.axhline(y = self.av_Bu_s[0], linewidth = self.lw, label = r'$V_{ux}$ medio', color = self.colors[0])
+            ax1.axhline(y = self.av_Bu_s[1], linewidth = self.lw, label = r'$V_{uy}$ medio', color = self.colors[1])
+            ax1.axhline(y = self.av_Bu_s[2], linewidth = self.lw, label = r'$V_{uz}$ medio', color = self.colors[2])
+            ax1.axhline(y = self.av_norm_Bu_s, linewidth = self.lw, label = r'$|V_{u}|$ medio', color = self.colors[3])
+            ax1.set_ylabel(r'$V_u$ [km/s]'.format(label_B), fontsize = self.font_label)
+            
         ax1.axes.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        ax1.yaxis.set_major_locator(ticker.MultipleLocator(ytick_spacing))
+        ax1.set_yticks(yticks_u)
+        #ax1.yaxis.set_major_locator(ticker.MultipleLocator(ytick_spacing))
         ax1.legend(loc = 0, fontsize = self.font_leg)
         ax1.axes.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
@@ -187,20 +196,31 @@ class CoplanaridadPLOTS:
         ax2.plot(self.Bd_s[:,1], linestyle='None', marker = self.markers[1], markersize = self.msize, color = self.colors[1])
         ax2.plot(self.Bd_s[:,2], linestyle='None', marker = self.markers[2], markersize = self.msize, color = self.colors[2])
         ax2.plot(self.norm_Bd_s, linestyle='None', marker = self.markers[3], markersize = self.msize, color = self.colors[3])
-        ax2.axhline(y = self.av_Bd_s[0], linewidth = self.lw, label = r'${}_{{}}$ medio'.format(label_B, label_dx), color = self.colors[0])
-        ax2.axhline(y = self.av_Bd_s[1], linewidth = self.lw, label = r'${}_{{}}$ medio'.format(label_B, label_dy), color = self.colors[1])
-        ax2.axhline(y = self.av_Bd_s[2], linewidth = self.lw, label = r'${}_{{}}$ medio'.format(label_B, label_dz), color = self.colors[2])
-        ax2.axhline(y = self.av_norm_Bd_s, linewidth = self.lw, label = r'$|{}_{{}}|$ medio'.format(label_B, label_d), color = self.colors[3])
-        ax2.set_ylabel(r'${}_d$ [nT]'.format(label_B), fontsize = self.font_label)
+        
+        if label_B == 'B':
+            ax2.axhline(y = self.av_Bd_s[0], linewidth = self.lw, label = r'$B_{dx}$ medio', color = self.colors[0])
+            ax2.axhline(y = self.av_Bd_s[1], linewidth = self.lw, label = r'$B_{dy}$ medio', color = self.colors[1])
+            ax2.axhline(y = self.av_Bd_s[2], linewidth = self.lw, label = r'$B_{dz}$ medio', color = self.colors[2])
+            ax2.axhline(y = self.av_norm_Bd_s, linewidth = self.lw, label = r'$|B_{d}|$ medio', color = self.colors[3])
+            ax2.set_ylabel(r'$B_d$ [nT]'.format(label_B), fontsize = self.font_label)
+        
+        elif label_B == 'V':
+            ax2.axhline(y = self.av_Bd_s[0], linewidth = self.lw, label = r'$V_{dx}$ medio', color = self.colors[0])
+            ax2.axhline(y = self.av_Bd_s[1], linewidth = self.lw, label = r'$V_{dy}$ medio', color = self.colors[1])
+            ax2.axhline(y = self.av_Bd_s[2], linewidth = self.lw, label = r'$V_{dz}$ medio', color = self.colors[2])
+            ax2.axhline(y = self.av_norm_Bd_s, linewidth = self.lw, label = r'$|V_{d}|$ medio', color = self.colors[3])
+            ax2.set_ylabel(r'$V_d$ [km/s]'.format(label_B), fontsize = self.font_label)
+        
         ax2.set_xlabel(r'Realizaciones', fontsize = self.font_label)
         ax2.axes.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        ax2.yaxis.set_major_locator(ticker.MultipleLocator(ytick_spacing))
+        ax2.set_yticks(yticks_d)
+        #ax2.yaxis.set_major_locator(ticker.MultipleLocator(ytick_spacing))
         ax2.legend(loc = 0, fontsize = self.font_leg)
         ax2.axes.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
     
     
     
-    def norm_variacion_updown(self, n_ud, av_n_ud, n_u, av_n_u, n_d, av_n_d, fignum, title):
+    def norm_variacion_updown(self, n_ud, av_n_ud, n_u, av_n_u, n_d, av_n_d, fignum, title, xticks_ud, xticks_u, xticks_d):
         
         self.nB_s2 = n_ud
         self.av_nB_s2 = av_n_ud
@@ -210,11 +230,13 @@ class CoplanaridadPLOTS:
         self.av_nB_sd = av_n_d
         
         
-        plt.figure(fignum, figsize = self.figsize)
-        plt.suptitle(r'{}  -  Variación de intervalos upstream/downstream'.format(title), fontsize = self.font_title)
+        plt.figure(fignum, figsize = (25,15))
+        titulo = r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$'
+        plt.suptitle(titulo+r',    {}'.format(title), fontsize = self.font_title)
+        plt.subplots_adjust(top=0.85, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.2)
         
         p = plt.subplot(131)
-        plt.title('Variación de intervalos\nupstream y downstream', fontsize = self.font_label)
+        plt.title('upstream y downstream', fontsize = self.font_label)
         plt.plot(self.nB_s2[:,0], linestyle='None', marker = self.markers[0], markersize = self.msize, color = self.colors[0])
         plt.plot(self.nB_s2[:,1], linestyle='None', marker = self.markers[1], markersize = self.msize, color = self.colors[1])
         plt.plot(self.nB_s2[:,2], linestyle='None', marker = self.markers[2], markersize = self.msize, color = self.colors[2])
@@ -222,13 +244,14 @@ class CoplanaridadPLOTS:
         plt.axhline(y = self.av_nB_s2[1], linewidth = self.lw, label = r'$n_y$ medio', color = self.colors[1])
         plt.axhline(y = self.av_nB_s2[2], linewidth = self.lw, label = r'$n_z$ medio', color = self.colors[2])
         plt.xlabel(r'Realizaciones', fontsize = self.font_label)
+        plt.xticks(xticks_ud)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
         p2 = plt.subplot(132, sharey = p)
         plt.setp(p2.get_yticklabels(), visible = False)
-        plt.title('Variación de intervalo upstream', fontsize = self.font_label)
+        plt.title('upstream', fontsize = self.font_label)
         plt.plot(self.nB_su[:,0], linestyle='None', marker = self.markers[0], markersize = self.msize, color = self.colors[0])
         plt.plot(self.nB_su[:,1], linestyle='None', marker = self.markers[1], markersize = self.msize, color = self.colors[1])
         plt.plot(self.nB_su[:,2], linestyle='None', marker = self.markers[2], markersize = self.msize, color = self.colors[2])
@@ -236,13 +259,14 @@ class CoplanaridadPLOTS:
         plt.axhline(y = self.av_nB_su[1], linewidth = self.lw, label = r'$n_y$ medio', color = self.colors[1])
         plt.axhline(y = self.av_nB_su[2], linewidth = self.lw, label = r'$n_z$ medio', color = self.colors[2])
         plt.xlabel(r'Realizaciones', fontsize = self.font_label)
+        plt.xticks(xticks_u)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        plt.legend(loc = 0, fontsize = self.font_leg)
+        plt.legend(loc = 5, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
         p3 = plt.subplot(133, sharey = p)
         plt.setp(p3.get_yticklabels(), visible = False)
-        plt.title('Variación de intervalo downstream', fontsize = self.font_label)
+        plt.title('downstream', fontsize = self.font_label)
         plt.plot(self.nB_sd[:,0], linestyle='None', marker = self.markers[0], markersize = self.msize, color = self.colors[0])
         plt.plot(self.nB_sd[:,1], linestyle='None', marker = self.markers[1], markersize = self.msize, color = self.colors[1])
         plt.plot(self.nB_sd[:,2], linestyle='None', marker = self.markers[2], markersize = self.msize, color = self.colors[2])
@@ -250,13 +274,14 @@ class CoplanaridadPLOTS:
         plt.axhline(y = self.av_nB_sd[1], linewidth = self.lw, label = r'$n_y$ medio', color = self.colors[1])
         plt.axhline(y = self.av_nB_sd[2], linewidth = self.lw, label = r'$n_z$ medio', color = self.colors[2])
         plt.xlabel(r'Realizaciones', fontsize = self.font_label)
+        plt.xticks(xticks_d)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
-        plt.legend(loc = 0, fontsize = self.font_leg)
+        plt.legend(loc = 5, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
     
     
     
-    def theta_variacion_updown(self, theta_ud, av_theta_ud, theta_u, av_theta_u, theta_d, av_theta_d, fignum, title):
+    def theta_variacion_updown(self, theta_ud, av_theta_ud, theta_u, av_theta_u, theta_d, av_theta_d, fignum, title, xticks_ud, xticks_u, xticks_d):
         
         self.thetaB_s2 = theta_ud
         self.av_thetaB_s2 = av_theta_ud
@@ -266,35 +291,40 @@ class CoplanaridadPLOTS:
         self.av_thetaB_sd = av_theta_d
         
         
-        plt.figure(fignum, figsize = self.figsize)
-        plt.suptitle(r'{}  -  Variación de intervalos upstream/downstream'.format(title), fontsize = self.font_title)
+        plt.figure(fignum, figsize = (25,15))
+        titulo = r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$'
+        plt.suptitle(titulo+r',    {}'.format(title), fontsize = self.font_title)
+        plt.subplots_adjust(top=0.85, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.2)
         
         p = plt.subplot(131)
-        plt.title('Variación de intervalos\nupstream y downstream', fontsize = self.font_label)
+        plt.title('upstream y downstream', fontsize = self.font_label)
         plt.plot(self.thetaB_s2, linestyle='None', marker = self.markers[3], markersize = self.msize, color = self.colors[3])
-        plt.axhline(y = self.av_thetaB_s2, linewidth = self.lw, label = r'$\theta_{Bun}$ medio', color = self.colors[3])
-        plt.ylabel(r'$\theta_{Bun}$ [grados]', fontsize = self.font_label)
+        plt.axhline(y = self.av_thetaB_s2, linewidth = self.lw, label = r'$\theta_{Bn}$ medio', color = self.colors[3])
+        plt.ylabel(r'$\theta_{Bn}$ [°]', fontsize = self.font_label)
         plt.xlabel(r'Realizaciones', fontsize = self.font_label)
+        plt.xticks(xticks_ud)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
         p2 = plt.subplot(132, sharey = p)
         plt.setp(p2.get_yticklabels(), visible = False)
-        plt.title('Variación de intervalo upstream', fontsize = self.font_label)
+        plt.title('upstream', fontsize = self.font_label)
         plt.plot(self.thetaB_su, linestyle='None', marker = self.markers[3], markersize = self.msize, color = self.colors[3])
-        plt.axhline(y = self.av_thetaB_su, linewidth = self.lw, label = r'$\theta_{Bun}$ medio', color = self.colors[3])
+        plt.axhline(y = self.av_thetaB_su, linewidth = self.lw, label = r'$\theta_{Bn}$ medio', color = self.colors[3])
         plt.xlabel(r'Realizaciones', fontsize = self.font_label)
+        plt.xticks(xticks_u)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
         
         p3 = plt.subplot(133, sharey = p)
         plt.setp(p3.get_yticklabels(), visible = False)
-        plt.title('Variación de intervalo downstream', fontsize = self.font_label)
+        plt.title('downstream', fontsize = self.font_label)
         plt.plot(self.thetaB_sd, linestyle='None', marker = self.markers[3], markersize = self.msize, color = self.colors[3])
-        plt.axhline(y = self.av_thetaB_sd, linewidth = self.lw, label = r'$\theta_{Bun}$ medio', color = self.colors[3])
+        plt.axhline(y = self.av_thetaB_sd, linewidth = self.lw, label = r'$\theta_{Bn}$ medio', color = self.colors[3])
         plt.xlabel(r'Realizaciones', fontsize = self.font_label)
+        plt.xticks(xticks_d)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
         plt.legend(loc = 0, fontsize = self.font_leg)
         plt.grid(which = 'both', axis = 'both', linewidth = self.lw, linestyle = '--', alpha = self.grid_alpha)
