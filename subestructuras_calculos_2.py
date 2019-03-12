@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_subestructuras = 1
+MODO_subestructuras = 0
 
 
 from mag import shock_date
@@ -885,11 +885,12 @@ if MODO_subestructuras == 1:
         #ploteo todos los limites determinados (a ojo y automatizados)
         
         figsize = (30,15)
-        lw = 1
+        lw = 1.5
+        lw2 = 2.5
         msize = 8
-        font_title = 30
-        font_label = 30
-        font_leg = 20
+        font_title = 40
+        font_label = 35
+        font_leg = 25
         ticks_l = 6
         ticks_w = 3
         grid_alpha = 0.8
@@ -904,26 +905,26 @@ if MODO_subestructuras == 1:
         
         
         plt.figure(55, figsize = figsize)
-        plt.suptitle(r'$\bf{Delimitación}$ $\bf{temporal}$ $\bf{de}$ $\bf{subestructuras}$', fontsize = font_title)
-        plt.subplots_adjust(top=0.9, bottom=0.10, left=0.10, right=0.95, hspace=0.3, wspace=0.25)
+        plt.suptitle(r'$\bf{MAVEN,}$ $\bf{MAG}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:48:40}$ $\bf{-}$ $\bf{9:51:36}$ $\bf{UTC}$', fontsize = font_title)
+        plt.subplots_adjust(top=0.9, bottom=0.10, left=0.10, right=0.95, hspace=0.3, wspace=0.3)
 
         
         p0 = plt.subplot(131)
         plt.title('foot', fontsize = font_label)
         plt.plot(t_mag, B, linewidth = lw)
         #asintotas de Bu y Bd
-        plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
+        plt.axhline(y = norm_Bu, linewidth = lw2, color = 'r', label = r'$B_u$')
         plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
         #inicio foot
-        plt.axvline(x = Ti1_foot_eye, linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = Ti2_foot_eye, linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = ti1_foot, linewidth = lw, linestyle = '-', color = 'm', label = 'inicio foot')
-        plt.axvline(x = ti2_foot, linewidth = lw, linestyle = '-', color = 'm')
+        plt.axvline(x = Ti1_foot_eye, linewidth = lw2, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = Ti2_foot_eye, linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = ti1_foot, linewidth = lw2, linestyle = '-', color = 'm', label = 'inicio foot')
+        plt.axvline(x = ti2_foot, linewidth = lw2, linestyle = '-', color = 'm')
         #inicio ramp
-        plt.axvline(x = Ti1_ramp_eye, linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = Ti2_ramp_eye, linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = ti1_ramp, linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
-        plt.axvline(x = ti2_ramp, linewidth = lw, linestyle = '-', color = 'c')
+        plt.axvline(x = Ti1_ramp_eye, linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = Ti2_ramp_eye, linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = ti1_ramp, linewidth = lw2, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = ti2_ramp, linewidth = lw2, linestyle = '-', color = 'c')
         
 #        class CustomScalarFormatter(ticker.ScalarFormatter):
 #            def format_data(self, value):
@@ -963,22 +964,22 @@ if MODO_subestructuras == 1:
         plt.setp(p1.get_yticklabels(), visible = False)
         plt.plot(t_mag, B, linewidth = lw)
         #asintotas de Bu y Bd
-        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhline(y = norm_Bd, linewidth = lw2, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
         #inicio ramp
-        plt.axvline(x = Ti1_ramp_eye, linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = Ti2_ramp_eye, linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = ti1_ramp, linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
-        plt.axvline(x = ti2_ramp, linewidth = lw, linestyle = '-', color = 'c')
+        plt.axvline(x = Ti1_ramp_eye, linewidth = lw2, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = Ti2_ramp_eye, linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = ti1_ramp, linewidth = lw2, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = ti2_ramp, linewidth = lw2, linestyle = '-', color = 'c')
         #ajustes ramp
-        plt.plot(t_mag[min(i1_ramp,f1_rampfit):max(i1_ramp,f1_rampfit)+1], i1_params[0]*t_mag[min(i1_ramp,f1_rampfit):max(i1_ramp,f1_rampfit)+1] + i1_params[1], linewidth = lw, color = 'y', linestyle = '-.')
-        plt.plot(t_mag[min(i2_ramp,f2_rampfit):max(i2_ramp,f2_rampfit)+1], i2_params[0]*t_mag[min(i2_ramp,f2_rampfit):max(i2_ramp,f2_rampfit)+1] + i2_params[1], linewidth = lw, color = 'r', linestyle = '-.')
-        plt.axvline(x = t_mag[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        plt.plot(t_mag[min(i1_ramp,f1_rampfit):max(i1_ramp,f1_rampfit)+1], i1_params[0]*t_mag[min(i1_ramp,f1_rampfit):max(i1_ramp,f1_rampfit)+1] + i1_params[1], linewidth = lw2, color = 'y', linestyle = '-.')
+        plt.plot(t_mag[min(i2_ramp,f2_rampfit):max(i2_ramp,f2_rampfit)+1], i2_params[0]*t_mag[min(i2_ramp,f2_rampfit):max(i2_ramp,f2_rampfit)+1] + i2_params[1], linewidth = lw2, color = 'r', linestyle = '-.')
+        plt.axvline(x = t_mag[C_high], linewidth = lw2, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
         #inicio overshoot
-        plt.axvline(x = Ti1_over_eye, linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = Ti2_over_eye, linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = ti1_over, linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
-        plt.axvline(x = ti2_over, linewidth = lw, linestyle = '-', color = 'g')        
+        plt.axvline(x = Ti1_over_eye, linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = Ti2_over_eye, linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = ti1_over, linewidth = lw2, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = ti2_over, linewidth = lw2, linestyle = '-', color = 'g')        
         plt.xlim(xlim_ramp[0], xlim_ramp[1])
         plt.ylim(ylim[0], ylim[1])
         
@@ -994,7 +995,7 @@ if MODO_subestructuras == 1:
         plt.xticks(r_ticks, r_ticks_label)
         
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
-        plt.xlabel('Tiempo [hs]', fontsize = font_label)
+        plt.xlabel('Time [hs]', fontsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
         
@@ -1003,19 +1004,19 @@ if MODO_subestructuras == 1:
         plt.setp(p2.get_yticklabels(), visible = False)
         plt.plot(t_mag, B, linewidth = lw)
         #asintotas de Bu y Bd
-        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhline(y = norm_Bd, linewidth = lw2, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
         #inicio overshoot
-        plt.axvline(x = Ti1_over_eye, linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = Ti2_over_eye, linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = ti1_over, linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
-        plt.axvline(x = ti2_over, linewidth = lw, linestyle = '-', color = 'g')
-        plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple', label = 'máximo overshoot')
+        plt.axvline(x = Ti1_over_eye, linewidth = lw2, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = Ti2_over_eye, linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = ti1_over, linewidth = lw2, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = ti2_over, linewidth = lw2, linestyle = '-', color = 'g')
+        plt.axhline(y = Bmax_over, linewidth = lw2, linestyle = '-', color = 'purple', label = 'máximo overshoot')
         #final overshoot
-        plt.axvline(x = Tf1_over_eye, linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = Tf2_over_eye, linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = tf1_over, linewidth = lw, linestyle = '-', color = 'y', label = 'final overshoot')
-        plt.axvline(x = tf2_over, linewidth = lw, linestyle = '-', color = 'y')
+        plt.axvline(x = Tf1_over_eye, linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = Tf2_over_eye, linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = tf1_over, linewidth = lw2, linestyle = '-', color = 'y', label = 'final overshoot')
+        plt.axvline(x = tf2_over, linewidth = lw2, linestyle = '-', color = 'y')
         plt.xlim(xlim_over[0], xlim_over[1])
         plt.ylim(ylim[0], ylim[1])
         plt.xticks(np.round(np.linspace(xlim_over[0], xlim_over[1], 5, endpoint = True),2))
@@ -1454,10 +1455,11 @@ if MODO_subestructuras == 1:
         
     figsize = (30,15)
     lw = 1.5
+    lw2 = 2.5
     msize = 8
-    font_title = 30
-    font_label = 30
-    font_leg = 20
+    font_title = 40
+    font_label = 35
+    font_leg = 25
     ticks_l = 6
     ticks_w = 3
     grid_alpha = 0.8
@@ -1477,25 +1479,25 @@ if MODO_subestructuras == 1:
                 
         
         plt.figure(9, figsize = figsize)
-        plt.suptitle(r'$\bf{Método}$ $\bf{A}$, $\bf{desarrollo}$ $\bf{del}$ $\bf{foot}$ $\bf{100 \%}$', fontsize = font_title)
-        plt.subplots_adjust(top=0.9, bottom=0.10, left=0.10, right=0.95, hspace=0.3, wspace=0.2)
+        plt.suptitle(r'$\bf{MAVEN,}$ $\bf{MAG}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:48:40}$ $\bf{-}$ $\bf{9:51:36}$ $\bf{UTC}$', fontsize = font_title)
+        plt.subplots_adjust(top=0.9, bottom=0.10, left=0.10, right=0.95, hspace=0.3, wspace=0.3)
         
         p0 = plt.subplot(131)
         plt.title('foot', fontsize = font_label)
         plt.plot(xdiA, B, linewidth = lw)
         #asintotas de Bu y Bd
-        plt.axhline(y = norm_Bu, linewidth = lw, color = 'r', label = r'$B_u$')
+        plt.axhline(y = norm_Bu, linewidth = lw2, color = 'r', label = r'$B_u$')
         plt.axhspan(ymin = norm_Bu - std_norm_Bu, ymax = norm_Bu + std_norm_Bu, facecolor = 'g', alpha = updown_alpha)
         #inicio foot
-        plt.axvline(x = xdiA[i1_foot_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = xdiA[i2_foot_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i1_foot], linewidth = lw, linestyle = '-', color = 'm', label = 'inicio foot')
-        plt.axvline(x = xdiA[i2_foot], linewidth = lw, linestyle = '-', color = 'm')
+        plt.axvline(x = xdiA[i1_foot_eye], linewidth = lw2, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiA[i2_foot_eye], linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_foot], linewidth = lw2, linestyle = '-', color = 'm', label = 'inicio foot')
+        plt.axvline(x = xdiA[i2_foot], linewidth = lw2, linestyle = '-', color = 'm')
         #inicio ramp
-        plt.axvline(x = xdiA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
-        plt.axvline(x = xdiA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.axvline(x = xdiA[i1_ramp_eye], linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i2_ramp_eye], linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_ramp], linewidth = lw2, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdiA[i2_ramp], linewidth = lw2, linestyle = '-', color = 'c')
         plt.xlim(xlim_foot[0], xlim_foot[1])
         plt.ylim(ylim[0], ylim[1])
         plt.xticks(np.linspace(xlim_foot[0], xlim_foot[1], 4, endpoint = True))
@@ -1511,20 +1513,20 @@ if MODO_subestructuras == 1:
         plt.setp(p1.get_yticklabels(), visible = False)
         plt.plot(xdeA, B, linewidth = lw)
         #asintotas de Bu y Bd
-        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhline(y = norm_Bd, linewidth = lw2, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
         #inicio ramp
-        plt.axvline(x = xdeA[i1_ramp_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = xdeA[i2_ramp_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdeA[i1_ramp], linewidth = lw, linestyle = '-', color = 'c', label = 'inicio ramp')
-        plt.axvline(x = xdeA[i2_ramp], linewidth = lw, linestyle = '-', color = 'c')
+        plt.axvline(x = xdeA[i1_ramp_eye], linewidth = lw2, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdeA[i2_ramp_eye], linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeA[i1_ramp], linewidth = lw2, linestyle = '-', color = 'c', label = 'inicio ramp')
+        plt.axvline(x = xdeA[i2_ramp], linewidth = lw2, linestyle = '-', color = 'c')
         #ajustes ramp
-        plt.axvline(x = xdeA[C_high], linewidth = lw, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
+        plt.axvline(x = xdeA[C_high], linewidth = lw2, linestyle = 'dotted', color = 'orange', label = 'Centro del choque')
         #inicio overshoot
-        plt.axvline(x = xdeA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdeA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdeA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
-        plt.axvline(x = xdeA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
+        plt.axvline(x = xdeA[i1_over_eye], linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeA[i2_over_eye], linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = xdeA[i1_over], linewidth = lw2, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdeA[i2_over], linewidth = lw2, linestyle = '-', color = 'g')
         plt.xlim(xlim_ramp[0], xlim_ramp[1])
         plt.ylim(ylim[0], ylim[1])
         plt.xticks(np.linspace(xlim_ramp[0], xlim_ramp[1], 5, endpoint = True))
@@ -1538,19 +1540,19 @@ if MODO_subestructuras == 1:
         plt.setp(p2.get_yticklabels(), visible = False)
         plt.plot(xdiA, B, linewidth = lw)
         #asintotas de Bu y Bd
-        plt.axhline(y = norm_Bd, linewidth = lw, color = 'r', label = r'$B_d$')
+        plt.axhline(y = norm_Bd, linewidth = lw2, color = 'r', label = r'$B_d$')
         plt.axhspan(ymin = norm_Bd - std_norm_Bd, ymax = norm_Bd + std_norm_Bd, facecolor = 'g', alpha = updown_alpha)
         #inicio overshoot
-        plt.axvline(x = xdiA[i1_over_eye], linewidth = lw, linestyle = '--', color = 'k', label = 'límites a ojo')
-        plt.axvline(x = xdiA[i2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[i1_over], linewidth = lw, linestyle = '-', color = 'g', label = 'inicio overshoot')
-        plt.axvline(x = xdiA[i2_over], linewidth = lw, linestyle = '-', color = 'g')
-        plt.axhline(y = Bmax_over, linewidth = lw, linestyle = '-', color = 'purple', label = 'máximo overshoot')
+        plt.axvline(x = xdiA[i1_over_eye], linewidth = lw2, linestyle = '--', color = 'k', label = 'límites a ojo')
+        plt.axvline(x = xdiA[i2_over_eye], linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[i1_over], linewidth = lw2, linestyle = '-', color = 'g', label = 'inicio overshoot')
+        plt.axvline(x = xdiA[i2_over], linewidth = lw2, linestyle = '-', color = 'g')
+        plt.axhline(y = Bmax_over, linewidth = lw2, linestyle = '-', color = 'purple', label = 'máximo overshoot')
         #final overshoot
-        plt.axvline(x = xdiA[f1_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[f2_over_eye], linewidth = lw, linestyle = '--', color = 'k')
-        plt.axvline(x = xdiA[f1_over], linewidth = lw, linestyle = '-', color = 'y', label = 'final overshoot')
-        plt.axvline(x = xdiA[f2_over], linewidth = lw, linestyle = '-', color = 'y')
+        plt.axvline(x = xdiA[f1_over_eye], linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[f2_over_eye], linewidth = lw2, linestyle = '--', color = 'k')
+        plt.axvline(x = xdiA[f1_over], linewidth = lw2, linestyle = '-', color = 'y', label = 'final overshoot')
+        plt.axvline(x = xdiA[f2_over], linewidth = lw2, linestyle = '-', color = 'y')
         plt.xlim(xlim_over[0], xlim_over[1])
         plt.ylim(ylim[0], ylim[1])
         plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 5, endpoint = True))

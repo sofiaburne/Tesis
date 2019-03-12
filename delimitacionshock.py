@@ -290,9 +290,9 @@ if MODO_delimitacion == 1:
     
     figsize = (25,15)
     lw = 1.5
-    font_title = 30
-    font_label = 30
-    font_leg = 30
+    font_title = 40
+    font_label = 35
+    font_leg = 25
     ticks_l = 6
     ticks_w = 3
     grid_alpha = 0.8
@@ -300,15 +300,16 @@ if MODO_delimitacion == 1:
     
     
     fig = plt.figure(2, figsize = figsize, tight_layout = True)
+    plt.title(r'$\bf{MAVEN,}$ $\bf{MAG,}$ $\bf{SWIA}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:42:00}$ $\bf{-}$ $\bf{10:06:00}$ $\bf{UTC}$', fontsize = font_title)
     host = fig.add_subplot(111)
     par1 = host.twinx()
     #par2 = host.twinx()
     
-    host.set_xlabel('Tiempo\n[hora decimal]', fontsize = font_label)
+    host.set_xlabel('Time [hs]', fontsize = font_label)
     host.set_xlim(xmin = 9.7, xmax = 10.1) #*
-    host.set_ylabel('$|B_{SW,MSO}|$\n[nT]', fontsize = font_label)
+    host.set_ylabel('$|B_{SW,MSO}|$ [nT]', fontsize = font_label)
     host.set_ylim(ymin = 0, ymax = 70)
-    par1.set_ylabel('$|V_{SW,MSO}|$\n[km/s]', fontsize = font_label)
+    par1.set_ylabel('$|V_{SW,MSO}|$ [km/s]', fontsize = font_label)
     par1.set_ylim(ymin = 0, ymax = 400)
     #par2.set_ylabel('$n_p$\n[$cm^{-3}$]',color = 'C2', fontsize = font_label)
     
@@ -471,9 +472,9 @@ if MODO_delimitacion == 1:
     
     figsize = (60,30)
     lw = 1.5
-    font_title = 30
-    font_label = 30
-    font_leg = 18
+    font_title = 40
+    font_label = 35
+    font_leg = 25
     ticks_l = 6
     ticks_w = 3
     grid_alpha = 0.8
@@ -484,9 +485,9 @@ if MODO_delimitacion == 1:
     
     
     f1, ((g1,g4), (g2,g5), (g3,g6)) = plt.subplots(3,2, sharex = True, figsize = figsize) #ojo con sharex y los distintos inst
-    f1.suptitle('MAVEN     MAG, SWEA, SWIA     25 Dic 2014  9:42:00 - 10:06:00', fontsize = font_title)
+    f1.suptitle(r'$\bf{MAVEN,}$ $\bf{MAG,}$ $\bf{SWEA,}$ $\bf{SWIA}$ $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:42:00}$ $\bf{-}$ $\bf{10:06:00}$ $\bf{UTC}$', fontsize = font_title)
     #plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.25, wspace=0.35)
-    plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.1, wspace=0.2)
+    plt.subplots_adjust(top=0.92, bottom=0.10, left=0.10, right=0.95, hspace=0.1, wspace=0.3)
     #f1.tight_layout()
     
     #plots de espectros swea
@@ -507,14 +508,14 @@ if MODO_delimitacion == 1:
     spec_1 = g1.contourf(t_swea, nivelesenergia_swea, flujosenergia_swea.T, locator=ticker.LogLocator(), cmap='jet')
     #g1.axes.axvspan(xmin = t_mag[min(i_u,f_u)], xmax = t_mag[max(i_u,f_u)], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
     #g1.axes.axvspan(xmin = t_mag[min(i_d,f_d)], xmax = t_mag[max(i_d,f_d)], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
-    g1.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Centro choque')
+    g1.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Shock center')
     divider = make_axes_locatable(g1)
-    cax = divider.append_axes('top', size='5%', pad=0.8)
-    cax.tick_params(labelsize = 20)
+    cax = divider.append_axes('top', size='5%', pad=1.2)
+    cax.tick_params(labelsize = 30)
     cbar = f1.colorbar(spec_1, cax=cax, orientation='horizontal')
-    cbar.ax.set_xlabel('Flujo diferencial [$(cm^2 sr s)^{-1}$]', fontsize = 20)
+    cbar.ax.set_xlabel('differential flux [$(cm^2 sr s)^{-1}$]', fontsize = 30)
     g1.axes.set_yscale('log')
-    g1.set_ylabel('$e_{e,SW}$ [eV]', fontsize = font_label)
+    g1.set_ylabel('$E_{e,SW}$ [eV]', fontsize = font_label)
     g1.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g1.axes.grid(axis = 'both', which = 'major', alpha = grid_alpha, linewidth = lw, linestyle = '--')
     g1.set_xlim(xmin = xmin, xmax = xmax)
@@ -539,15 +540,15 @@ if MODO_delimitacion == 1:
     spec_2 = g2.contourf(t_swia_spec, nivelesenergia_swia, flujosenergia_swia.T, locator=ticker.LogLocator(), cmap='jet')
     #g2.axes.axvspan(xmin = t_mag[min(i_u,f_u)], xmax = t_mag[max(i_u,f_u)], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
     #g2.axes.axvspan(xmin = t_mag[min(i_d,f_d)], xmax = t_mag[max(i_d,f_d)], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
-    g2.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Centro choque')
+    g2.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Shock center')
     divider = make_axes_locatable(g2)
-    cax = divider.append_axes('top', size='5%', pad=0.8)
+    cax = divider.append_axes('top', size='5%', pad=1.2)
     cax.tick_params(labelsize=font_leg)
-    cax.tick_params(labelsize = 20)
+    cax.tick_params(labelsize = 30)
     cbar = f1.colorbar(spec_2, cax=cax, orientation='horizontal')
-    cbar.ax.set_xlabel('Flujo diferencial [$(cm^2 sr s)^{-1}$]', fontsize = 20)
+    cbar.ax.set_xlabel('differential flux [$(cm^2 sr s)^{-1}$]', fontsize = 30)
     g2.axes.set_yscale('log')
-    g2.set_ylabel('$e_{i,SW}$ [eV]', fontsize = font_label)
+    g2.set_ylabel('$E_{i,SW}$ [eV]', fontsize = font_label)
     g2.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g2.axes.grid(axis = 'both', which = 'major', alpha = grid_alpha, linewidth = lw, linestyle = '--')
     g2.set_xlim(xmin = xmin, xmax = xmax)
@@ -561,9 +562,9 @@ if MODO_delimitacion == 1:
     g3.semilogy(t_swia_mom, temperatura_swia_norm, linewidth = lw, label = r'$|T|$')
     g3.axes.axvspan(xmin = t_mag[min(i_u,f_u)], xmax = t_mag[max(i_u,f_u)], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
     g3.axes.axvspan(xmin = t_mag[min(i_d,f_d)], xmax = t_mag[max(i_d,f_d)], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
-    g3.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Centro choque')
+    g3.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Shock center')
     g3.set_ylabel('$T_{i,SW}$ [eV]', fontsize = font_label)
-    g3.set_xlabel('Tiempo\n[hora decimal]', fontsize = font_label)
+    #g3.set_xlabel('Time [hs]', fontsize = font_label)
     g3.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g3.axes.grid(axis = 'both', which = 'major', alpha = grid_alpha, linewidth = lw, linestyle = '--')
     g3.set_xlim(xmin = xmin, xmax = xmax)
@@ -574,10 +575,11 @@ if MODO_delimitacion == 1:
     g4.plot(t_swia_mom, densidad_swia, linewidth = lw)
     g4.axes.axvspan(xmin = t_mag[min(i_u,f_u)], xmax = t_mag[max(i_u,f_u)], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
     g4.axes.axvspan(xmin = t_mag[min(i_d,f_d)], xmax = t_mag[max(i_d,f_d)], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
-    g4.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Centro choque')
+    g4.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Shock center')
     g4.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g4.axes.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
     g4.set_ylabel('$n_{i,SW}$ [$cm^{-3}$]', fontsize = font_label)
+    g4.set_ylim(0,60)
     g4.set_xlim(xmin = xmin, xmax = xmax)
     g4.legend(loc = 0, fontsize = font_leg)
     
@@ -589,7 +591,7 @@ if MODO_delimitacion == 1:
     g5.plot(t_swia_mom, norm_vel, linewidth = lw, label = r'$|V|$')
     g5.axes.axvspan(xmin = t_mag[min(i_u,f_u)], xmax = t_mag[max(i_u,f_u)], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
     g5.axes.axvspan(xmin = t_mag[min(i_d,f_d)], xmax = t_mag[max(i_d,f_d)], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
-    g5.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Centro choque')
+    g5.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Shock center')
     g5.set_ylabel('$V_{SW,MSO}$ [km/s]', fontsize = font_label)
     g5.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g5.axes.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
@@ -604,8 +606,8 @@ if MODO_delimitacion == 1:
     g6.plot(t_mag, B, linewidth = lw, label = r'$|B|$')
     g6.axes.axvspan(xmin = t_mag[min(i_u,f_u)], xmax = t_mag[max(i_u,f_u)], facecolor = 'r', alpha = updown_alpha, label = 'Upstream')
     g6.axes.axvspan(xmin = t_mag[min(i_d,f_d)], xmax = t_mag[max(i_d,f_d)], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
-    g6.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Centro choque')
-    g6.set_xlabel('Tiempo\n[hora decimal]', fontsize = font_label)
+    g6.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Shock center')
+    g6.set_xlabel('Time [hs]', fontsize = font_label)
     g6.set_ylabel('$B_{SW,MSO}$ [nT]', fontsize = font_label)
     g6.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g6.axes.grid(axis = 'both', which = 'major', alpha = grid_alpha, linewidth = lw, linestyle = '--')

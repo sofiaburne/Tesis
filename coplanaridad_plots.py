@@ -5,7 +5,7 @@ from matplotlib import ticker
 
 class CoplanaridadPLOTS:
     
-    def __init__(self, figsize = (30,15), lw = 1.5, font_title = 30, font_label = 30, font_leg = 20,
+    def __init__(self, figsize = (30,15), lw = 1.5, font_title = 40, font_label = 35, font_leg = 25,
                  ticks_l = 6, ticks_w = 3, grid_alpha = 0.8, labelpad = 110, msize = 8, markers = ['o', 's', '^', '*'],
                  colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']):
         
@@ -28,19 +28,19 @@ class CoplanaridadPLOTS:
     
         self.nB_boot = n
         self.av_nB_boot = av_n
-        self.lw = 2
+        self.lw = 2.5
         
         
-        plt.figure(fignum, figsize = (25,10))
+        plt.figure(fignum, figsize = (25,15))
         titulo = r'$\bf{Método}$ $\bf{bootstrap}$,'
-        plt.suptitle(titulo+r' {}'.format(title), fontsize = self.font_title)
-        plt.subplots_adjust(top=0.88, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.2)
+        plt.suptitle(r'{}'.format(title), fontsize = self.font_title)
+        plt.subplots_adjust(top=0.88, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.3)
         
         p = plt.subplot(131)
-        plt.hist(self.nB_boot[:,0], bins = bins, color = self.colors[0])
+        plt.hist(self.nB_boot[:,0], bins = bins, color = self.colors[0], alpha = 0.8)
         plt.axvline(x = self.av_nB_boot[0], linewidth = self.lw, label = r'$n_x$ medio', color = 'k')
         plt.xlabel(r'$n_x$', fontsize = self.font_label)
-        plt.ylabel(r'Número de ocurrencias', fontsize = 30)
+        plt.ylabel(r'Número de ocurrencias', fontsize = 35)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
         #p.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
         plt.xticks(xticks_nx)
@@ -49,7 +49,7 @@ class CoplanaridadPLOTS:
         
         p2 = plt.subplot(132, sharey = p)
         plt.setp(p2.get_yticklabels(), visible = False)
-        plt.hist(self.nB_boot[:,1], bins = bins, color = self.colors[1])
+        plt.hist(self.nB_boot[:,1], bins = bins, color = self.colors[1], alpha = 0.8)
         plt.axvline(x = self.av_nB_boot[1], linewidth = self.lw, label = r'$n_y$ medio', color = 'k')
         plt.xlabel(r'$n_y$', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
@@ -60,7 +60,7 @@ class CoplanaridadPLOTS:
         
         p3 = plt.subplot(133, sharey = p)
         plt.setp(p3.get_yticklabels(), visible = False)
-        plt.hist(self.nB_boot[:,2], bins = bins, color = self.colors[2])
+        plt.hist(self.nB_boot[:,2], bins = bins, color = self.colors[2], alpha = 0.8)
         plt.axvline(x = self.av_nB_boot[2], linewidth = self.lw, label = r'$n_z$ medio', color = 'k')
         plt.xlabel(r'$n_z$', fontsize = self.font_label)
         plt.tick_params(axis = 'both', which = 'both', length = self.ticks_l, width = self.ticks_w, labelsize = self.font_label)
@@ -159,10 +159,13 @@ class CoplanaridadPLOTS:
         self.norm_Bd_s = norm_Bd
         self.av_norm_Bd_s = av_norm_Bd
         
+        self.lw = 2.5
+        self.msize = 12
+        
 
         
         plt.figure(fignum, figsize = (25,15))
-        plt.suptitle(r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$', fontsize = self.font_title)
+        #plt.suptitle(r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$', fontsize = self.font_title)
         plt.subplots_adjust(top=0.92, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.2)
         
         ax1 = plt.subplot(211)
@@ -229,10 +232,13 @@ class CoplanaridadPLOTS:
         self.nB_sd = n_d
         self.av_nB_sd = av_n_d
         
+        self.lw = 2.5
+        self.msize = 12
+        
         
         plt.figure(fignum, figsize = (25,15))
-        titulo = r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$'
-        plt.suptitle(titulo+r',    {}'.format(title), fontsize = self.font_title)
+        #titulo = r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$'
+        plt.suptitle(r'{}'.format(title), fontsize = self.font_title)
         plt.subplots_adjust(top=0.85, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.2)
         
         p = plt.subplot(131)
@@ -290,10 +296,12 @@ class CoplanaridadPLOTS:
         self.thetaB_sd = theta_d
         self.av_thetaB_sd = av_theta_d
         
+        self.lw = 2.5
+        self.msize = 12
         
         plt.figure(fignum, figsize = (25,15))
-        titulo = r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$'
-        plt.suptitle(titulo+r',    {}'.format(title), fontsize = self.font_title)
+        #titulo = r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$'
+        plt.suptitle(r'{}'.format(title), fontsize = self.font_title)
         plt.subplots_adjust(top=0.85, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.2)
         
         p = plt.subplot(131)

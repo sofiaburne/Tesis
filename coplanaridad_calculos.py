@@ -235,64 +235,86 @@ BN = np.dot(np.array([Bx,By,Bz]).T, N)
 if MODO_coplanaridad == 1:
      
     fignum = 0
-    figsize = (30,15)
-    font_title = 30
-    font_label = 30
-    font_leg = 26
-    lw = 1
+    figsize = (25,20)
+    font_title = 40
+    font_label = 35
+    font_leg = 25
+    lw = 1.5
+    lw2 = 2.5
     colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
     ticks_l = 6
     ticks_w = 3
     grid_alpha = 0.8
     
+    xlim = [9.7, 10.1]
+    
     
     plt.figure(fignum, figsize = figsize)
-    plt.suptitle(r'Componente normal del campo magnético - coplanaridad', fontsize = font_title)
-    
+    plt.suptitle(r'$\bf{MAVEN,}$ $\bf{MAG}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:42:00}$ $\bf{-}$ $\bf{10:06:00}$ $\bf{UTC}$', fontsize = font_title)
+    plt.subplots_adjust(top=0.9, bottom=0.10, left=0.10, right=0.95, hspace=0.4, wspace=0.3)
+
     plot0 = plt.subplot(511)
     plt.setp(plot0.get_xticklabels(), visible = False)
     plt.plot(t_mag, B, linewidth = lw, color = colors[0])
+    plot0.axes.axvspan(xmin = 9.814, xmax = 9.819, facecolor = 'y', alpha = 0.5)
     plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
-    plt.ylabel(r'$|B_{SW,MSO}|$ [nT]', fontsize = font_label)
-    #plt.xlim(xmin = 9.814988, xmax = 9.81946749)
+    plt.ylabel(r'$|B_{SW,MSO}|$'+'\n[nT]', fontsize = font_label)
+    plt.xlim(xmin = xlim[0], xmax = xlim[1])
+    plt.yticks(np.arange(0,45,20))
+    plt.ylim(0,40)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    p1 = plt.subplot(512, sharex = plot0)
+    p1 = plt.subplot(512)
     plt.setp(p1.get_xticklabels(), visible = False)
     plt.plot(t_mag, Bn_B, linewidth = lw, color = colors[1])
-    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
-    plt.ylabel(r'$B_n$ [nT]'+'\nn1', fontsize = font_label)
+    p1.axes.axvspan(xmin = 9.814, xmax = 9.819, facecolor = 'y', alpha = 0.5)
+    plt.axhline(y = 0, linewidth = lw2, linestyle = 'dotted', color = colors[9])
+    plt.ylabel('$n_{cop1}$\n'+r'$B_n$ [nT]', fontsize = font_label)
+    plt.xlim(xmin = xlim[0], xmax = xlim[1])
+    plt.yticks(np.arange(-10,21,10))
+    plt.ylim(-10,20)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    p4 = plt.subplot(513, sharex = plot0)
+    p4 = plt.subplot(513)
     plt.setp(p4.get_xticklabels(), visible = False)
     plt.plot(t_mag, Bn_BduV, linewidth = lw, color = colors[2])
-    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
-    plt.ylabel(r'$B_n$ [nT]'+'\nn4', fontsize = font_label)
+    p4.axes.axvspan(xmin = 9.814, xmax = 9.819, facecolor = 'y', alpha = 0.5)
+    plt.axhline(y = 0, linewidth = lw2, linestyle = 'dotted', color = colors[9])
+    plt.ylabel('$n_{cop4}$\n'+r'$B_n$ [nT]', fontsize = font_label)
+    plt.xlim(xmin = xlim[0], xmax = xlim[1])
+    plt.yticks(np.arange(-10,21,10))
+    plt.ylim(-10,20)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    p5 = plt.subplot(514, sharex = plot0)
+    p5 = plt.subplot(514)
     plt.setp(p5.get_xticklabels(), visible = False)
     plt.plot(t_mag, Bn_V, linewidth = lw, color = colors[3])
-    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
-    plt.xlabel(r'Tiempo [hora decimal]', fontsize = font_label)
-    plt.ylabel(r'$B_n$ [nT]'+'\nn5', fontsize = font_label)
+    p5.axes.axvspan(xmin = 9.814, xmax = 9.819, facecolor = 'y', alpha = 0.5)
+    plt.axhline(y = 0, linewidth = lw2, linestyle = 'dotted', color = colors[9])
+    plt.ylabel('\n$n_{cop5}$\n'+r'$B_n$ [nT]', fontsize = font_label)
+    plt.xlim(xmin = xlim[0], xmax = xlim[1])
+    plt.yticks(np.arange(-10,21,10))
+    plt.ylim(-10,20)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    p6 = plt.subplot(515, sharex = plot0)
+    p6 = plt.subplot(515)
     plt.plot(t_mag, BN, linewidth = lw, color = colors[4])
-    plt.axhline(y = 0, linewidth = lw, linestyle = 'dotted', color = colors[9])
-    plt.xlabel(r'Tiempo [hora decimal]', fontsize = font_label)
-    plt.ylabel(r'$B_n$ [nT]'+'\nN', fontsize = font_label)
+    p6.axes.axvspan(xmin = 9.814, xmax = 9.819, facecolor = 'y', alpha = 0.5)
+    plt.axhline(y = 0, linewidth = lw2, linestyle = 'dotted', color = colors[9])
+    plt.xlabel(r'Time [hs]', fontsize = font_label)
+    plt.ylabel('\n$n{fit}$\n'+r'$B_n$ [nT]', fontsize = font_label)
+    plt.xlim(xmin = xlim[0], xmax = xlim[1])
+    plt.yticks(np.arange(-10,21,10))
+    plt.ylim(-10,20)
     plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     plt.grid(which = 'both', axis = 'both', linewidth = lw, linestyle = '--', alpha = grid_alpha)
     
-    #plt.savefig(path_analisis+'Bn_coplanar{}'.format(shock_date))
-    #plt.savefig(path_analisis+'Bn_coplanar{}.pdf'.format(shock_date))   
+    plt.savefig(path_analisis+'Bn_coplanar{}'.format(shock_date))
+    plt.savefig(path_analisis+'Bn_coplanar{}.pdf'.format(shock_date))   
 
 
 
@@ -637,16 +659,16 @@ if MODO_coplanaridad == 1:
 
 
     #plot para thetaBduV_boot
-    plt.figure(200, figsize = (20,10))
-    #plt.suptitle(r'$\bf{Método}$ $\bf{bootstrap}$,   $\theta_{Bn}^{cop4}$', fontsize = 30)
+    plt.figure(200, figsize = (20,15))
+    #plt.suptitle(r'$\bf{Método}$ $\bf{bootstrap}$,   $\theta_{Bn}^{cop4}$', fontsize = 40)
     
-    plt.hist(thetaB_boot[:,0], bins = 60, color = 'C3')
-    plt.axvline(x = av_thetaB_boot, linewidth = 2, label = r'$\theta_{Bn}$ medio', color = 'k')
-    plt.xlabel(r'$\theta_{Bn}$ [°]', fontsize = 30)
-    plt.ylabel(r'Número de ocurrencias', fontsize = 30)
-    plt.tick_params(axis = 'both', which = 'both', length = 6, width = 3, labelsize = 30)
+    plt.hist(thetaB_boot[:,0], bins = 60, color = 'C3', alpha = 0.8)
+    plt.axvline(x = av_thetaB_boot, linewidth = 2.5, label = r'$\theta_{Bn}$ medio', color = 'k')
+    plt.xlabel(r'$\theta_{Bn}$ [°]', fontsize = 35)
+    plt.ylabel(r'Número de ocurrencias', fontsize = 35)
+    plt.tick_params(axis = 'both', which = 'both', length = 6, width = 3, labelsize = 35)
     plt.xticks(np.arange(72,81,1))
-    plt.legend(loc = 0, fontsize = 20)
+    plt.legend(loc = 0, fontsize = 25)
     plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
     
     plt.savefig(path_analisis+'hist_thetaBduV_copl_boot_{}'.format(shock_date))
