@@ -289,10 +289,10 @@ if MODO_delimitacion == 1:
     '''
     
     figsize = (25,15)
-    lw = 1.5
-    font_title = 40
-    font_label = 35
-    font_leg = 25
+    lw = 2.5
+    font_title = 45
+    font_label = 40
+    font_leg = 30
     ticks_l = 6
     ticks_w = 3
     grid_alpha = 0.8
@@ -300,7 +300,7 @@ if MODO_delimitacion == 1:
     
     
     fig = plt.figure(2, figsize = figsize, tight_layout = True)
-    plt.title(r'$\bf{MAVEN,}$ $\bf{MAG,}$ $\bf{SWIA}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:42:00}$ $\bf{-}$ $\bf{10:06:00}$ $\bf{UTC}$', fontsize = font_title)
+    plt.title(r'$\bf{MAVEN,}$ $\bf{MAG,}$ $\bf{SWIA}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:42:00}$ $\bf{-}$ $\bf{10:06:00}$ $\bf{UTC}$', fontsize = font_title, y=1.05)
     host = fig.add_subplot(111)
     par1 = host.twinx()
     #par2 = host.twinx()
@@ -471,10 +471,10 @@ if MODO_delimitacion == 1:
     '''
     
     figsize = (60,30)
-    lw = 1.5
-    font_title = 40
-    font_label = 35
-    font_leg = 25
+    lw = 2.5
+    font_title = 42
+    font_label = 34
+    font_leg = 26
     ticks_l = 6
     ticks_w = 3
     grid_alpha = 0.8
@@ -564,7 +564,7 @@ if MODO_delimitacion == 1:
     g3.axes.axvspan(xmin = t_mag[min(i_d,f_d)], xmax = t_mag[max(i_d,f_d)], facecolor = 'y', alpha = updown_alpha, label = 'Downstream')
     g3.axvline(x = t_mag[C0], linewidth = lw, color = 'k', label = 'Shock center')
     g3.set_ylabel('$T_{i,SW}$ [eV]', fontsize = font_label)
-    #g3.set_xlabel('Time [hs]', fontsize = font_label)
+    g3.set_xlabel('Time [hs]', fontsize = font_label)
     g3.axes.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     g3.axes.grid(axis = 'both', which = 'major', alpha = grid_alpha, linewidth = lw, linestyle = '--')
     g3.set_xlim(xmin = xmin, xmax = xmax)

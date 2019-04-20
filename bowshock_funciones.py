@@ -209,11 +209,19 @@ def plot_implicit(fn, Rc, L, limites=(-3.5, 3.5)):
     ax.set_xlim3d(xmin,xmax)
     ax.set_ylim3d(ymin,ymax)
     
-    ax.set_xlabel(r'$X_{MSO}$ $[R_M]$', fontsize = 20, labelpad = 30)
-    ax.set_ylabel(r'$Y_{MSO}$ $[R_M]$', fontsize = 20, labelpad = 30)
-    ax.set_zlabel(r'$Z_{MSO}$ $[R_M]$', fontsize = 20, labelpad = 30)
-    plt.tick_params(axis='both', which = 'both', length = 4, width = 2, labelsize = 20)
-    plt.legend(loc = 0, fontsize = 20)
+    ax.set_xlabel(r'$X_{MSO}$ $[R_M]$', fontsize = 40, labelpad = 30)
+    ax.set_ylabel(r'$Y_{MSO}$ $[R_M]$', fontsize = 40, labelpad = 30)
+    ax.set_zlabel(r'$Z_{MSO}$ $[R_M]$', fontsize = 40, labelpad = 30)
+    plt.tick_params(axis='both', which = 'both', length = 4, width = 2, labelsize = 40)
+    plt.legend(loc = 0, fontsize = 30)
+    
+#    #poster
+#    ax.set_xlabel(r'$X_{MSO}$ $[R_M]$', fontsize = 48, labelpad = 40)
+#    ax.set_ylabel(r'$Y_{MSO}$ $[R_M]$', fontsize = 48, labelpad = 40)
+#    ax.set_zlabel(r'$Z_{MSO}$ $[R_M]$', fontsize = 48, labelpad = 40)
+#    plt.tick_params(axis='both', which = 'both', length = 8, width = 2, labelsize = 48)
+#    plt.legend(loc = 0, fontsize = 35)
+    
     plt.show()
     
     return ax

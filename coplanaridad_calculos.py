@@ -150,10 +150,10 @@ if MODO_coplanaridad == 1:
     
     fignum = 0
     figsize = (30,15)
-    font_title = 30
-    font_label = 30
-    font_leg = 26
-    lw = 1
+    font_title = 45
+    font_label = 40
+    font_leg = 30
+    lw = 2.5
     colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
     ticks_l = 6
     ticks_w = 3
@@ -235,12 +235,12 @@ BN = np.dot(np.array([Bx,By,Bz]).T, N)
 if MODO_coplanaridad == 1:
      
     fignum = 0
-    figsize = (25,20)
-    font_title = 40
-    font_label = 35
-    font_leg = 25
-    lw = 1.5
-    lw2 = 2.5
+    figsize = (30,25)
+    font_title = 45
+    font_label = 40
+    font_leg = 30
+    lw = 2.5
+    lw2 = 3.5
     colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
     ticks_l = 6
     ticks_w = 3
@@ -251,7 +251,7 @@ if MODO_coplanaridad == 1:
     
     plt.figure(fignum, figsize = figsize)
     plt.suptitle(r'$\bf{MAVEN,}$ $\bf{MAG}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:42:00}$ $\bf{-}$ $\bf{10:06:00}$ $\bf{UTC}$', fontsize = font_title)
-    plt.subplots_adjust(top=0.9, bottom=0.10, left=0.10, right=0.95, hspace=0.4, wspace=0.3)
+    plt.subplots_adjust(top=0.9, bottom=0.10, left=0.10, right=0.95, hspace=0.8, wspace=0.3)
 
     plot0 = plt.subplot(511)
     plt.setp(plot0.get_xticklabels(), visible = False)
@@ -660,15 +660,15 @@ if MODO_coplanaridad == 1:
 
     #plot para thetaBduV_boot
     plt.figure(200, figsize = (20,15))
-    #plt.suptitle(r'$\bf{Método}$ $\bf{bootstrap}$,   $\theta_{Bn}^{cop4}$', fontsize = 40)
+    #plt.suptitle(r'$\bf{Método}$ $\bf{bootstrap}$,   $\theta_{Bn}^{cop4}$', fontsize = 45)
     
     plt.hist(thetaB_boot[:,0], bins = 60, color = 'C3', alpha = 0.8)
     plt.axvline(x = av_thetaB_boot, linewidth = 2.5, label = r'$\theta_{Bn}$ medio', color = 'k')
-    plt.xlabel(r'$\theta_{Bn}$ [°]', fontsize = 35)
-    plt.ylabel(r'Número de ocurrencias', fontsize = 35)
-    plt.tick_params(axis = 'both', which = 'both', length = 6, width = 3, labelsize = 35)
+    plt.xlabel(r'$\theta_{Bn}$ [°]', fontsize = 40)
+    plt.ylabel(r'Número de ocurrencias', fontsize = 40)
+    plt.tick_params(axis = 'both', which = 'both', length = 6, width = 3, labelsize = 40)
     plt.xticks(np.arange(72,81,1))
-    plt.legend(loc = 0, fontsize = 25)
+    plt.legend(loc = 0, fontsize = 30)
     plt.grid(which = 'both', axis = 'both', linewidth = 2, linestyle = '--', alpha = 0.8)
     
     plt.savefig(path_analisis+'hist_thetaBduV_copl_boot_{}'.format(shock_date))

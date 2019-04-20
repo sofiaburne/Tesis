@@ -5,7 +5,7 @@ from matplotlib import ticker
 
 class CoplanaridadPLOTS:
     
-    def __init__(self, figsize = (30,15), lw = 1.5, font_title = 40, font_label = 35, font_leg = 25,
+    def __init__(self, figsize = (30,15), lw = 1.5, font_title = 45, font_label = 40, font_leg = 30,
                  ticks_l = 6, ticks_w = 3, grid_alpha = 0.8, labelpad = 110, msize = 8, markers = ['o', 's', '^', '*'],
                  colors = ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']):
         
@@ -31,7 +31,7 @@ class CoplanaridadPLOTS:
         self.lw = 2.5
         
         
-        plt.figure(fignum, figsize = (25,15))
+        plt.figure(fignum, figsize = (30,15))
         titulo = r'$\bf{Método}$ $\bf{bootstrap}$,'
         plt.suptitle(r'{}'.format(title), fontsize = self.font_title)
         plt.subplots_adjust(top=0.88, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.3)
@@ -160,11 +160,11 @@ class CoplanaridadPLOTS:
         self.av_norm_Bd_s = av_norm_Bd
         
         self.lw = 2.5
-        self.msize = 12
+        self.msize = 18
         
 
         
-        plt.figure(fignum, figsize = (25,15))
+        plt.figure(fignum, figsize = (35,25))
         #plt.suptitle(r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$', fontsize = self.font_title)
         plt.subplots_adjust(top=0.92, bottom=0.10, left=0.1, right=0.95, hspace=0.2, wspace=0.2)
         
@@ -233,7 +233,7 @@ class CoplanaridadPLOTS:
         self.av_nB_sd = av_n_d
         
         self.lw = 2.5
-        self.msize = 12
+        self.msize = 18
         
         
         plt.figure(fignum, figsize = (25,15))
@@ -297,7 +297,7 @@ class CoplanaridadPLOTS:
         self.av_thetaB_sd = av_theta_d
         
         self.lw = 2.5
-        self.msize = 12
+        self.msize = 18
         
         plt.figure(fignum, figsize = (25,15))
         #titulo = r'$\bf{Variación}$ $\bf{de}$ $\bf{intervalos}$ $\bf{upstream}$ $\bf{y}$ $\bf{downstream}$'

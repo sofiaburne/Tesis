@@ -1,6 +1,6 @@
 # 0 uso modulo desde otro modulo
 # 1 uso modulo y quiero que me haga plots y los guarde
-MODO_subestructuras = 0
+MODO_subestructuras = 1
 
 
 from mag import shock_date
@@ -69,7 +69,7 @@ std_Bu_low = std_Bu
 
 #importo Bx, By, Bz de alta frecuencia
 path_mag_high = r'C:\Users\sofia\Documents\Facultad\Tesis\Datos Maven\MAG\alta_frec/'
-d_high, day_frac_high, Bx, By, Bz, X_high, Y_high, Z_high = np.loadtxt(path_mag_high+'2014/12/mvn_mag_l2_2014359pc_20141225_v01_r01.sts', skiprows = 147, usecols = (1,6,7,8,9,11,12,13),unpack = True)
+d_high, day_frac_high, Bx, By, Bz, X_high, Y_high, Z_high = np.loadtxt(path_mag_high+'2014/12/mvn_mag_l2_2014359ss_20141225_v01_r01.sts', skiprows = 147, usecols = (1,6,7,8,9,11,12,13),unpack = True)
 
 #en radios marcianos
 x, y, z = X_high/3390, Y_high/3390, Z_high/3390
@@ -886,7 +886,7 @@ if MODO_subestructuras == 1:
         
         figsize = (30,15)
         lw = 1.5
-        lw2 = 2.5
+        lw2 =2.5
         msize = 8
         font_title = 40
         font_label = 35
@@ -899,13 +899,14 @@ if MODO_subestructuras == 1:
         ylim = [0,50]
         
         xlim_foot = [t_mag[114071], 9.81999] #*
-        xlim_ramp = [t_mag[115023],t_mag[115035]] #*
+        #xlim_ramp = [t_mag[115023],t_mag[115035]] #*
+        xlim_ramp = [9.81941, 9.81952] #*
         xlim_over = [t_mag[114550],t_mag[119341]] #*
         
         
         
         plt.figure(55, figsize = figsize)
-        plt.suptitle(r'$\bf{MAVEN,}$ $\bf{MAG}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:48:40}$ $\bf{-}$ $\bf{9:51:36}$ $\bf{UTC}$', fontsize = font_title)
+        plt.suptitle(r'$\bf{MAVEN,}$ $\bf{MAG}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014}$', fontsize = font_title)
         plt.subplots_adjust(top=0.9, bottom=0.10, left=0.10, right=0.95, hspace=0.3, wspace=0.3)
 
         
@@ -926,32 +927,20 @@ if MODO_subestructuras == 1:
         plt.axvline(x = ti1_ramp, linewidth = lw2, linestyle = '-', color = 'c', label = 'inicio ramp')
         plt.axvline(x = ti2_ramp, linewidth = lw2, linestyle = '-', color = 'c')
         
-#        class CustomScalarFormatter(ticker.ScalarFormatter):
-#            def format_data(self, value):
-#                if self._useLocale:
-#                    s = ticker.locale.format_string('%1.3g', (value,))
-#                else:
-#                    s = '%1.3g' % value
-#                s = self._formatSciNotation(s)
-#                return self.fix_minus(s)
-#        
-#        xmajorformatter = CustomScalarFormatter(9.81)  # default useOffset=True
-#        p0.get_xaxis().set_major_formatter(xmajorformatter)
-        
-        
         plt.xlim(xlim_foot[0], xlim_foot[1])
         plt.ylim(ylim[0], ylim[1])
         
         ft_ticks = np.round(np.linspace(xlim_foot[0], xlim_foot[1], 4, endpoint = True),6)
-        false_ticks = (ft_ticks - 9.81)*(1e5)
-        ft_ticks_label = []
-        for i in range(len(false_ticks)):
-            string = '{:04f}'.format(false_ticks[i])
-            string = string[:-7]
-            ft_ticks_label.append(string)
-
-        
-        plt.xticks(ft_ticks, ft_ticks_label)
+#        false_ticks = (ft_ticks - 9.81)*(1e5)
+#        ft_ticks_label = []
+#        for i in range(len(false_ticks)):
+#            string = '{:04f}'.format(false_ticks[i])
+#            string = string[:-7]
+#            ft_ticks_label.append(string)
+#
+#        
+#        plt.xticks(ft_ticks, ft_ticks_label)
+        plt.xticks(ft_ticks)
     
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
         plt.ylabel(r'$|B_{SW,MSO}|$ [nT]', fontsize = font_label)
@@ -984,15 +973,16 @@ if MODO_subestructuras == 1:
         plt.ylim(ylim[0], ylim[1])
         
         r_ticks = np.round(np.linspace(xlim_ramp[0], xlim_ramp[1], 4, endpoint = True),6)
-        r_false_ticks = (r_ticks - 9.819)*(1e7)
-        r_ticks_label = []
-        for i in range(len(r_false_ticks)):
-            string = '{:04f}'.format(r_false_ticks[i])
-            string = string[:-8]
-            #print(string)
-            r_ticks_label.append(string)
-        
-        plt.xticks(r_ticks, r_ticks_label)
+#        r_false_ticks = (r_ticks - 9.819)*(1e7)
+#        r_ticks_label = []
+#        for i in range(len(r_false_ticks)):
+#            string = '{:04f}'.format(r_false_ticks[i])
+#            string = string[:-8]
+#            #print(string)
+#            r_ticks_label.append(string)
+#        
+#        plt.xticks(r_ticks, r_ticks_label)
+        plt.xticks(r_ticks)
         
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
         plt.xlabel('Time [hs]', fontsize = font_label)
@@ -1019,15 +1009,15 @@ if MODO_subestructuras == 1:
         plt.axvline(x = tf2_over, linewidth = lw2, linestyle = '-', color = 'y')
         plt.xlim(xlim_over[0], xlim_over[1])
         plt.ylim(ylim[0], ylim[1])
-        plt.xticks(np.round(np.linspace(xlim_over[0], xlim_over[1], 5, endpoint = True),2))
+        plt.xticks(np.linspace(xlim_over[0], xlim_over[1], 4))
         plt.tick_params(axis = 'both', which = 'both', length = ticks_l, width = ticks_w, labelsize = font_label)
     #    plt.grid(axis = 'both', which = 'both', alpha = grid_alpha, linewidth = lw, linestyle = '--')
         plt.legend(loc = 0, fontsize = font_leg)
         
         
         
-        plt.savefig(path_analisis+'subestructuras_temporal_{}'.format(shock_date))
-        plt.savefig(path_analisis+'subestructuras_temporal_{}.pdf'.format(shock_date))
+#        plt.savefig(path_analisis+'subestructuras_temporal_{}'.format(shock_date))
+#        plt.savefig(path_analisis+'subestructuras_temporal_{}.pdf'.format(shock_date))
     
 #%%    
     
@@ -1479,7 +1469,7 @@ if MODO_subestructuras == 1:
                 
         
         plt.figure(9, figsize = figsize)
-        plt.suptitle(r'$\bf{MAVEN,}$ $\bf{MAG}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:48:40}$ $\bf{-}$ $\bf{9:51:36}$ $\bf{UTC}$', fontsize = font_title)
+        plt.suptitle(r'$\bf{MAVEN,}$ $\bf{MAG}$  $\bf{Dec}$ $\bf{25,}$ $\bf{2014,}$ $\bf{9:48:39}$ $\bf{-}$ $\bf{9:51:32}$ $\bf{UTC}$', fontsize = font_title)
         plt.subplots_adjust(top=0.9, bottom=0.10, left=0.10, right=0.95, hspace=0.3, wspace=0.3)
         
         p0 = plt.subplot(131)
@@ -1563,8 +1553,8 @@ if MODO_subestructuras == 1:
         
         
         
-        plt.savefig(path_analisis+'subestructuras_espacial_A_{}'.format(shock_date))
-        plt.savefig(path_analisis+'subestructuras_espacial_A_{}.pdf'.format(shock_date))
+       # plt.savefig(path_analisis+'subestructuras_espacial_A_{}'.format(shock_date))
+       # plt.savefig(path_analisis+'subestructuras_espacial_A_{}.pdf'.format(shock_date))
     
 #%%    
     

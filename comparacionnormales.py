@@ -117,21 +117,21 @@ if MODO_fit == 1:
     ax.scatter(Rc[0], Rc[1], Rc[2], color="g", s=100)
     
     #ploteo normales coplanares
-    ax.quiver(Rc[0], Rc[1], Rc[2], nB[0], nB[1], nB[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C0', normalize = True, label = '$n_1$')
-    ax.quiver(Rc[0], Rc[1], Rc[2], nBuV[0], nBuV[1], nBuV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C1', normalize = True, label = '$n_2$')
-    ax.quiver(Rc[0], Rc[1], Rc[2], nBdV[0], nBdV[1], nBdV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C2', normalize = True, label = '$n_3$')
-    ax.quiver(Rc[0], Rc[1], Rc[2], nBduV[0], nBduV[1], nBduV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C3', normalize = True, label = '$n_4$')
-    ax.quiver(Rc[0], Rc[1], Rc[2], nV[0], nV[1], nV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C4', normalize = True, label = '$n_5$')
+    ax.quiver(Rc[0], Rc[1], Rc[2], nB[0], nB[1], nB[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C0', normalize = True, label = '$n_{c1}$')
+    ax.quiver(Rc[0], Rc[1], Rc[2], nBuV[0], nBuV[1], nBuV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C1', normalize = True, label = '$n_{c2}$')
+    ax.quiver(Rc[0], Rc[1], Rc[2], nBdV[0], nBdV[1], nBdV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C2', normalize = True, label = '$n_{c3}$')
+    ax.quiver(Rc[0], Rc[1], Rc[2], nBduV[0], nBduV[1], nBduV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C3', normalize = True, label = '$n_{c4}$')
+    ax.quiver(Rc[0], Rc[1], Rc[2], nV[0], nV[1], nV[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C4', normalize = True, label = '$n_{c5}$')
     
     #ploteo normal MVA
     #ax.quiver(Rc[0], Rc[1], Rc[2], n_mva[0], n_mva[1], n_mva[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C7', normalize = True, label = '$n_{MVA}$')
     
     #ploteo normal del fit
     n_fit = fbow.norm_fit_MGS(Rc[0],Rc[1],Rc[2],L)
-    ax.quiver(Rc[0], Rc[1], Rc[2], n_fit[0], n_fit[1], n_fit[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C5', normalize = True, label = 'normal fit')
+    ax.quiver(Rc[0], Rc[1], Rc[2], n_fit[0], n_fit[1], n_fit[2], length = 2, linewidth = 5, arrow_length_ratio = 0.1, color = 'C5', normalize = True, label = '$n_{fit}$')
     
     #ploteo vector vel nave en el shock
-    ax.quiver(Rc[0], Rc[1], Rc[2], v_nave[0], v_nave[1], v_nave[2], length = 2, linewidth = 5, linestyle = '--', arrow_length_ratio = 0.1, color = 'C6', normalize = True, label = 'velocidad nave')
+    ax.quiver(Rc[0], Rc[1], Rc[2], v_nave[0], v_nave[1], v_nave[2], length = 2, linewidth = 5, linestyle = '--', arrow_length_ratio = 0.1, color = 'C6', normalize = True, label = '$v_{sp}$')
     
     #dibujo esfera = Marte
     x_esfera, y_esfera, z_esfera = fbow.esfera()
@@ -161,8 +161,8 @@ if MODO_fit == 1:
     
     ax.legend(loc=0, fontsize=20)
     
-   # plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}'.format(shock_date))
-   # plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}.pdf'.format(shock_date))
+    plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}'.format(shock_date))
+    plt.savefig(path_analisis+'vectores_sobre_fit_bowshock_{}.pdf'.format(shock_date))
 
 
 #%%------------------------------- GUARDO RESULTADOS ------------------------------
